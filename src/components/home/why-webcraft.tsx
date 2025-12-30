@@ -57,12 +57,12 @@ function TrustPoint({
 
 export function WhyWebCraft(): React.ReactElement {
   return (
-    <Section size="lg" background="primary">
+    <Section size="lg" background="primary" aria-labelledby="why-webcraft-heading">
       <Container>
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left column - heading */}
           <div>
-            <Heading level={2} className="mb-4">
+            <Heading level={2} id="why-webcraft-heading" className="mb-4">
               Why Work With Us
             </Heading>
             <Text variant="secondary" size="lg" className="max-w-md">

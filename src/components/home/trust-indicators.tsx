@@ -162,8 +162,11 @@ function TrustIndicator({
 
 export function TrustIndicators(): React.ReactElement {
   return (
-    <Section size="md" background="secondary">
+    <Section size="md" background="secondary" aria-label="Quality standards">
       <Container>
+        {/* Visually hidden heading for accessibility */}
+        <h2 className="sr-only">Our Quality Standards</h2>
+
         {/* Grid of indicators */}
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
           {indicators.map((indicator) => (

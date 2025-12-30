@@ -133,11 +133,11 @@ const services = [
 
 export function ServicesSection(): React.ReactElement {
   return (
-    <Section size="lg" background="secondary">
+    <Section size="lg" background="secondary" aria-labelledby="services-heading">
       <Container>
         {/* Section header */}
         <div className="mx-auto mb-12 max-w-2xl text-center sm:mb-16">
-          <Heading level={2} className="mb-4">
+          <Heading level={2} id="services-heading" className="mb-4">
             What We Build
           </Heading>
           <Text variant="secondary" size="lg">
@@ -146,8 +146,8 @@ export function ServicesSection(): React.ReactElement {
           </Text>
         </div>
 
-        {/* Services grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Services grid - auto-fit for flexible layout */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {services.map((service) => (
             <ServiceCard
               key={service.title}
