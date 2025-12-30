@@ -4,18 +4,24 @@
  *
  * Performance:
  * - Static generation for fastest load (best for LCP)
- * - No client JS in hero section
+ * - No client JS in sections
  * - CLS = 0 (no layout shifts)
  *
  * SEO:
  * - Single H1 in hero section
+ * - H2 for each major section
  * - Page-specific metadata
  * - JSON-LD structured data
  */
 
 import type { Metadata } from 'next';
 
-import { Hero } from '@/components/home';
+import {
+  Hero,
+  ServicesSection,
+  TrustIndicators,
+  WhyWebCraft,
+} from '@/components/home';
 import { JsonLd } from '@/components/shared';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
 
@@ -47,7 +53,14 @@ export default function HomePage(): React.ReactElement {
       {/* Hero Section - Above the fold */}
       <Hero />
 
-      {/* Additional sections will be added in future phases */}
+      {/* Services Overview */}
+      <ServicesSection />
+
+      {/* Why WebCraft - Trust builder */}
+      <WhyWebCraft />
+
+      {/* Trust Indicators - Quality signals */}
+      <TrustIndicators />
     </>
   );
 }
