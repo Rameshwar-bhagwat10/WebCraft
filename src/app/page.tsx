@@ -1,14 +1,15 @@
 /**
  * Home Page
- * Server Component - renders statically
+ * Server Component - renders statically (SSG)
  *
- * Performance: Static generation (SSG) for fastest load
- * SEO: Uses page-specific metadata
+ * Performance: Static generation for fastest load (best for LCP)
+ * SEO: Uses page-specific metadata and JSON-LD
  */
 
 import type { Metadata } from 'next';
 
 import { Container, Section } from '@/components/layout';
+import { JsonLd } from '@/components/shared';
 import { Heading, Text } from '@/components/ui';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
 
@@ -34,13 +35,8 @@ export default function HomePage(): React.ReactElement {
 
   return (
     <>
-      {/* Page-specific JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(pageSchema),
-        }}
-      />
+      {/* Page-specific JSON-LD - sanitized */}
+      <JsonLd data={pageSchema} />
 
       <Section size="lg">
         <Container size="md" className="text-center">

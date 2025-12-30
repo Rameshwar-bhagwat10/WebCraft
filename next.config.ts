@@ -1,6 +1,11 @@
 /**
  * Next.js Configuration
  * Performance-optimized settings for production
+ *
+ * Core Web Vitals targets:
+ * - LCP (Largest Contentful Paint): < 2.5s
+ * - CLS (Cumulative Layout Shift): < 0.1
+ * - INP (Interaction to Next Paint): < 200ms
  */
 
 import type { NextConfig } from 'next';
@@ -12,12 +17,12 @@ const nextConfig: NextConfig = {
   // Strict mode for better development experience
   reactStrictMode: true,
 
-  // Optimize images
+  // Optimize images for Core Web Vitals (LCP, CLS)
   images: {
-    // Modern formats for better compression
+    // Modern formats for better compression (25-35% smaller)
     formats: ['image/avif', 'image/webp'],
 
-    // Remote image domains (add as needed)
+    // Remote image patterns (use instead of deprecated 'domains')
     remotePatterns: [
       // Example: Allow images from your CDN
       // {
@@ -27,28 +32,35 @@ const nextConfig: NextConfig = {
       // },
     ],
 
-    // Device sizes for responsive images
+    // Device sizes for responsive images (srcset)
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
 
     // Image sizes for the sizes attribute
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
 
-    // Minimize image size
-    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
+    // Cache optimized images for 30 days
+    minimumCacheTTL: 60 * 60 * 24 * 30,
+
+    // Disable blur placeholder generation for faster builds
+    // (use custom blur data URLs instead)
+    dangerouslyAllowSVG: false,
+    contentDispositionType: 'inline',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-  // Experimental features
+  // Experimental features for performance
   experimental: {
-    // Optimize package imports
+    // Optimize package imports (reduces bundle size)
     optimizePackageImports: [
       '@radix-ui/react-slot',
       'class-variance-authority',
       'clsx',
       'tailwind-merge',
+      'schema-dts',
     ],
   },
 
-  // Headers for security and caching
+  // Security and caching headers
   async headers() {
     return [
       {
@@ -67,11 +79,25 @@ const nextConfig: NextConfig = {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
           },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
         ],
       },
       {
-        // Cache static assets
+        // Cache static assets aggressively (1 year)
         source: '/(.*)\\.(ico|png|jpg|jpeg|gif|webp|avif|svg|woff|woff2)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Cache JS/CSS with revalidation
+        source: '/_next/static/(.*)',
         headers: [
           {
             key: 'Cache-Control',
@@ -94,14 +120,22 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Powered by header (disable for security)
+  // Disable powered-by header (security)
   poweredByHeader: false,
 
-  // Compress responses
+  // Enable compression
   compress: true,
 
   // Generate ETags for caching
   generateEtags: true,
+
+  // Trailing slash configuration (SEO consistency)
+  trailingSlash: false,
+
+  // Skip type checking during build (handled by CI)
+  // typescript: {
+  //   ignoreBuildErrors: true,
+  // },
 };
 
 export default nextConfig;

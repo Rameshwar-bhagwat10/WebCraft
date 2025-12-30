@@ -1,9 +1,13 @@
 /**
  * SEO Utilities
  * Helper functions for metadata generation and SEO optimization
+ *
+ * Security: JSON-LD is sanitized to prevent XSS attacks
+ * @see https://nextjs.org/docs/app/guides/json-ld
  */
 
 import type { Metadata } from 'next';
+import type { Organization, WebPage, WebSite, WithContext } from 'schema-dts';
 
 import { siteConfig } from '@/config/site';
 
@@ -12,27 +16,27 @@ import { siteConfig } from '@/config/site';
  * Following platform-specific recommendations
  */
 export const IMAGE_SIZES = {
-  // Open Graph (Facebook, LinkedIn)
+  // Open Graph (Facebook, LinkedIn) - 1.91:1 ratio
   og: {
     width: 1200,
     height: 630,
   },
-  // Twitter card
+  // Twitter card - 2:1 ratio
   twitter: {
     width: 1200,
     height: 600,
   },
-  // Hero images
+  // Hero images - 16:9 ratio
   hero: {
     width: 1920,
     height: 1080,
   },
-  // Portfolio/work thumbnails
+  // Portfolio/work thumbnails - 4:3 ratio
   thumbnail: {
     width: 800,
     height: 600,
   },
-  // Avatar/profile
+  // Avatar/profile - 1:1 ratio
   avatar: {
     width: 400,
     height: 400,
@@ -44,6 +48,16 @@ export const IMAGE_SIZES = {
  */
 export function absoluteUrl(path: string): string {
   return `${siteConfig.url}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
+/**
+ * Sanitize JSON-LD to prevent XSS attacks
+ * Replaces < with unicode equivalent to prevent script injection
+ *
+ * @see https://nextjs.org/docs/app/guides/json-ld
+ */
+export function sanitizeJsonLd<T>(data: T): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
 }
 
 /**
@@ -109,8 +123,10 @@ export function generatePageMetadata({
 /**
  * Generate JSON-LD structured data for organization
  * Helps search engines understand the business
+ *
+ * Type-safe using schema-dts
  */
-export function generateOrganizationSchema() {
+export function generateOrganizationSchema(): WithContext<Organization> {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -132,6 +148,19 @@ export function generateOrganizationSchema() {
 }
 
 /**
+ * Generate JSON-LD structured data for the website
+ */
+export function generateWebSiteSchema(): WithContext<WebSite> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+  };
+}
+
+/**
  * Generate JSON-LD structured data for a web page
  */
 export function generateWebPageSchema({
@@ -142,7 +171,7 @@ export function generateWebPageSchema({
   title: string;
   description: string;
   pathname?: string;
-}) {
+}): WithContext<WebPage> {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebPage',

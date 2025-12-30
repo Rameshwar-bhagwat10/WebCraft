@@ -3,8 +3,9 @@
  * Server Component - wraps entire application
  *
  * Performance:
- * - Fonts loaded via next/font for optimal loading (no CLS)
+ * - Fonts loaded via next/font (self-hosted, no CLS)
  * - Server Component by default (minimal JS)
+ * - Optimized for Core Web Vitals (LCP < 2.5s, CLS < 0.1, INP < 200ms)
  *
  * Accessibility:
  * - Skip link for keyboard navigation
@@ -12,23 +13,25 @@
  *
  * SEO:
  * - Proper document structure
- * - JSON-LD structured data
+ * - JSON-LD structured data (sanitized for XSS prevention)
  */
 
 import type { Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import { Footer, Header } from '@/components/layout';
+import { JsonLd } from '@/components/shared';
 import { defaultMetadata, viewportConfig } from '@/config/site';
-import { generateOrganizationSchema } from '@/lib/seo';
+import { generateOrganizationSchema, generateWebSiteSchema } from '@/lib/seo';
 
 import './globals.css';
 
 /**
  * Font optimization via next/font
- * - Self-hosted (no external requests)
+ * - Self-hosted (no external requests, better privacy)
  * - Subset to reduce file size
- * - display: swap prevents FOIT
+ * - display: swap prevents FOIT (Flash of Invisible Text)
+ * - preload for critical fonts
  */
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -53,8 +56,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>): React.ReactElement {
-  // Generate organization schema for SEO
+  // Generate structured data schemas
   const organizationSchema = generateOrganizationSchema();
+  const webSiteSchema = generateWebSiteSchema();
 
   return (
     <html
@@ -63,19 +67,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* JSON-LD Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
-          }}
-        />
-
-        {/* Preconnect to external domains (add as needed) */}
-        {/* <link rel="preconnect" href="https://fonts.googleapis.com" /> */}
-
-        {/* DNS prefetch for performance */}
-        <link rel="dns-prefetch" href="//www.google-analytics.com" />
+        {/* JSON-LD Structured Data - sanitized for XSS prevention */}
+        <JsonLd data={organizationSchema} />
+        <JsonLd data={webSiteSchema} />
       </head>
       <body className="bg-background text-foreground flex min-h-screen flex-col antialiased">
         {/* Skip link for keyboard accessibility */}
