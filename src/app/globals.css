@@ -4,7 +4,8 @@
  * ===========================================
  * WebCraft Design System
  * White theme with scalable tokens
- * WCAG 2.1 AA compliant
+ * WCAG 2.2 AA compliant
+ * Tailwind CSS v4 - OKLCH color space
  * ===========================================
  */
 
@@ -15,7 +16,7 @@
   --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  /* Font sizes - mobile first, scales with clamp */
+  /* Font sizes - mobile first */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -40,79 +41,79 @@
   --font-bold: 700;
 
   /* =========================================
-   * COLORS - White Theme
-   * All colors WCAG AA compliant
+   * COLORS - White Theme (OKLCH)
+   * OKLCH provides perceptually uniform colors
+   * All colors WCAG 2.2 AA compliant
    * ========================================= */
 
-  /* Primary brand (blue) */
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-  --color-primary-950: #172554;
+  /* Primary brand (blue) - OKLCH for perceptual uniformity */
+  --color-primary-50: oklch(97% 0.02 250);
+  --color-primary-100: oklch(93% 0.04 250);
+  --color-primary-200: oklch(87% 0.08 250);
+  --color-primary-300: oklch(78% 0.12 250);
+  --color-primary-400: oklch(70% 0.15 250);
+  --color-primary-500: oklch(62% 0.19 254);
+  --color-primary-600: oklch(55% 0.2 255);
+  --color-primary-700: oklch(49% 0.19 256);
+  --color-primary-800: oklch(42% 0.16 257);
+  --color-primary-900: oklch(37% 0.12 258);
+  --color-primary-950: oklch(28% 0.09 259);
 
-  /* Neutral gray scale */
-  --color-neutral-50: #fafafa;
-  --color-neutral-100: #f5f5f5;
-  --color-neutral-200: #e5e5e5;
-  --color-neutral-300: #d4d4d4;
-  --color-neutral-400: #a3a3a3;
-  --color-neutral-500: #737373;
-  --color-neutral-600: #525252;
-  --color-neutral-700: #404040;
-  --color-neutral-800: #262626;
-  --color-neutral-900: #171717;
-  --color-neutral-950: #0a0a0a;
+  /* Neutral gray scale - OKLCH */
+  --color-neutral-50: oklch(98% 0 0);
+  --color-neutral-100: oklch(96% 0 0);
+  --color-neutral-200: oklch(92% 0 0);
+  --color-neutral-300: oklch(87% 0 0);
+  --color-neutral-400: oklch(71% 0 0);
+  --color-neutral-500: oklch(55% 0 0);
+  --color-neutral-600: oklch(45% 0 0);
+  --color-neutral-700: oklch(37% 0 0);
+  --color-neutral-800: oklch(27% 0 0);
+  --color-neutral-900: oklch(21% 0 0);
+  --color-neutral-950: oklch(14% 0 0);
 
-  /* Semantic: Success (green) */
-  --color-success-50: #f0fdf4;
-  --color-success-100: #dcfce7;
-  --color-success-500: #22c55e;
-  --color-success-600: #16a34a;
-  --color-success-700: #15803d;
+  /* Semantic: Success (green) - OKLCH */
+  --color-success-50: oklch(97% 0.03 145);
+  --color-success-100: oklch(93% 0.06 145);
+  --color-success-500: oklch(72% 0.19 145);
+  --color-success-600: oklch(63% 0.18 145);
+  --color-success-700: oklch(53% 0.15 145);
 
-  /* Semantic: Warning (amber) */
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
-  --color-warning-500: #f59e0b;
-  --color-warning-600: #d97706;
-  --color-warning-700: #b45309;
+  /* Semantic: Warning (amber) - OKLCH */
+  --color-warning-50: oklch(98% 0.03 85);
+  --color-warning-100: oklch(94% 0.08 85);
+  --color-warning-500: oklch(80% 0.16 75);
+  --color-warning-600: oklch(72% 0.16 60);
+  --color-warning-700: oklch(62% 0.14 50);
 
-  /* Semantic: Error (red) */
-  --color-error-50: #fef2f2;
-  --color-error-100: #fee2e2;
-  --color-error-500: #ef4444;
-  --color-error-600: #dc2626;
-  --color-error-700: #b91c1c;
+  /* Semantic: Error (red) - OKLCH */
+  --color-error-50: oklch(97% 0.02 25);
+  --color-error-100: oklch(93% 0.05 25);
+  --color-error-500: oklch(63% 0.21 25);
+  --color-error-600: oklch(55% 0.22 25);
+  --color-error-700: oklch(47% 0.2 25);
 
   /* Background colors */
-  --color-background: #ffffff;
-  --color-background-secondary: #fafafa;
-  --color-background-tertiary: #f5f5f5;
+  --color-background: oklch(100% 0 0);
+  --color-background-secondary: oklch(98% 0 0);
+  --color-background-tertiary: oklch(96% 0 0);
 
-  /* Text colors - WCAG AA compliant on white */
-  --color-foreground: #171717;
-  --color-foreground-secondary: #525252;
-  --color-foreground-muted: #737373;
+  /* Text colors - WCAG 2.2 AA compliant on white (4.5:1 min) */
+  --color-foreground: oklch(21% 0 0);
+  --color-foreground-secondary: oklch(45% 0 0);
+  --color-foreground-muted: oklch(55% 0 0);
 
   /* Border & divider */
-  --color-border: #e5e5e5;
-  --color-border-strong: #d4d4d4;
-  --color-divider: #e5e5e5;
+  --color-border: oklch(92% 0 0);
+  --color-border-strong: oklch(87% 0 0);
+  --color-divider: oklch(92% 0 0);
 
   /* Interactive states */
-  --color-focus: #3b82f6;
-  --color-hover: #f5f5f5;
+  --color-focus: oklch(55% 0.2 255);
+  --color-hover: oklch(96% 0 0);
 
   /* =========================================
-   * SPACING SCALE
-   * 4px base unit
+   * SPACING SCALE (4px base unit)
    * ========================================= */
   --spacing-0: 0;
   --spacing-1: 0.25rem;
@@ -182,10 +183,14 @@ body {
 }
 
 /* =========================================
- * ACCESSIBILITY
+ * ACCESSIBILITY (WCAG 2.2)
  * ========================================= */
 
-/* Focus ring - visible and consistent */
+/*
+ * Focus ring - WCAG 2.2 compliant
+ * - 2px minimum thickness
+ * - 3:1 contrast ratio against adjacent colors
+ */
 :focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;

@@ -3,8 +3,8 @@
  * Import all UI components from '@/components/ui'
  */
 
-export { Button } from './button';
-export type { ButtonProps, ButtonVariant, ButtonSize } from './button';
+export { Button, buttonVariants } from './button';
+export type { ButtonProps } from './button';
 
 export {
   Card,
