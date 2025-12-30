@@ -251,28 +251,18 @@ p {
   line-height: var(--leading-relaxed);
 }
 
-a:not([class*='bg-']) {
+/* 
+ * Link styles - only for content links, not button-styled links
+ * Button components handle their own text colors
+ */
+a:where(:not([class*='inline-flex'])) {
   color: var(--color-primary-600);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
-a:not([class*='bg-']):hover {
+a:where(:not([class*='inline-flex'])):hover {
   color: var(--color-primary-700);
-}
-
-/* Reset link color inside buttons (when using asChild with Link) */
-button a,
-[role='button'] a,
-a[class*='bg-primary'],
-a[class*='bg-error'],
-a[class*='bg-neutral'] {
-  color: inherit;
-}
-
-a[class*='bg-primary']:hover,
-a[class*='bg-error']:hover {
-  color: inherit;
 }
 
 /* =========================================
