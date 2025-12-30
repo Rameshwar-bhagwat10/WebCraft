@@ -17,8 +17,12 @@
 import type { Metadata } from 'next';
 
 import {
+  FeaturedWork,
+  FinalCTA,
   Hero,
+  ProcessSection,
   ServicesSection,
+  StatsSection,
   TrustIndicators,
   WhyWebCraft,
 } from '@/components/home';
@@ -53,14 +57,26 @@ export default function HomePage(): React.ReactElement {
       {/* Hero Section - Above the fold */}
       <Hero />
 
+      {/* Trust Indicators - Quality signals */}
+      <TrustIndicators />
+
       {/* Services Overview */}
       <ServicesSection />
+
+      {/* Stats Section - Credibility boost */}
+      <StatsSection />
+
+      {/* Process Section - How we work */}
+      <ProcessSection />
+
+      {/* Featured Work - Social proof */}
+      <FeaturedWork />
 
       {/* Why WebCraft - Trust builder */}
       <WhyWebCraft />
 
-      {/* Trust Indicators - Quality signals */}
-      <TrustIndicators />
+      {/* Final CTA - Conversion */}
+      <FinalCTA />
     </>
   );
 }
