@@ -14,7 +14,11 @@
 
 import type { Metadata } from 'next';
 
-import { ContactFormSection, ContactIntro } from '@/components/contact';
+import {
+  ContactFAQ,
+  ContactFormSection,
+  ContactIntro,
+} from '@/components/contact';
 import { JsonLd } from '@/components/shared';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
 
@@ -47,6 +51,9 @@ export default function ContactPage(): React.ReactElement {
 
       {/* Contact Form Section */}
       <ContactFormSection />
+
+      {/* Contact FAQ */}
+      <ContactFAQ />
     </>
   );
 }
