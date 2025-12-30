@@ -123,16 +123,11 @@ function TrustIndicators(): React.ReactElement {
 export function Hero(): React.ReactElement {
   return (
     <section
-      aria-labelledby="hero-heading"
+      aria-label="Hero"
       className="bg-background relative isolate overflow-hidden pb-16 pt-24 sm:pb-24 sm:pt-32 lg:pb-32 lg:pt-40"
     >
       <Container size="lg">
         <div className="mx-auto max-w-4xl text-center">
-          {/* Visually hidden label for accessibility */}
-          <span id="hero-heading" className="sr-only">
-            WebCraft - Professional Web Development
-          </span>
-
           {/* Main content with clear hierarchy */}
           <HeroEyebrow />
           <HeroHeadline />
@@ -153,9 +148,9 @@ export function Hero(): React.ReactElement {
         <div className="bg-primary-50/40 absolute -bottom-1/4 right-0 h-[600px] w-[600px] rounded-full blur-3xl" />
       </div>
 
-      {/* Subtle grid pattern for depth (optional visual enhancement) */}
+      {/* Subtle grid pattern for depth */}
       <div
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] [background-size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]"
         aria-hidden="true"
       />
     </section>
