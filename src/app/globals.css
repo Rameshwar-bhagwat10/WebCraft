@@ -170,8 +170,11 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* Prevent font size inflation on mobile */
+  text-size-adjust: 100%;
 }
 
+/* Improve text rendering */
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
@@ -180,6 +183,33 @@ body {
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Improve text rendering */
+  text-rendering: optimizeLegibility;
+  /* Prevent horizontal scroll */
+  overflow-x: hidden;
+}
+
+/* Improve image rendering */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Remove default button styles for better accessibility */
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* Improve form element consistency */
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 /* =========================================
@@ -280,4 +310,65 @@ a:where(:not([class*='inline-flex'])):hover {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* =========================================
+ * PERFORMANCE OPTIMIZATIONS
+ * ========================================= */
+
+/* Content visibility for off-screen sections (improves initial render) */
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+/* Optimize paint for fixed/sticky elements */
+.will-change-transform {
+  will-change: transform;
+}
+
+/* GPU acceleration for animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* =========================================
+ * PRINT STYLES
+ * ========================================= */
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a[href]::after {
+    content: ' (' attr(href) ')';
+  }
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+
+  /* Hide non-essential elements */
+  nav,
+  footer,
+  .skip-link {
+    display: none !important;
+  }
 }
