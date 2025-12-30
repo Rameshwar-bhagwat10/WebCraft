@@ -66,7 +66,7 @@ export function WhyWebCraft(): React.ReactElement {
               Why Work With Us
             </Heading>
             <Text variant="secondary" size="lg" className="max-w-md">
-              We're not the biggest agency, and that's by design. We focus on
+              We&apos;re not the biggest agency, and that&apos;s by design. We focus on
               doing great work for clients who value quality over quantity.
             </Text>
           </div>
