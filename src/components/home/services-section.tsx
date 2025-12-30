@@ -133,7 +133,11 @@ const services = [
 
 export function ServicesSection(): React.ReactElement {
   return (
-    <Section size="lg" background="secondary" aria-labelledby="services-heading">
+    <Section
+      size="lg"
+      background="secondary"
+      aria-labelledby="services-heading"
+    >
       <Container>
         {/* Section header */}
         <div className="mx-auto mb-12 max-w-2xl text-center sm:mb-16">

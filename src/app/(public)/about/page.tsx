@@ -40,8 +40,7 @@ export default function AboutPage(): React.ReactElement {
   // Generate page-specific schema
   const pageSchema = generateWebPageSchema({
     title: 'About Us - WebCraft',
-    description:
-      'Learn about WebCraft, our mission, values, and how we work.',
+    description: 'Learn about WebCraft, our mission, values, and how we work.',
     pathname: '/about',
   });
 

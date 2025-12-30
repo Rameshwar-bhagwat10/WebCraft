@@ -33,7 +33,8 @@ export const pricingPlans: PricingPlan[] = [
   {
     id: 'basic',
     name: 'Basic',
-    description: 'A solid foundation for small businesses getting started online.',
+    description:
+      'A solid foundation for small businesses getting started online.',
     bestFor: 'Small businesses, personal brands, simple online presence',
     startingPrice: 2500,
     priceSuffix: 'one-time',
@@ -53,7 +54,8 @@ export const pricingPlans: PricingPlan[] = [
   {
     id: 'standard',
     name: 'Standard',
-    description: 'Everything you need for a professional, conversion-focused website.',
+    description:
+      'Everything you need for a professional, conversion-focused website.',
     bestFor: 'Growing businesses, service providers, lead generation',
     startingPrice: 5000,
     priceSuffix: 'one-time',
@@ -74,7 +76,8 @@ export const pricingPlans: PricingPlan[] = [
   {
     id: 'premium',
     name: 'Premium',
-    description: 'Full-featured solution for businesses with complex requirements.',
+    description:
+      'Full-featured solution for businesses with complex requirements.',
     bestFor: 'Established businesses, e-commerce, custom functionality',
     startingPrice: 10000,
     priceSuffix: 'one-time',

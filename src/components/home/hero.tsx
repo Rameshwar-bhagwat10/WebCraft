@@ -25,7 +25,7 @@ import { Button } from '@/components/ui';
  */
 function HeroEyebrow(): React.ReactElement {
   return (
-    <p className="text-primary-600 mb-4 text-sm font-semibold uppercase tracking-wider sm:text-base">
+    <p className="text-primary-600 mb-4 text-sm font-semibold tracking-wider uppercase sm:text-base">
       Web Development Agency
     </p>
   );
@@ -38,9 +38,8 @@ function HeroEyebrow(): React.ReactElement {
  */
 function HeroHeadline(): React.ReactElement {
   return (
-    <h1 className="text-foreground text-balance text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
-      Websites that{' '}
-      <span className="text-primary-600">grow your business</span>
+    <h1 className="text-foreground text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl xl:text-7xl">
+      Websites that <span className="text-primary-600">grow your business</span>
     </h1>
   );
 }
@@ -52,7 +51,7 @@ function HeroHeadline(): React.ReactElement {
  */
 function HeroSubheadline(): React.ReactElement {
   return (
-    <p className="text-foreground-secondary mx-auto mt-6 max-w-xl text-pretty text-lg leading-relaxed sm:text-xl lg:mt-8 lg:text-2xl">
+    <p className="text-foreground-secondary mx-auto mt-6 max-w-xl text-lg leading-relaxed text-pretty sm:text-xl lg:mt-8 lg:text-2xl">
       We craft high-performance websites that convert visitors into customers.
       From startups to enterprises.
     </p>
@@ -124,7 +123,7 @@ export function Hero(): React.ReactElement {
   return (
     <section
       aria-label="Hero"
-      className="bg-background relative isolate overflow-hidden pb-16 pt-24 sm:pb-24 sm:pt-32 lg:pb-32 lg:pt-40"
+      className="bg-background relative isolate overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-24 lg:pt-40 lg:pb-32"
     >
       <Container size="lg">
         <div className="mx-auto max-w-4xl text-center">
@@ -145,12 +144,12 @@ export function Hero(): React.ReactElement {
         {/* Primary gradient blob */}
         <div className="bg-primary-100/60 absolute -top-1/2 left-1/2 h-[1000px] w-[1000px] -translate-x-1/2 rounded-full blur-3xl" />
         {/* Secondary accent */}
-        <div className="bg-primary-50/40 absolute -bottom-1/4 right-0 h-[600px] w-[600px] rounded-full blur-3xl" />
+        <div className="bg-primary-50/40 absolute right-0 -bottom-1/4 h-[600px] w-[600px] rounded-full blur-3xl" />
       </div>
 
       {/* Subtle grid pattern for depth */}
       <div
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] [background-size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] [background-size:4rem_4rem]"
         aria-hidden="true"
       />
     </section>

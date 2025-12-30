@@ -12,7 +12,11 @@ import { pricingNotes } from './pricing-data';
 
 export function PricingNotes(): React.ReactElement {
   return (
-    <Section size="md" background="primary" aria-labelledby="pricing-notes-heading">
+    <Section
+      size="md"
+      background="primary"
+      aria-labelledby="pricing-notes-heading"
+    >
       <Container size="md">
         <div className="mx-auto max-w-2xl">
           <Heading

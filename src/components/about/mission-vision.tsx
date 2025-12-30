@@ -28,7 +28,7 @@ export function MissionVision(): React.ReactElement {
           <div className="grid gap-12 md:grid-cols-2 md:gap-16">
             {/* Mission */}
             <div>
-              <h3 className="text-primary-600 mb-3 text-sm font-semibold uppercase tracking-wider">
+              <h3 className="text-primary-600 mb-3 text-sm font-semibold tracking-wider uppercase">
                 Our Mission
               </h3>
               <Text variant="body" size="lg" className="leading-relaxed">
@@ -39,7 +39,7 @@ export function MissionVision(): React.ReactElement {
 
             {/* Vision */}
             <div>
-              <h3 className="text-primary-600 mb-3 text-sm font-semibold uppercase tracking-wider">
+              <h3 className="text-primary-600 mb-3 text-sm font-semibold tracking-wider uppercase">
                 Our Vision
               </h3>
               <Text variant="body" size="lg" className="leading-relaxed">

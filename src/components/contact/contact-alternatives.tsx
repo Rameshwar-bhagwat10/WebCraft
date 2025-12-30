@@ -13,7 +13,7 @@ export function ContactAlternatives(): React.ReactElement {
   const emailAddress = 'hello@webcraft.com';
 
   return (
-    <div className="mt-12 border-t border-border pt-8">
+    <div className="border-border mt-12 border-t pt-8">
       <Text variant="muted" size="sm" className="mb-4 text-center">
         Prefer a different way to reach us?
       </Text>
@@ -24,7 +24,7 @@ export function ContactAlternatives(): React.ReactElement {
           href={`https://wa.me/${whatsappNumber}?text=Hi%20WebCraft%2C%20I%27d%20like%20to%20discuss%20a%20project.`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-primary-200 hover:bg-primary-50"
+          className="border-border bg-background text-foreground hover:border-primary-200 hover:bg-primary-50 inline-flex items-center gap-2 rounded-lg border px-5 py-3 text-sm font-medium transition-colors"
         >
           <svg
             className="h-5 w-5 text-[#25D366]"
@@ -40,7 +40,7 @@ export function ContactAlternatives(): React.ReactElement {
         {/* Email CTA */}
         <a
           href={`mailto:${emailAddress}?subject=Project%20Inquiry`}
-          className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-primary-200 hover:bg-primary-50"
+          className="border-border bg-background text-foreground hover:border-primary-200 hover:bg-primary-50 inline-flex items-center gap-2 rounded-lg border px-5 py-3 text-sm font-medium transition-colors"
         >
           <svg
             className="text-primary-600 h-5 w-5"

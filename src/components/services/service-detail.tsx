@@ -112,7 +112,7 @@ export function ServiceDetail({
               <h3 className="text-foreground mb-4 text-lg font-semibold">
                 Expected outcome
               </h3>
-              <div className="rounded-lg border border-primary-200 bg-primary-50 p-4">
+              <div className="border-primary-200 bg-primary-50 rounded-lg border p-4">
                 <Text variant="body" className="text-sm leading-relaxed">
                   {service.outcome}
                 </Text>

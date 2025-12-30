@@ -117,7 +117,11 @@ export function ProjectDetail({
       </Section>
 
       {/* Features */}
-      <Section size="lg" background="primary" aria-labelledby="features-heading">
+      <Section
+        size="lg"
+        background="primary"
+        aria-labelledby="features-heading"
+      >
         <Container size="lg">
           <div className="mx-auto max-w-4xl">
             <Heading level={2} id="features-heading" className="mb-8">
@@ -128,7 +132,7 @@ export function ProjectDetail({
               {project.features.map((feature, index) => (
                 <li
                   key={index}
-                  className="flex items-start gap-3 rounded-lg border border-border bg-background p-4"
+                  className="border-border bg-background flex items-start gap-3 rounded-lg border p-4"
                 >
                   <svg
                     className="text-primary-500 mt-0.5 h-5 w-5 shrink-0"
@@ -165,7 +169,7 @@ export function ProjectDetail({
             <Heading level={2} id="outcome-heading" className="mb-4">
               The Result
             </Heading>
-            <div className="rounded-xl border border-primary-200 bg-primary-50 p-6 sm:p-8">
+            <div className="border-primary-200 bg-primary-50 rounded-xl border p-6 sm:p-8">
               <Text variant="body" size="lg" className="leading-relaxed">
                 {project.outcome}
               </Text>

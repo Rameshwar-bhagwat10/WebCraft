@@ -76,7 +76,8 @@ function validateForm(data: FormData): FormErrors {
   if (!data.message.trim()) {
     errors.message = 'Please tell us about your project';
   } else if (data.message.trim().length < 20) {
-    errors.message = 'Please provide a bit more detail (at least 20 characters)';
+    errors.message =
+      'Please provide a bit more detail (at least 20 characters)';
   }
 
   return errors;
@@ -131,10 +132,10 @@ export function ContactForm(): React.ReactElement {
   // Success state
   if (status === 'success') {
     return (
-      <div className="rounded-xl border border-success-200 bg-success-50 p-8 text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-success-100">
+      <div className="border-success-200 bg-success-50 rounded-xl border p-8 text-center">
+        <div className="bg-success-100 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
           <svg
-            className="h-6 w-6 text-success-600"
+            className="text-success-600 h-6 w-6"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -223,7 +224,7 @@ export function ContactForm(): React.ReactElement {
       {/* Error state */}
       {status === 'error' && (
         <div
-          className="rounded-lg border border-error-200 bg-error-50 p-4 text-sm text-error-700"
+          className="border-error-200 bg-error-50 text-error-700 rounded-lg border p-4 text-sm"
           role="alert"
         >
           Something went wrong. Please try again or contact us directly via

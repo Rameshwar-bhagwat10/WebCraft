@@ -15,7 +15,7 @@ export function ClosingStatement(): React.ReactElement {
         <figure className="mx-auto max-w-2xl text-center">
           {/* Decorative quote mark */}
           <div
-            className="text-primary-100 mx-auto mb-6 text-6xl font-serif leading-none"
+            className="text-primary-100 mx-auto mb-6 font-serif text-6xl leading-none"
             aria-hidden="true"
           >
             &ldquo;

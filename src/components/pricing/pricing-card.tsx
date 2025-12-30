@@ -22,9 +22,9 @@ export function PricingCard({ plan }: PricingCardProps): React.ReactElement {
   return (
     <article
       className={cn(
-        'relative flex flex-col rounded-2xl border bg-background p-6 sm:p-8',
+        'bg-background relative flex flex-col rounded-2xl border p-6 sm:p-8',
         isRecommended
-          ? 'border-primary-300 ring-2 ring-primary-100'
+          ? 'border-primary-300 ring-primary-100 ring-2'
           : 'border-border'
       )}
     >

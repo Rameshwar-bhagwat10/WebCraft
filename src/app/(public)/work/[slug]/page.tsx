@@ -82,7 +82,9 @@ export async function generateMetadata({
 /**
  * Generate structured data for the project
  */
-function generateProjectSchema(project: NonNullable<ReturnType<typeof getProjectBySlug>>) {
+function generateProjectSchema(
+  project: NonNullable<ReturnType<typeof getProjectBySlug>>
+) {
   return {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',

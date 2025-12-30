@@ -46,7 +46,7 @@ function TrustPoint({
     <div className="relative pl-8">
       {/* Accent line */}
       <div
-        className="bg-primary-500 absolute left-0 top-1 h-6 w-1 rounded-full"
+        className="bg-primary-500 absolute top-1 left-0 h-6 w-1 rounded-full"
         aria-hidden="true"
       />
       <h3 className="text-foreground mb-2 text-lg font-semibold">{headline}</h3>
@@ -57,7 +57,11 @@ function TrustPoint({
 
 export function WhyWebCraft(): React.ReactElement {
   return (
-    <Section size="lg" background="primary" aria-labelledby="why-webcraft-heading">
+    <Section
+      size="lg"
+      background="primary"
+      aria-labelledby="why-webcraft-heading"
+    >
       <Container>
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left column - heading */}
@@ -66,8 +70,9 @@ export function WhyWebCraft(): React.ReactElement {
               Why Work With Us
             </Heading>
             <Text variant="secondary" size="lg" className="max-w-md">
-              We&apos;re not the biggest agency, and that&apos;s by design. We focus on
-              doing great work for clients who value quality over quantity.
+              We&apos;re not the biggest agency, and that&apos;s by design. We
+              focus on doing great work for clients who value quality over
+              quantity.
             </Text>
           </div>
 

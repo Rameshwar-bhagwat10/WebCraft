@@ -147,7 +147,7 @@ function TrustIndicator({
   return (
     <div className="flex items-center gap-3">
       <div
-        className="text-primary-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-50"
+        className="text-primary-600 bg-primary-50 flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
         aria-hidden="true"
       >
         {icon}

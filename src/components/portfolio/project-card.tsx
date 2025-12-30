@@ -43,7 +43,7 @@ export function ProjectCard({
     <article className={cn('group', className)}>
       <Link
         href={`/work/${slug}`}
-        className="block overflow-hidden rounded-xl border border-border bg-background transition-all duration-200 hover:border-primary-200 hover:shadow-lg"
+        className="border-border bg-background hover:border-primary-200 block overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-lg"
       >
         {/* Thumbnail */}
         <div className="relative aspect-[16/10] overflow-hidden bg-neutral-100">
@@ -67,7 +67,7 @@ export function ProjectCard({
           </span>
 
           {/* Title */}
-          <h3 className="text-foreground mb-2 text-lg font-semibold group-hover:text-primary-600">
+          <h3 className="text-foreground group-hover:text-primary-600 mb-2 text-lg font-semibold">
             {title}
           </h3>
 

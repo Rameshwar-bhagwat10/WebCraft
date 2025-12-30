@@ -107,11 +107,11 @@ function ServiceOverviewCard({
   return (
     <Link
       href={`#${id}`}
-      className="bg-background group block rounded-xl border border-border p-6 transition-all duration-200 hover:border-primary-200 hover:shadow-lg"
+      className="bg-background group border-border hover:border-primary-200 block rounded-xl border p-6 transition-all duration-200 hover:shadow-lg"
     >
       {/* Icon */}
       <div
-        className="bg-primary-50 text-primary-600 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg transition-colors duration-200 group-hover:bg-primary-100"
+        className="bg-primary-50 text-primary-600 group-hover:bg-primary-100 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg transition-colors duration-200"
         aria-hidden="true"
       >
         {icons[id]}

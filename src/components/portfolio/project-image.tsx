@@ -17,11 +17,7 @@ interface ProjectImageProps {
  * Placeholder SVG for missing images
  * Shows a professional placeholder instead of broken image
  */
-function ImagePlaceholder({
-  alt,
-}: {
-  alt: string;
-}): React.ReactElement {
+function ImagePlaceholder({ alt }: { alt: string }): React.ReactElement {
   return (
     <div
       className="flex h-full w-full items-center justify-center bg-neutral-100"

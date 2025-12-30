@@ -60,7 +60,10 @@ export function FormField({
   return (
     <div className={cn('space-y-2', className)}>
       {/* Label */}
-      <label htmlFor={inputId} className="block text-sm font-medium text-foreground">
+      <label
+        htmlFor={inputId}
+        className="text-foreground block text-sm font-medium"
+      >
         {label}
         {required && (
           <span className="text-error-500 ml-1" aria-hidden="true">
@@ -115,7 +118,7 @@ export function FormField({
 
       {/* Error message */}
       {hasError && (
-        <p id={errorId} className="text-sm text-error-600" role="alert">
+        <p id={errorId} className="text-error-600 text-sm" role="alert">
           {error}
         </p>
       )}
