@@ -29,6 +29,7 @@ export function ServiceDetail({
       size="lg"
       background={alternate ? 'secondary' : 'primary'}
       aria-labelledby={`${service.id}-heading`}
+      className="scroll-mt-20"
     >
       <Container size="lg">
         <div className="mx-auto max-w-4xl">

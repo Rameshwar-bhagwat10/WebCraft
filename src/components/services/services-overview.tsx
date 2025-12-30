@@ -166,17 +166,18 @@ export function ServicesOverview(): React.ReactElement {
           </Text>
         </div>
 
-        {/* Services grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {/* Services grid - using list for semantics */}
+        <ul className="grid list-none gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {servicesData.map((service) => (
-            <ServiceOverviewCard
-              key={service.id}
-              id={service.id}
-              title={service.title}
-              shortDescription={service.shortDescription}
-            />
+            <li key={service.id}>
+              <ServiceOverviewCard
+                id={service.id}
+                title={service.title}
+                shortDescription={service.shortDescription}
+              />
+            </li>
           ))}
-        </div>
+        </ul>
       </Container>
     </Section>
   );

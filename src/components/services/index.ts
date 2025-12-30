@@ -4,5 +4,5 @@
 
 export { ServiceDetail } from './service-detail';
 export { ServicesCTA } from './services-cta';
-export { servicesData } from './services-data';
+export { servicesData, type ServiceData } from './services-data';
 export { ServicesOverview } from './services-overview';
