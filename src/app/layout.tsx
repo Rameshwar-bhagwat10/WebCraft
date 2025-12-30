@@ -3,6 +3,7 @@
  * Server Component - wraps entire application
  *
  * Performance: Fonts loaded via next/font for optimal loading
+ * Accessibility: Skip link for keyboard navigation
  */
 
 import { Geist, Geist_Mono } from 'next/font/google';
@@ -34,6 +35,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="bg-background text-foreground min-h-screen antialiased">
+        {/* Skip link for keyboard accessibility */}
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         {children}
       </body>
     </html>
