@@ -5,12 +5,18 @@
  * Purpose: Help visitors understand services and self-qualify
  * - Overview of all services
  * - Detailed information for each service
+ * - FAQ section
  * - Clear outcomes and CTAs
  *
  * Performance:
  * - Static generation for fastest load
  * - No client JS
  * - CLS = 0
+ *
+ * SEO:
+ * - Single H1 in ServicesOverview
+ * - H2 for each service detail
+ * - FAQ schema for rich snippets
  */
 
 import type { Metadata } from 'next';
@@ -19,6 +25,7 @@ import {
   ServiceDetail,
   ServicesCTA,
   servicesData,
+  ServicesFAQ,
   ServicesOverview,
 } from '@/components/services';
 import { JsonLd } from '@/components/shared';
@@ -59,6 +66,9 @@ export default function ServicesPage(): React.ReactElement {
           alternate={index % 2 === 1}
         />
       ))}
+
+      {/* FAQ Section */}
+      <ServicesFAQ />
 
       {/* Final CTA */}
       <ServicesCTA />
