@@ -3,7 +3,7 @@
  * Displays WebCraft's service offerings in a grid layout
  *
  * Server Component - no client JS needed
- * Mobile-first responsive grid
+ * Mobile-first responsive grid with enhanced visuals
  */
 
 import { Container, Section } from '@/components/layout';
@@ -139,28 +139,53 @@ export function ServicesSection(): React.ReactElement {
       aria-labelledby="services-heading"
     >
       <Container>
-        {/* Section header */}
+        {/* Section header with entrance animation */}
         <div className="mx-auto mb-12 max-w-2xl text-center sm:mb-16">
-          <Heading level={2} id="services-heading" className="mb-4">
-            What We Build
-          </Heading>
-          <Text variant="secondary" size="lg">
-            From concept to launch, we create digital products that help
-            businesses grow.
-          </Text>
+          <div
+            className="motion-slide-up"
+            style={
+              {
+                '--motion-delay': '0s',
+                '--motion-duration': '0.5s',
+              } as React.CSSProperties
+            }
+          >
+            <Heading level={2} id="services-heading" className="mb-4">
+              What We Build
+            </Heading>
+          </div>
+          <div
+            className="motion-slide-up"
+            style={
+              {
+                '--motion-delay': '0.1s',
+                '--motion-duration': '0.5s',
+              } as React.CSSProperties
+            }
+          >
+            <Text variant="secondary" size="lg">
+              From concept to launch, we create digital products that help
+              businesses grow.
+            </Text>
+          </div>
         </div>
 
-        {/* Services grid - auto-fit for flexible layout */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {services.map((service) => (
-            <ServiceCard
-              key={service.title}
-              title={service.title}
-              description={service.description}
-              icon={service.icon}
-            />
+        {/* Services grid - improved spacing and balanced layout */}
+        <ul
+          className="grid list-none gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3"
+          role="list"
+        >
+          {services.map((service, index) => (
+            <li key={service.title}>
+              <ServiceCard
+                title={service.title}
+                description={service.description}
+                icon={service.icon}
+                index={index}
+              />
+            </li>
           ))}
-        </div>
+        </ul>
       </Container>
     </Section>
   );

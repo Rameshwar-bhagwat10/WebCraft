@@ -16,5 +16,7 @@ export {
 } from './card';
 export type { CardProps } from './card';
 
+export { FadeIn, ScaleIn, SlideUp } from './motion';
+
 export { Text, Heading } from './typography';
 export type { TextProps, HeadingProps } from './typography';

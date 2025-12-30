@@ -313,6 +313,103 @@ a:where(:not([class*='inline-flex'])):hover {
 }
 
 /* =========================================
+ * ANIMATION SYSTEM
+ * CSS-only animations for performance
+ * ========================================= */
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Motion utility classes */
+.motion-fade-in {
+  animation: fadeIn var(--motion-duration, 0.5s) ease-out
+    var(--motion-delay, 0s) both;
+}
+
+.motion-slide-up {
+  animation: slideUp var(--motion-duration, 0.5s) ease-out
+    var(--motion-delay, 0s) both;
+}
+
+.motion-scale-in {
+  animation: scaleIn var(--motion-duration, 0.4s) ease-out
+    var(--motion-delay, 0s) both;
+}
+
+.motion-float {
+  animation: float 20s ease-in-out infinite;
+}
+
+.motion-pulse-glow {
+  animation: pulse-glow 8s ease-in-out infinite;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .motion-fade-in,
+  .motion-slide-up,
+  .motion-scale-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .motion-float,
+  .motion-pulse-glow {
+    animation: none;
+  }
+}
+
+/* =========================================
  * PERFORMANCE OPTIMIZATIONS
  * ========================================= */
 

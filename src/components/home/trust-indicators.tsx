@@ -4,6 +4,7 @@
  *
  * Server Component - no client JS needed
  * No fake testimonials, logos, or inflated numbers
+ * Enhanced with subtle animations and improved visual presence
  */
 
 import { Container, Section } from '@/components/layout';
@@ -139,21 +140,39 @@ function TrustIndicator({
   label,
   description,
   icon,
+  index,
 }: {
   label: string;
   description: string;
   icon: React.ReactNode;
+  index: number;
 }): React.ReactElement {
   return (
-    <div className="flex items-center gap-3">
+    <div
+      className="motion-slide-up group flex items-center gap-3"
+      style={
+        {
+          '--motion-delay': `${index * 0.08}s`,
+          '--motion-duration': '0.5s',
+        } as React.CSSProperties
+      }
+    >
+      {/* Icon with enhanced glow effect */}
       <div
-        className="text-primary-600 bg-primary-50 flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+        className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-105"
         aria-hidden="true"
       >
-        {icon}
+        {/* Background */}
+        <div className="bg-primary-50 group-hover:bg-primary-100 absolute inset-0 rounded-full transition-colors duration-300" />
+        {/* Subtle glow on hover */}
+        <div className="from-primary-200/0 to-primary-100/0 group-hover:from-primary-200/50 group-hover:to-primary-100/30 absolute inset-0 rounded-full bg-gradient-to-br transition-all duration-300" />
+        {/* Icon */}
+        <span className="text-primary-600 relative">{icon}</span>
       </div>
       <div>
-        <p className="text-foreground text-sm font-medium">{label}</p>
+        <p className="text-foreground group-hover:text-primary-700 text-sm font-medium transition-colors duration-200">
+          {label}
+        </p>
         <p className="text-foreground-muted text-xs">{description}</p>
       </div>
     </div>
@@ -167,14 +186,15 @@ export function TrustIndicators(): React.ReactElement {
         {/* Visually hidden heading for accessibility */}
         <h2 className="sr-only">Our Quality Standards</h2>
 
-        {/* Grid of indicators */}
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
-          {indicators.map((indicator) => (
+        {/* Grid of indicators - improved mobile spacing */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 sm:gap-8 lg:grid-cols-6">
+          {indicators.map((indicator, index) => (
             <TrustIndicator
               key={indicator.label}
               label={indicator.label}
               description={indicator.description}
               icon={indicator.icon}
+              index={index}
             />
           ))}
         </div>
