@@ -12,7 +12,7 @@ export function ClosingStatement(): React.ReactElement {
   return (
     <Section size="lg" background="primary" aria-label="Closing statement">
       <Container size="sm">
-        <div className="mx-auto max-w-2xl text-center">
+        <figure className="mx-auto max-w-2xl text-center">
           {/* Decorative quote mark */}
           <div
             className="text-primary-100 mx-auto mb-6 text-6xl font-serif leading-none"
@@ -21,20 +21,25 @@ export function ClosingStatement(): React.ReactElement {
             &ldquo;
           </div>
 
-          <Text
-            variant="body"
-            size="lg"
-            className="mb-6 text-xl leading-relaxed sm:text-2xl"
-          >
-            We measure success by the quality of our work and the trust of our
-            clients. Every project is an opportunity to build something we can
-            all be proud of.
-          </Text>
+          <blockquote>
+            <Text
+              as="p"
+              variant="body"
+              size="lg"
+              className="mb-6 text-xl leading-relaxed sm:text-2xl"
+            >
+              We measure success by the quality of our work and the trust of our
+              clients. Every project is an opportunity to build something we can
+              all be proud of.
+            </Text>
+          </blockquote>
 
-          <Text variant="muted" className="text-sm">
-            — The WebCraft Team
-          </Text>
-        </div>
+          <figcaption>
+            <Text variant="muted" as="span" className="text-sm">
+              — The WebCraft Team
+            </Text>
+          </figcaption>
+        </figure>
       </Container>
     </Section>
   );

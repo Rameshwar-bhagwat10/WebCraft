@@ -48,8 +48,8 @@ function ProcessStep({
   description: string;
 }): React.ReactElement {
   return (
-    <div className="relative">
-      {/* Step number */}
+    <li className="relative list-none">
+      {/* Step number - decorative */}
       <span
         className="text-primary-200 mb-4 block text-5xl font-bold"
         aria-hidden="true"
@@ -64,7 +64,7 @@ function ProcessStep({
       <Text variant="secondary" className="leading-relaxed">
         {description}
       </Text>
-    </div>
+    </li>
   );
 }
 
@@ -82,8 +82,8 @@ export function OurProcess(): React.ReactElement {
           </Text>
         </div>
 
-        {/* Process steps grid */}
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+        {/* Process steps - ordered list for semantics */}
+        <ol className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {processSteps.map((step) => (
             <ProcessStep
               key={step.number}
@@ -92,7 +92,7 @@ export function OurProcess(): React.ReactElement {
               description={step.description}
             />
           ))}
-        </div>
+        </ol>
       </Container>
     </Section>
   );
