@@ -4,24 +4,37 @@
  *
  * Purpose: Build trust and credibility
  * - Who WebCraft is
+ * - Our journey and story
  * - Mission & Vision
  * - How we work
  * - Our values
+ * - Meet the team
+ * - Tech stack
+ * - CTA
  *
  * Performance:
  * - Static generation for fastest load
  * - No client JS
  * - CLS = 0
+ *
+ * SEO:
+ * - Single H1 in AboutIntro
+ * - H2 for each major section
+ * - Proper heading hierarchy
  */
 
 import type { Metadata } from 'next';
 
 import {
+  AboutCTA,
   AboutIntro,
   ClosingStatement,
   MissionVision,
   OurProcess,
+  OurStory,
   OurValues,
+  TeamSection,
+  TechStack,
 } from '@/components/about';
 import { JsonLd } from '@/components/shared';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
@@ -49,11 +62,14 @@ export default function AboutPage(): React.ReactElement {
       {/* Page-specific JSON-LD */}
       <JsonLd data={pageSchema} />
 
-      {/* About Intro - Who we are (contains H1) */}
+      {/* About Intro - Hero with H1 */}
       <AboutIntro />
 
       {/* Mission & Vision */}
       <MissionVision />
+
+      {/* Our Story / Timeline */}
+      <OurStory />
 
       {/* Our Process - How we work */}
       <OurProcess />
@@ -61,8 +77,17 @@ export default function AboutPage(): React.ReactElement {
       {/* Our Values - What we believe */}
       <OurValues />
 
-      {/* Closing Statement - Trust builder */}
+      {/* Team Section */}
+      <TeamSection />
+
+      {/* Tech Stack */}
+      <TechStack />
+
+      {/* Closing Statement */}
       <ClosingStatement />
+
+      {/* About CTA */}
+      <AboutCTA />
     </>
   );
 }
