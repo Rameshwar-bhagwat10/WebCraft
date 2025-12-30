@@ -1,30 +1,83 @@
 /**
- * Site configuration
+ * Site Configuration
  * Centralized metadata and SEO settings
+ * Single source of truth for all site-wide configuration
  */
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 
+/**
+ * Core site configuration
+ * Used across metadata, SEO, and social sharing
+ */
 export const siteConfig = {
   name: 'WebCraft',
+  shortName: 'WebCraft',
   description:
     'Professional web development services. We craft high-performance, scalable websites that drive results.',
   url: process.env.NEXT_PUBLIC_APP_URL ?? 'https://webcraft.com',
-  ogImage: '/og-image.png',
+  locale: 'en_US',
+  language: 'en',
+
+  // Social & branding
+  creator: 'WebCraft Team',
+  twitterHandle: '@webcraft',
+
+  // Social links
   links: {
     twitter: 'https://twitter.com/webcraft',
     github: 'https://github.com/webcraft',
+    linkedin: 'https://linkedin.com/company/webcraft',
   },
-  creator: 'WebCraft Team',
+
+  // Open Graph image standards
+  // Recommended: 1200x630 for optimal display
+  ogImage: {
+    url: '/og-image.png',
+    width: 1200,
+    height: 630,
+    alt: 'WebCraft - Professional Web Development',
+  },
+
+  // Twitter card image (can be same as OG)
+  twitterImage: {
+    url: '/twitter-image.png',
+    alt: 'WebCraft - Professional Web Development',
+  },
 } as const;
 
+/**
+ * Viewport configuration
+ * Separate from metadata per Next.js 14+ requirements
+ */
+export const viewportConfig: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#ffffff' },
+  ],
+};
+
+/**
+ * Default metadata for the entire application
+ * Individual pages can extend/override using generateMetadata
+ */
 export const defaultMetadata: Metadata = {
+  // Base URL for resolving relative URLs
   metadataBase: new URL(siteConfig.url),
+
+  // Title configuration with template
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`,
   },
+
+  // Core SEO
   description: siteConfig.description,
+  applicationName: siteConfig.name,
   keywords: [
     'web development',
     'web design',
@@ -32,32 +85,104 @@ export const defaultMetadata: Metadata = {
     'React',
     'TypeScript',
     'professional websites',
+    'custom web applications',
+    'responsive design',
+    'SEO optimization',
   ],
-  authors: [{ name: siteConfig.creator }],
+
+  // Authorship
+  authors: [{ name: siteConfig.creator, url: siteConfig.url }],
   creator: siteConfig.creator,
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: siteConfig.name,
-    description: siteConfig.description,
-    creator: '@webcraft',
-  },
+  publisher: siteConfig.name,
+
+  // Robots directives
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
+      noimageindex: false,
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
   },
+
+  // Open Graph metadata
+  openGraph: {
+    type: 'website',
+    locale: siteConfig.locale,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [
+      {
+        url: siteConfig.ogImage.url,
+        width: siteConfig.ogImage.width,
+        height: siteConfig.ogImage.height,
+        alt: siteConfig.ogImage.alt,
+      },
+    ],
+  },
+
+  // Twitter card metadata
+  twitter: {
+    card: 'summary_large_image',
+    site: siteConfig.twitterHandle,
+    creator: siteConfig.twitterHandle,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [siteConfig.twitterImage.url],
+  },
+
+  // Additional metadata
+  category: 'technology',
+  classification: 'Business',
+
+  // Verification (placeholders - add real values in production)
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.YANDEX_VERIFICATION,
+  },
+
+  // Alternate languages (for future i18n)
+  alternates: {
+    canonical: siteConfig.url,
+  },
+
+  // App-specific
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: siteConfig.shortName,
+  },
+
+  // Format detection
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
 };
+
+/**
+ * Helper to create page-specific metadata
+ * Merges with defaults while allowing overrides
+ */
+export function createMetadata(metadata: Metadata): Metadata {
+  return {
+    ...defaultMetadata,
+    ...metadata,
+    openGraph: {
+      ...defaultMetadata.openGraph,
+      ...metadata.openGraph,
+    },
+    twitter: {
+      ...defaultMetadata.twitter,
+      ...metadata.twitter,
+    },
+  };
+}

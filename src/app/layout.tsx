@@ -2,53 +2,82 @@
  * Root Layout
  * Server Component - wraps entire application
  *
- * Performance: Fonts loaded via next/font for optimal loading
- * Accessibility: Skip link for keyboard navigation
- * SEO: Semantic HTML structure with header, main, footer
+ * Performance:
+ * - Fonts loaded via next/font for optimal loading (no CLS)
+ * - Server Component by default (minimal JS)
+ *
+ * Accessibility:
+ * - Skip link for keyboard navigation
+ * - Semantic HTML structure
+ *
+ * SEO:
+ * - Proper document structure
+ * - JSON-LD structured data
  */
 
 import type { Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import { Footer, Header } from '@/components/layout';
-import { defaultMetadata } from '@/config/site';
+import { defaultMetadata, viewportConfig } from '@/config/site';
+import { generateOrganizationSchema } from '@/lib/seo';
 
 import './globals.css';
 
-// Font optimization via next/font
+/**
+ * Font optimization via next/font
+ * - Self-hosted (no external requests)
+ * - Subset to reduce file size
+ * - display: swap prevents FOIT
+ */
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
   display: 'swap',
+  preload: true,
 });
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
   display: 'swap',
+  preload: true,
 });
 
+// Export metadata and viewport
 export const metadata = defaultMetadata;
-
-/**
- * Viewport configuration (Next.js 14+ requirement)
- * Separate from metadata for proper mobile rendering
- */
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 5,
-  themeColor: '#ffffff',
-};
+export const viewport: Viewport = viewportConfig;
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>): React.ReactElement {
+  // Generate organization schema for SEO
+  const organizationSchema = generateOrganizationSchema();
+
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="flex min-h-screen flex-col bg-background text-foreground antialiased">
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+
+        {/* Preconnect to external domains (add as needed) */}
+        {/* <link rel="preconnect" href="https://fonts.googleapis.com" /> */}
+
+        {/* DNS prefetch for performance */}
+        <link rel="dns-prefetch" href="//www.google-analytics.com" />
+      </head>
+      <body className="bg-background text-foreground flex min-h-screen flex-col antialiased">
         {/* Skip link for keyboard accessibility */}
         <a href="#main-content" className="skip-link">
           Skip to main content

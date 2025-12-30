@@ -1,28 +1,60 @@
 /**
- * Home Page (Placeholder)
+ * Home Page
  * Server Component - renders statically
  *
- * This is a minimal placeholder for Phase 1-3.
- * Page sections will be built in Phase 4+.
+ * Performance: Static generation (SSG) for fastest load
+ * SEO: Uses page-specific metadata
  */
+
+import type { Metadata } from 'next';
 
 import { Container, Section } from '@/components/layout';
 import { Heading, Text } from '@/components/ui';
+import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
+
+/**
+ * Page-specific metadata
+ * Extends default metadata with page-specific values
+ */
+export const metadata: Metadata = generatePageMetadata({
+  title: 'WebCraft - Professional Web Development Services',
+  description:
+    'We craft high-performance, scalable websites that drive results. Expert web development, UI/UX design, and digital solutions.',
+  pathname: '/',
+});
 
 export default function HomePage(): React.ReactElement {
+  // Generate page-specific schema
+  const pageSchema = generateWebPageSchema({
+    title: 'WebCraft - Professional Web Development Services',
+    description:
+      'We craft high-performance, scalable websites that drive results.',
+    pathname: '/',
+  });
+
   return (
-    <Section size="lg">
-      <Container size="md" className="text-center">
-        <Heading level={1} className="mb-4">
-          WebCraft
-        </Heading>
-        <Text variant="secondary" size="lg" className="mb-8">
-          Professional web development services
-        </Text>
-        <Text variant="muted" size="sm">
-          Phase 3 Complete — Layout & Navigation Ready
-        </Text>
-      </Container>
-    </Section>
+    <>
+      {/* Page-specific JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(pageSchema),
+        }}
+      />
+
+      <Section size="lg">
+        <Container size="md" className="text-center">
+          <Heading level={1} className="mb-4">
+            WebCraft
+          </Heading>
+          <Text variant="secondary" size="lg" className="mb-8">
+            Professional web development services
+          </Text>
+          <Text variant="muted" size="sm">
+            Phase 4 Complete — SEO & Performance Ready
+          </Text>
+        </Container>
+      </Section>
+    </>
   );
 }

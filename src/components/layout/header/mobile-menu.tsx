@@ -124,8 +124,8 @@ export function MobileMenu(): React.ReactElement {
         onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
           'inline-flex items-center justify-center rounded-lg p-2',
-          'text-foreground-secondary hover:bg-neutral-100 hover:text-foreground',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500'
+          'text-foreground-secondary hover:text-foreground hover:bg-neutral-100',
+          'focus-visible:ring-primary-500 focus-visible:ring-2 focus-visible:outline-none'
         )}
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
@@ -139,7 +139,7 @@ export function MobileMenu(): React.ReactElement {
         ref={menuRef}
         id="mobile-menu"
         className={cn(
-          'fixed inset-x-0 bottom-0 top-16 z-40',
+          'fixed inset-x-0 top-16 bottom-0 z-40',
           'bg-background',
           'transform transition-transform duration-300 ease-in-out',
           isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -164,7 +164,7 @@ export function MobileMenu(): React.ReactElement {
           </ul>
 
           {/* CTA button */}
-          <div className="mt-6 border-t border-border pt-6">
+          <div className="border-border mt-6 border-t pt-6">
             <Button asChild fullWidth>
               <Link href={ctaConfig.href} onClick={closeMenu}>
                 {ctaConfig.label}
