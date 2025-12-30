@@ -1,9 +1,8 @@
 /**
  * Project Card Component
- * Displays a project preview in the portfolio grid
+ * Enhanced project preview with animations and hover effects
  *
  * Server Component - no client JS needed
- * Uses next/image for optimization
  */
 
 import Link from 'next/link';
@@ -18,17 +17,105 @@ export interface ProjectCardProps {
   shortDescription: string;
   type: string;
   thumbnail: string;
-  className?: string;
+  result?: string | undefined;
+  index?: number | undefined;
+  className?: string | undefined;
 }
 
 /**
- * Type badge colors
+ * Type badge styles with icons
  */
-const typeBadgeStyles: Record<string, string> = {
-  Website: 'bg-primary-50 text-primary-700',
-  'Web App': 'bg-success-50 text-success-700',
-  'Mobile App': 'bg-warning-50 text-warning-700',
-  Dashboard: 'bg-neutral-100 text-neutral-700',
+const typeConfig: Record<string, { style: string; icon: React.ReactNode }> = {
+  Website: {
+    style: 'bg-primary-50 text-primary-700 border-primary-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="2" y="3" width="20" height="14" rx="2" />
+        <path d="M8 21h8M12 17v4" />
+      </svg>
+    ),
+  },
+  'Web App': {
+    style: 'bg-success-50 text-success-700 border-success-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z" />
+      </svg>
+    ),
+  },
+  'Mobile App': {
+    style: 'bg-warning-50 text-warning-700 border-warning-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="5" y="2" width="14" height="20" rx="2" />
+        <path d="M12 18h.01" />
+      </svg>
+    ),
+  },
+  Dashboard: {
+    style: 'bg-neutral-100 text-neutral-700 border-neutral-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="3" y="3" width="7" height="9" rx="1" />
+        <rect x="14" y="3" width="7" height="5" rx="1" />
+        <rect x="14" y="12" width="7" height="9" rx="1" />
+        <rect x="3" y="16" width="7" height="5" rx="1" />
+      </svg>
+    ),
+  },
+};
+
+/**
+ * Gradient colors for project placeholders
+ */
+const gradientColors: Record<string, string> = {
+  'freshbite-restaurant': 'from-orange-500/20 to-red-500/20',
+  'taskflow-app': 'from-blue-500/20 to-purple-500/20',
+  'greenleaf-ecommerce': 'from-green-500/20 to-emerald-500/20',
+  'healthtrack-dashboard': 'from-cyan-500/20 to-blue-500/20',
+};
+
+/**
+ * Default config for unknown project types
+ */
+const defaultConfig = {
+  style: 'bg-primary-50 text-primary-700 border-primary-200',
+  icon: (
+    <svg
+      className="h-3 w-3"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <rect x="2" y="3" width="20" height="14" rx="2" />
+      <path d="M8 21h8M12 17v4" />
+    </svg>
+  ),
 };
 
 export function ProjectCard({
@@ -37,37 +124,100 @@ export function ProjectCard({
   shortDescription,
   type,
   thumbnail,
+  result,
+  index = 0,
   className,
 }: ProjectCardProps): React.ReactElement {
+  const config = typeConfig[type] ?? defaultConfig;
+  const gradient =
+    gradientColors[slug] ?? 'from-primary-500/20 to-primary-600/20';
+
   return (
-    <article className={cn('group', className)}>
+    <article
+      className={cn('motion-slide-up group', className)}
+      style={
+        {
+          '--motion-delay': `${0.1 + index * 0.1}s`,
+          '--motion-duration': '0.5s',
+        } as React.CSSProperties
+      }
+    >
       <Link
         href={`/work/${slug}`}
-        className="border-border bg-background hover:border-primary-200 block overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-lg"
+        className={cn(
+          'relative block overflow-hidden rounded-2xl',
+          'bg-background border-border border',
+          'transition-all duration-300',
+          'hover:border-primary-200 hover:-translate-y-1 hover:shadow-xl'
+        )}
       >
+        {/* Top accent gradient - visible on hover */}
+        <div
+          className="from-primary-400 via-primary-500 to-primary-400 absolute inset-x-0 top-0 z-10 h-1 bg-linear-to-r opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          aria-hidden="true"
+        />
+
         {/* Thumbnail */}
-        <div className="relative aspect-[16/10] overflow-hidden bg-neutral-100">
+        <div
+          className={cn(
+            'relative aspect-video overflow-hidden bg-linear-to-br',
+            gradient
+          )}
+        >
           <ProjectImage
             src={thumbnail}
             alt={`${title} project screenshot`}
-            className="transition-transform duration-300 group-hover:scale-105"
+            title={title}
+            className="transition-transform duration-500 group-hover:scale-105"
           />
+
+          {/* Hover overlay */}
+          <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/20">
+            <span className="translate-y-4 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-neutral-900 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+              View Case Study →
+            </span>
+          </div>
+
+          {/* Result badge */}
+          {result && (
+            <div className="absolute right-4 bottom-4 left-4">
+              <div className="bg-background/95 border-border inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium shadow-lg backdrop-blur-sm">
+                <svg
+                  className="text-success-600 h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                  />
+                </svg>
+                <span className="text-foreground-secondary line-clamp-1">
+                  {result}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Content */}
-        <div className="p-5">
-          {/* Type badge */}
+        <div className="p-6">
+          {/* Type badge with icon */}
           <span
             className={cn(
-              'mb-3 inline-block rounded-full px-3 py-1 text-xs font-medium',
-              typeBadgeStyles[type] || typeBadgeStyles.Website
+              'mb-3 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium',
+              config.style
             )}
           >
+            {config.icon}
             {type}
           </span>
 
           {/* Title */}
-          <h3 className="text-foreground group-hover:text-primary-600 mb-2 text-lg font-semibold">
+          <h3 className="text-foreground group-hover:text-primary-700 mb-2 text-xl font-semibold transition-colors duration-200">
             {title}
           </h3>
 
@@ -78,9 +228,9 @@ export function ProjectCard({
 
           {/* View project indicator */}
           <span className="text-primary-600 mt-4 inline-flex items-center text-sm font-medium">
-            View project
+            Read case study
             <svg
-              className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1"
+              className="ml-1 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

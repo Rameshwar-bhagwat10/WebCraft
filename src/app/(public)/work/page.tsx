@@ -5,6 +5,7 @@
  * Purpose: Showcase projects and build credibility
  * - Overview of completed projects
  * - Links to individual case studies
+ * - CTA for new projects
  *
  * Performance:
  * - Static generation for fastest load
@@ -14,7 +15,7 @@
 
 import type { Metadata } from 'next';
 
-import { PortfolioGrid } from '@/components/portfolio';
+import { PortfolioGrid, WorkCTA } from '@/components/portfolio';
 import { JsonLd } from '@/components/shared';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
 
@@ -44,6 +45,9 @@ export default function WorkPage(): React.ReactElement {
 
       {/* Portfolio Grid */}
       <PortfolioGrid />
+
+      {/* Work CTA */}
+      <WorkCTA />
     </>
   );
 }

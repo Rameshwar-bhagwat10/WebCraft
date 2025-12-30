@@ -12,3 +12,4 @@ export {
   projectsData,
   type ProjectData,
 } from './projects-data';
+export { WorkCTA } from './work-cta';
