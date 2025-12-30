@@ -4,10 +4,12 @@
  *
  * Performance: Fonts loaded via next/font for optimal loading
  * Accessibility: Skip link for keyboard navigation
+ * SEO: Semantic HTML structure with header, main, footer
  */
 
 import { Geist, Geist_Mono } from 'next/font/google';
 
+import { Header, Footer } from '@/components/layout';
 import { defaultMetadata } from '@/config/site';
 
 import './globals.css';
@@ -34,12 +36,22 @@ export default function RootLayout({
 }>): React.ReactElement {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="bg-background text-foreground min-h-screen antialiased">
+      <body className="bg-background text-foreground flex min-h-screen flex-col antialiased">
         {/* Skip link for keyboard accessibility */}
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
-        {children}
+
+        {/* Header */}
+        <Header />
+
+        {/* Main content area */}
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
+
+        {/* Footer */}
+        <Footer />
       </body>
     </html>
   );

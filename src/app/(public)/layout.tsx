@@ -2,8 +2,8 @@
  * Public Routes Layout
  * Wraps all public-facing pages
  *
- * This layout will contain shared elements like Header/Footer
- * once they are built in Phase 2+
+ * Header and Footer are now in root layout.
+ * This layout can be used for public-route-specific wrappers if needed.
  */
 
 export default function PublicLayout({
@@ -11,11 +11,5 @@ export default function PublicLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>): React.ReactElement {
-  return (
-    <>
-      {/* Header will go here in Phase 2 */}
-      {children}
-      {/* Footer will go here in Phase 2 */}
-    </>
-  );
+  return <>{children}</>;
 }

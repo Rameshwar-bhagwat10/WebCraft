@@ -8,3 +8,6 @@ export type { SectionProps, SectionSize, SectionBackground } from './section';
 
 export { Container } from './container';
 export type { ContainerProps, ContainerSize } from './container';
+
+export { Header } from './header';
+export { Footer } from './footer';
