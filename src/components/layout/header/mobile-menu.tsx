@@ -4,10 +4,16 @@
  * MobileMenu Component
  * Accessible mobile navigation menu with toggle
  * Client Component - requires interactivity
+ *
+ * Accessibility:
+ * - Uses `inert` attribute to disable background content (better than aria-hidden)
+ * - Focus trap when menu is open
+ * - Escape key closes menu
+ * - aria-expanded on toggle button
  */
 
 import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui';
 import { ctaConfig, mainNavItems } from '@/config/navigation';
@@ -47,26 +53,28 @@ function MenuIcon({ open }: { open: boolean }): React.ReactElement {
 
 export function MobileMenu(): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = useCallback(() => {
-    setIsOpen((prev) => !prev);
-  }, []);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const toggleButtonRef = useRef<HTMLButtonElement>(null);
 
   const closeMenu = useCallback(() => {
     setIsOpen(false);
+    // Return focus to toggle button when closing
+    toggleButtonRef.current?.focus();
   }, []);
 
   // Close menu on escape key
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
+      if (e.key === 'Escape') {
+        closeMenu();
       }
     };
 
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen]);
+  }, [isOpen, closeMenu]);
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -80,16 +88,44 @@ export function MobileMenu(): React.ReactElement {
     };
   }, [isOpen]);
 
+  // Focus first link when menu opens
+  useEffect(() => {
+    if (isOpen && menuRef.current) {
+      const firstLink = menuRef.current.querySelector('a');
+      firstLink?.focus();
+    }
+  }, [isOpen]);
+
+  // Apply inert to main content when menu is open
+  useEffect(() => {
+    const mainContent = document.getElementById('main-content');
+    const footer = document.querySelector('footer');
+
+    if (isOpen) {
+      mainContent?.setAttribute('inert', '');
+      footer?.setAttribute('inert', '');
+    } else {
+      mainContent?.removeAttribute('inert');
+      footer?.removeAttribute('inert');
+    }
+
+    return () => {
+      mainContent?.removeAttribute('inert');
+      footer?.removeAttribute('inert');
+    };
+  }, [isOpen]);
+
   return (
     <div className="lg:hidden">
       {/* Menu toggle button */}
       <button
+        ref={toggleButtonRef}
         type="button"
-        onClick={toggleMenu}
+        onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
           'inline-flex items-center justify-center rounded-lg p-2',
-          'text-foreground-secondary hover:text-foreground hover:bg-neutral-100',
-          'focus-visible:ring-primary-500 focus-visible:ring-2 focus-visible:outline-none'
+          'text-foreground-secondary hover:bg-neutral-100 hover:text-foreground',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500'
         )}
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
@@ -100,9 +136,10 @@ export function MobileMenu(): React.ReactElement {
 
       {/* Mobile menu panel */}
       <div
+        ref={menuRef}
         id="mobile-menu"
         className={cn(
-          'fixed inset-x-0 top-16 bottom-0 z-40',
+          'fixed inset-x-0 bottom-0 top-16 z-40',
           'bg-background',
           'transform transition-transform duration-300 ease-in-out',
           isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -114,7 +151,7 @@ export function MobileMenu(): React.ReactElement {
           aria-label="Mobile navigation"
         >
           {/* Navigation links */}
-          <ul className="flex flex-col gap-1">
+          <ul className="flex flex-col gap-1" role="list">
             {mainNavItems.map((item) => (
               <li key={item.href}>
                 <NavLink
@@ -127,7 +164,7 @@ export function MobileMenu(): React.ReactElement {
           </ul>
 
           {/* CTA button */}
-          <div className="border-border mt-6 border-t pt-6">
+          <div className="mt-6 border-t border-border pt-6">
             <Button asChild fullWidth>
               <Link href={ctaConfig.href} onClick={closeMenu}>
                 {ctaConfig.label}
