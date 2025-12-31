@@ -8,6 +8,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import {
+  categories,
+  categoryColors,
+  getFeaturedPosts,
+  getRegularPosts,
+} from '@/components/blog';
 import { Container, Section } from '@/components/layout';
 import { JsonLd } from '@/components/shared';
 import { Heading, Text } from '@/components/ui';
@@ -21,87 +27,6 @@ export const metadata: Metadata = generatePageMetadata({
   pathname: '/blog',
 });
 
-/**
- * Blog categories
- */
-const categories = ['All', 'Development', 'Design', 'Business', 'Tutorials'];
-
-/**
- * Blog posts data
- */
-const posts = [
-  {
-    slug: 'nextjs-15-features',
-    title: "What's New in Next.js 15: A Complete Guide",
-    excerpt:
-      'Explore the latest features and improvements in Next.js 15, including the new App Router enhancements and performance optimizations.',
-    category: 'Development',
-    date: 'Dec 15, 2024',
-    readTime: '8 min read',
-    featured: true,
-  },
-  {
-    slug: 'design-system-guide',
-    title: 'Building a Scalable Design System from Scratch',
-    excerpt:
-      'Learn how to create a consistent and maintainable design system that grows with your product.',
-    category: 'Design',
-    date: 'Dec 10, 2024',
-    readTime: '12 min read',
-    featured: true,
-  },
-  {
-    slug: 'web-performance-tips',
-    title: '10 Web Performance Tips for 2025',
-    excerpt:
-      "Practical strategies to improve your website's Core Web Vitals and deliver faster user experiences.",
-    category: 'Development',
-    date: 'Dec 5, 2024',
-    readTime: '6 min read',
-    featured: false,
-  },
-  {
-    slug: 'client-communication',
-    title: 'Effective Client Communication for Developers',
-    excerpt:
-      'How to build strong client relationships through clear communication and expectation management.',
-    category: 'Business',
-    date: 'Nov 28, 2024',
-    readTime: '5 min read',
-    featured: false,
-  },
-  {
-    slug: 'tailwind-v4-migration',
-    title: 'Migrating to Tailwind CSS v4: What You Need to Know',
-    excerpt:
-      'A step-by-step guide to upgrading your project to Tailwind CSS v4 with minimal disruption.',
-    category: 'Tutorials',
-    date: 'Nov 20, 2024',
-    readTime: '10 min read',
-    featured: false,
-  },
-  {
-    slug: 'accessibility-checklist',
-    title: 'The Ultimate Web Accessibility Checklist',
-    excerpt:
-      'Ensure your website is accessible to everyone with this comprehensive WCAG compliance checklist.',
-    category: 'Development',
-    date: 'Nov 15, 2024',
-    readTime: '7 min read',
-    featured: false,
-  },
-];
-
-/**
- * Category badge colors
- */
-const categoryColors: Record<string, string> = {
-  Development: 'bg-primary-50 text-primary-700 border-primary-200',
-  Design: 'bg-purple-50 text-purple-700 border-purple-200',
-  Business: 'bg-success-50 text-success-700 border-success-200',
-  Tutorials: 'bg-warning-50 text-warning-700 border-warning-200',
-};
-
 export default function BlogPage(): React.ReactElement {
   const pageSchema = generateWebPageSchema({
     title: 'Blog - WebCraft',
@@ -109,8 +34,8 @@ export default function BlogPage(): React.ReactElement {
     pathname: '/blog',
   });
 
-  const featuredPosts = posts.filter((p) => p.featured);
-  const regularPosts = posts.filter((p) => !p.featured);
+  const featuredPosts = getFeaturedPosts();
+  const regularPosts = getRegularPosts();
 
   return (
     <>
