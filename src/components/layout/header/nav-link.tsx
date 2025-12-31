@@ -29,13 +29,13 @@ export function NavLink({
 
   const baseStyles = cn(
     'text-sm font-medium',
-    'transition-colors duration-200',
+    'transition-all duration-200',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
-    'rounded-md px-3 py-2',
+    'rounded-full px-4 py-2',
     // Active state styling
     isActive
-      ? 'text-primary-600 bg-primary-50'
-      : 'text-foreground-secondary hover:text-foreground hover:bg-neutral-50',
+      ? 'text-primary-600 bg-primary-50/80'
+      : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100/80',
     className
   );
 
