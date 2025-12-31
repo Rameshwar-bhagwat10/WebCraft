@@ -17,7 +17,7 @@
  */
 
 import type { Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { DM_Sans, Geist_Mono, Space_Grotesk } from 'next/font/google';
 
 import { ChatTrigger } from '@/components/chat';
 import { Footer, Header } from '@/components/layout';
@@ -34,13 +34,24 @@ import './globals.css';
  * - display: swap prevents FOIT (Flash of Invisible Text)
  * - preload for critical fonts
  */
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+
+// Space Grotesk - for logotype/brand and headings (techy, modern, distinctive)
+const spaceGrotesk = Space_Grotesk({
+  variable: '--font-space-grotesk',
   subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
 
+// DM Sans - for body text and navigation (clean, readable, modern)
+const dmSans = DM_Sans({
+  variable: '--font-dm-sans',
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+});
+
+// Geist Mono - for code blocks
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
@@ -64,7 +75,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${spaceGrotesk.variable} ${dmSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>

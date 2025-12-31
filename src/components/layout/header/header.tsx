@@ -22,7 +22,7 @@ function Brand(): React.ReactElement {
   return (
     <Link
       href="/"
-      className="text-foreground focus-visible:ring-primary-500 flex items-center gap-2 rounded-md text-xl font-bold focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+      className="text-foreground focus-visible:ring-primary-500 flex items-center gap-2 rounded-md font-display text-xl font-bold tracking-tight focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       aria-label={`${siteConfig.name} - Home`}
     >
       {siteConfig.name}

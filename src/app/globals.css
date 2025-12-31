@@ -13,7 +13,11 @@
   /* =========================================
    * TYPOGRAPHY
    * ========================================= */
-  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  /* DM Sans - body text and navigation (clean, readable, modern) */
+  --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  /* Space Grotesk - logotype and headings (techy, modern, distinctive) */
+  --font-display: var(--font-space-grotesk), system-ui, -apple-system, sans-serif;
+  /* Geist Mono - code blocks */
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   /* Font sizes - mobile first */
