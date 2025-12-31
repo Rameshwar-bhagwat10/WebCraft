@@ -16,25 +16,14 @@ import { NavLink } from './nav-link';
 import { StickyHeader } from './sticky-header';
 
 /**
- * Logo icon - stylized "W" in a circle
+ * Logo icon - elegant calligraphic "W" in a circle
  */
 function LogoIcon(): React.ReactElement {
   return (
-    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-950">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        className="h-4 w-4"
-        aria-hidden="true"
-      >
-        <path
-          d="M4 7L7 17L12 9L17 17L20 7"
-          stroke="white"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-950">
+      <span className="text-white text-2xl font-script leading-none">
+        W
+      </span>
     </div>
   );
 }

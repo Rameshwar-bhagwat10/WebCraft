@@ -17,6 +17,8 @@
   --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
   /* Ubuntu Bold - logotype/brand (distinctive, friendly, modern) */
   --font-display: var(--font-ubuntu), system-ui, -apple-system, sans-serif;
+  /* Playfair Display - stylish script for logo icon */
+  --font-script: var(--font-script), cursive;
   /* Geist Mono - code blocks */
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 

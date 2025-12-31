@@ -17,7 +17,7 @@
  */
 
 import type { Viewport } from 'next';
-import { DM_Sans, Geist_Mono, Ubuntu } from 'next/font/google';
+import { DM_Sans, Geist_Mono, Great_Vibes, Ubuntu } from 'next/font/google';
 
 import { ChatTrigger } from '@/components/chat';
 import { Footer, Header } from '@/components/layout';
@@ -60,6 +60,15 @@ const geistMono = Geist_Mono({
   preload: true,
 });
 
+// Great Vibes - elegant calligraphic script for logo icon
+const greatVibes = Great_Vibes({
+  variable: '--font-script',
+  subsets: ['latin'],
+  weight: ['400'],
+  display: 'swap',
+  preload: true,
+});
+
 // Export metadata and viewport
 export const metadata = defaultMetadata;
 export const viewport: Viewport = viewportConfig;
@@ -76,7 +85,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ubuntu.variable} ${dmSans.variable} ${geistMono.variable}`}
+      className={`${ubuntu.variable} ${dmSans.variable} ${geistMono.variable} ${greatVibes.variable}`}
       suppressHydrationWarning
     >
       <head>
