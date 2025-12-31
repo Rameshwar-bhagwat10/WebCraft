@@ -2,9 +2,11 @@
  * Admin Login Page
  * Secure login for admin users
  * Located outside /admin to avoid auth redirect loop
+ * 
+ * Set ENABLE_ADMIN=true in .env.local to enable
  */
 
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
@@ -20,6 +22,13 @@ export default async function AdminLoginPage({
 }: {
   searchParams: Promise<{ error?: string }>;
 }) {
+  // Check if admin panel is enabled
+  const isAdminEnabled = process.env.ENABLE_ADMIN === 'true';
+  
+  if (!isAdminEnabled) {
+    notFound();
+  }
+
   // Check if already logged in
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
