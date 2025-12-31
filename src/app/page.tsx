@@ -16,6 +16,7 @@
 
 import type { Metadata } from 'next';
 
+import { CalculatorSection } from '@/components/calculator';
 import {
   FeaturedWork,
   FinalCTA,
@@ -72,6 +73,9 @@ export default function HomePage(): React.ReactElement {
 
       {/* Featured Work - Social proof */}
       <FeaturedWork />
+
+      {/* Project Cost Calculator */}
+      <CalculatorSection />
 
       {/* Why WebCraft - Trust builder */}
       <WhyWebCraft />

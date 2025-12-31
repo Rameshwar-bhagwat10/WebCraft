@@ -15,7 +15,7 @@ import {
   getRegularPosts,
 } from '@/components/blog';
 import { Container, Section } from '@/components/layout';
-import { JsonLd } from '@/components/shared';
+import { JsonLd, NewsletterForm } from '@/components/shared';
 import { Heading, Text } from '@/components/ui';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
 import { cn } from '@/lib/utils';
@@ -298,19 +298,7 @@ export default function BlogPage(): React.ReactElement {
             <p className="mx-auto mb-6 max-w-md text-white/80">
               Get the latest articles and resources delivered to your inbox.
             </p>
-            <form className="mx-auto flex max-w-md flex-col gap-3 sm:flex-row">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 rounded-lg border-0 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 focus:ring-2 focus:ring-white/50 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="text-primary-700 rounded-lg bg-white px-6 py-3 font-medium transition-colors hover:bg-white/90"
-              >
-                Subscribe
-              </button>
-            </form>
+            <NewsletterForm source="blog" variant="dark" className="mx-auto max-w-md" />
           </div>
         </Container>
       </Section>

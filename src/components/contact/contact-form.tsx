@@ -3,6 +3,7 @@
  * Main contact form with validation and UX feedback
  *
  * Client Component - handles form state and submission
+ * Integrates with Supabase backend via API routes
  */
 
 'use client';
@@ -10,6 +11,8 @@
 import { useState } from 'react';
 
 import { Button, Text } from '@/components/ui';
+import { submitContactForm } from '@/services/forms';
+import type { ProjectType } from '@/types/database';
 
 import { FormField } from './form-field';
 
@@ -34,6 +37,8 @@ interface FormData {
   phone: string;
   projectType: string;
   message: string;
+  // Honeypot field for spam protection
+  website: string;
 }
 
 /**
@@ -90,10 +95,12 @@ export function ContactForm(): React.ReactElement {
     phone: '',
     projectType: '',
     message: '',
+    website: '', // Honeypot - should remain empty
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<SubmitStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   /**
    * Update a single field
@@ -111,6 +118,7 @@ export function ContactForm(): React.ReactElement {
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage('');
 
     // Validate
     const validationErrors = validateForm(formData);
@@ -119,14 +127,27 @@ export function ContactForm(): React.ReactElement {
       return;
     }
 
-    // Submit (simulated - no backend yet)
     setStatus('submitting');
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Submit to API
+    const result = await submitContactForm({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || undefined,
+      project_type: formData.projectType as ProjectType,
+      message: formData.message,
+      website: formData.website, // Honeypot
+    });
 
-    // For now, always succeed (backend integration comes later)
-    setStatus('success');
+    if (result.success) {
+      setStatus('success');
+    } else {
+      setStatus('error');
+      setErrorMessage(result.error || 'Something went wrong');
+      if (result.errors) {
+        setErrors(result.errors as FormErrors);
+      }
+    }
   };
 
   // Success state
@@ -227,10 +248,23 @@ export function ContactForm(): React.ReactElement {
           className="border-error-200 bg-error-50 text-error-700 rounded-lg border p-4 text-sm"
           role="alert"
         >
-          Something went wrong. Please try again or contact us directly via
-          email.
+          {errorMessage || 'Something went wrong. Please try again or contact us directly via email.'}
         </div>
       )}
+
+      {/* Honeypot field - hidden from users, catches bots */}
+      <div className="hidden" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input
+          type="text"
+          id="website"
+          name="website"
+          value={formData.website}
+          onChange={(e) => updateField('website')(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
 
       {/* Submit button */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
