@@ -2,61 +2,55 @@
  * Calculator Submission API Route
  * POST /api/calculator
  *
- * Security:
- * - Rate limited (10/hour/IP)
- * - Honeypot spam protection
- * - Server-side validation
- * - RLS enforced
+ * HARDENED:
+ * - Request body size limit (100KB)
+ * - Safe JSON parsing
+ * - Rate limiting fails closed
+ * - Trusted IP extraction
  */
 
-import { NextResponse } from 'next/server';
-
 import { notifyNewCalculatorLead } from '@/lib/email';
+import { checkRateLimit, rateLimitHeaders } from '@/lib/rate-limit';
 import {
-  checkRateLimit,
-  rateLimitHeaders,
-} from '@/lib/rate-limit';
+  errorResponse,
+  parseJsonBody,
+  rateLimitResponse,
+  successResponse,
+} from '@/lib/request-utils';
 import { createAdminClient } from '@/lib/supabase/server';
-import {
-  isHoneypotTriggered,
-  validateCalculatorForm,
-} from '@/lib/validations/forms';
+import { isHoneypotTriggered, validateCalculatorForm } from '@/lib/validations/forms';
 
 export async function POST(request: Request) {
+  // Parse body with size limit
+  const parseResult = await parseJsonBody(request);
+  if (!parseResult.success) {
+    return parseResult.error;
+  }
+
+  const body = parseResult.data!;
+
+  // Check honeypot (spam protection)
+  if (isHoneypotTriggered(body)) {
+    return successResponse({ message: 'Quote saved successfully' });
+  }
+
+  // Check rate limit (fails closed)
+  const rateLimit = await checkRateLimit('calculator');
+  if (!rateLimit.allowed) {
+    return rateLimitResponse(
+      rateLimitHeaders('calculator', rateLimit.remaining, rateLimit.resetIn),
+      rateLimit.error === 'rate_limit_unavailable'
+    );
+  }
+
+  // Validate form data
+  const validation = validateCalculatorForm(body);
+  if (!validation.success) {
+    return errorResponse('Validation failed', 400, validation.errors);
+  }
+
+  // Insert into database
   try {
-    // Parse request body
-    const body = await request.json();
-
-    // Check honeypot (spam protection)
-    if (isHoneypotTriggered(body)) {
-      return NextResponse.json(
-        { success: true, message: 'Quote saved successfully' },
-        { status: 200 }
-      );
-    }
-
-    // Check rate limit
-    const rateLimit = await checkRateLimit('calculator');
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { success: false, error: 'Too many requests. Please try again later.' },
-        {
-          status: 429,
-          headers: rateLimitHeaders('calculator', rateLimit.remaining, rateLimit.resetIn),
-        }
-      );
-    }
-
-    // Validate form data
-    const validation = validateCalculatorForm(body);
-    if (!validation.success) {
-      return NextResponse.json(
-        { success: false, errors: validation.errors },
-        { status: 400 }
-      );
-    }
-
-    // Insert into database
     const supabase = createAdminClient();
     const { error } = await supabase
       .from('calculator_submissions')
@@ -69,17 +63,18 @@ export async function POST(request: Request) {
         contact_email: validation.data!.contact_email,
         contact_name: validation.data!.contact_name,
         status: 'new',
+        lead_source: 'calculator',
       } as never);
 
     if (error) {
-      console.error('Database error:', error);
-      return NextResponse.json(
-        { success: false, error: 'Failed to save quote. Please try again.' },
-        { status: 500 }
-      );
+      console.error('[Calculator] Database error:', {
+        code: error.code,
+        message: error.message,
+      });
+      return errorResponse('Failed to save quote. Please try again.', 500);
     }
 
-    // Send email notifications (async, non-blocking) - only if email provided
+    // Send email notifications (async, non-blocking)
     const contactEmail = validation.data!.contact_email;
     if (contactEmail) {
       notifyNewCalculatorLead({
@@ -91,18 +86,13 @@ export async function POST(request: Request) {
       });
     }
 
-    return NextResponse.json(
-      { success: true, message: 'Quote saved successfully' },
-      {
-        status: 200,
-        headers: rateLimitHeaders('calculator', rateLimit.remaining, rateLimit.resetIn),
-      }
+    return successResponse(
+      { message: 'Quote saved successfully' },
+      200,
+      rateLimitHeaders('calculator', rateLimit.remaining, rateLimit.resetIn)
     );
   } catch (error) {
-    console.error('Calculator form error:', error);
-    return NextResponse.json(
-      { success: false, error: 'An unexpected error occurred' },
-      { status: 500 }
-    );
+    console.error('[Calculator] Unexpected error:', error);
+    return errorResponse('An unexpected error occurred', 500);
   }
 }

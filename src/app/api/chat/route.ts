@@ -2,68 +2,83 @@
  * Chat Message API Route
  * POST /api/chat
  *
- * Security:
- * - Rate limited (30/hour/session)
- * - Server-side validation
- * - RLS enforced
+ * HARDENED:
+ * - Request body size limit (100KB)
+ * - Safe JSON parsing
+ * - Rate limiting fails closed
+ * - Session ownership validation
+ * - Server-side visitor ID validation
  */
 
-import { NextResponse } from 'next/server';
-
 import { notifyNewChatMessage } from '@/lib/email/notifications';
+import { checkRateLimit, rateLimitHeaders } from '@/lib/rate-limit';
 import {
-  checkRateLimit,
-  rateLimitHeaders,
-} from '@/lib/rate-limit';
+  errorResponse,
+  parseJsonBody,
+  rateLimitResponse,
+  successResponse,
+} from '@/lib/request-utils';
 import { createAdminClient } from '@/lib/supabase/server';
 import { validateChatMessage } from '@/lib/validations/forms';
+import { validateSessionOwnership, validateVisitorId } from '@/lib/visitor';
 
 export async function POST(request: Request) {
+  // Parse body with size limit
+  const parseResult = await parseJsonBody(request);
+  if (!parseResult.success) {
+    return parseResult.error;
+  }
+
+  const body = parseResult.data!;
+
+  // Validate message data
+  const validation = validateChatMessage(body);
+  if (!validation.success) {
+    return errorResponse('Validation failed', 400, validation.errors);
+  }
+
+  // Validate and normalize visitor ID
+  const visitorValidation = await validateVisitorId(validation.data!.visitor_id);
+  if (!visitorValidation.valid) {
+    return errorResponse('Invalid visitor identity', 400);
+  }
+  const visitorId = visitorValidation.visitorId;
+
+  // Check rate limit using validated visitor_id (fails closed)
+  const rateLimit = await checkRateLimit('chat', visitorId);
+  if (!rateLimit.allowed) {
+    return rateLimitResponse(
+      rateLimitHeaders('chat', rateLimit.remaining, rateLimit.resetIn),
+      rateLimit.error === 'rate_limit_unavailable'
+    );
+  }
+
+  const supabase = createAdminClient();
+  let sessionId = validation.data!.session_id;
+
+  // Validate session ownership if session ID provided
+  if (sessionId) {
+    const ownershipCheck = await validateSessionOwnership(sessionId, visitorId, supabase);
+    if (!ownershipCheck.valid) {
+      return errorResponse(ownershipCheck.error ?? 'Session access denied', 403);
+    }
+  }
+
   try {
-    // Parse request body
-    const body = await request.json();
-
-    // Validate message data
-    const validation = validateChatMessage(body);
-    if (!validation.success) {
-      return NextResponse.json(
-        { success: false, errors: validation.errors },
-        { status: 400 }
-      );
-    }
-
-    // Check rate limit using visitor_id as identifier
-    const rateLimit = await checkRateLimit('chat', validation.data!.visitor_id);
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { success: false, error: 'Too many messages. Please wait a moment.' },
-        {
-          status: 429,
-          headers: rateLimitHeaders('chat', rateLimit.remaining, rateLimit.resetIn),
-        }
-      );
-    }
-
-    const supabase = createAdminClient();
-    let sessionId = validation.data!.session_id;
-
     // Create new session if needed
     if (!sessionId) {
       const { data: session, error: sessionError } = await supabase
         .from('chat_sessions')
         .insert({
-          visitor_id: validation.data!.visitor_id,
+          visitor_id: visitorId,
           status: 'active',
         } as never)
         .select('id')
         .single();
 
       if (sessionError || !session) {
-        console.error('Session creation error:', sessionError);
-        return NextResponse.json(
-          { success: false, error: 'Failed to start chat session' },
-          { status: 500 }
-        );
+        console.error('[Chat] Session creation error:', sessionError);
+        return errorResponse('Failed to start chat session', 500);
       }
 
       sessionId = (session as { id: string }).id;
@@ -82,11 +97,8 @@ export async function POST(request: Request) {
       } as never);
 
     if (messageError) {
-      console.error('Message insert error:', messageError);
-      return NextResponse.json(
-        { success: false, error: 'Failed to send message' },
-        { status: 500 }
-      );
+      console.error('[Chat] Message insert error:', messageError);
+      return errorResponse('Failed to send message', 500);
     }
 
     // Update session last_message_at
@@ -100,25 +112,16 @@ export async function POST(request: Request) {
       name: validation.data!.visitor_name ?? undefined,
       email: validation.data!.visitor_email ?? undefined,
       message: validation.data!.message,
-      sessionId: sessionId!,
+      sessionId: sessionId,
     });
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: 'Message sent',
-        session_id: sessionId,
-      },
-      {
-        status: 200,
-        headers: rateLimitHeaders('chat', rateLimit.remaining, rateLimit.resetIn),
-      }
+    return successResponse(
+      { message: 'Message sent', session_id: sessionId },
+      200,
+      rateLimitHeaders('chat', rateLimit.remaining, rateLimit.resetIn)
     );
   } catch (error) {
-    console.error('Chat error:', error);
-    return NextResponse.json(
-      { success: false, error: 'An unexpected error occurred' },
-      { status: 500 }
-    );
+    console.error('[Chat] Unexpected error:', error);
+    return errorResponse('An unexpected error occurred', 500);
   }
 }

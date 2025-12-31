@@ -2,8 +2,10 @@
  * Rate Limiting Utility
  * IP-based rate limiting for public endpoints
  *
- * Uses database-backed sliding window approach
- * Falls back to in-memory for edge cases
+ * HARDENED:
+ * - Fails CLOSED (denies on error)
+ * - Trusted IP extraction (last proxy hop only)
+ * - Strict IP validation
  */
 
 import { headers } from 'next/headers';
@@ -23,49 +25,99 @@ export const RATE_LIMITS = {
 export type RateLimitEndpoint = keyof typeof RATE_LIMITS;
 
 /**
+ * IPv4 regex pattern
+ */
+const IPV4_REGEX = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+/**
+ * IPv6 regex pattern (simplified, covers most cases)
+ */
+const IPV6_REGEX = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::(?:[0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4}$|^(?:[0-9a-fA-F]{1,4}:){1,7}:$|^(?:[0-9a-fA-F]{1,4}:){0,6}::(?:[0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4}$/;
+
+/**
+ * Validate IP address format
+ */
+function isValidIP(ip: string): boolean {
+  if (!ip || ip.length > 45) return false;
+  return IPV4_REGEX.test(ip) || IPV6_REGEX.test(ip);
+}
+
+/**
+ * Extract and sanitize IP from string
+ */
+function sanitizeIP(ip: string | null | undefined): string | null {
+  if (!ip) return null;
+  const trimmed = ip.trim();
+  return isValidIP(trimmed) ? trimmed : null;
+}
+
+/**
  * Get client IP from request headers
+ * HARDENED: Trust only last proxy hop, validate format
  */
 export async function getClientIP(): Promise<string> {
   const headersList = await headers();
 
-  // Check common proxy headers
+  // Priority 1: Vercel-specific header (most trusted on Vercel)
+  const vercelIP = sanitizeIP(headersList.get('x-vercel-forwarded-for')?.split(',').pop());
+  if (vercelIP) return vercelIP;
+
+  // Priority 2: X-Real-IP (set by reverse proxy)
+  const realIP = sanitizeIP(headersList.get('x-real-ip'));
+  if (realIP) return realIP;
+
+  // Priority 3: X-Forwarded-For - LAST entry only (closest proxy)
   const forwardedFor = headersList.get('x-forwarded-for');
   if (forwardedFor) {
-    const firstIP = forwardedFor.split(',')[0];
-    return firstIP?.trim() ?? 'unknown';
+    const ips = forwardedFor.split(',');
+    const lastIP = sanitizeIP(ips[ips.length - 1]);
+    if (lastIP) return lastIP;
   }
 
-  const realIP = headersList.get('x-real-ip');
-  if (realIP) {
-    return realIP;
-  }
+  // Fallback: Use hash of user-agent + timestamp for uniqueness
+  // This prevents complete bypass but limits effectiveness
+  const userAgent = headersList.get('user-agent') ?? '';
+  const fallbackId = `unknown_${hashString(userAgent).slice(0, 8)}`;
+  return fallbackId;
+}
 
-  // Vercel-specific
-  const vercelIP = headersList.get('x-vercel-forwarded-for');
-  if (vercelIP) {
-    const firstIP = vercelIP.split(',')[0];
-    return firstIP?.trim() ?? 'unknown';
+/**
+ * Simple string hash for fallback identification
+ */
+function hashString(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
   }
+  return Math.abs(hash).toString(36);
+}
 
-  // Fallback
-  return 'unknown';
+/**
+ * Rate limit check result
+ */
+export interface RateLimitResult {
+  allowed: boolean;
+  remaining: number;
+  resetIn: number;
+  error?: string;
 }
 
 /**
  * Check if request is rate limited
- * Returns true if request is ALLOWED, false if BLOCKED
+ * HARDENED: Fails CLOSED - denies on error
  */
 export async function checkRateLimit(
   endpoint: RateLimitEndpoint,
   identifier?: string
-): Promise<{ allowed: boolean; remaining: number; resetIn: number }> {
-  const ip = identifier || (await getClientIP());
+): Promise<RateLimitResult> {
+  const ip = identifier ?? (await getClientIP());
   const config = RATE_LIMITS[endpoint];
 
   try {
     const supabase = createAdminClient();
 
-    // Call the rate limit function (type assertion needed until tables exist)
     const { data, error } = await supabase.rpc('check_rate_limit' as never, {
       p_identifier: ip,
       p_endpoint: endpoint,
@@ -74,22 +126,52 @@ export async function checkRateLimit(
     } as never);
 
     if (error) {
-      console.error('Rate limit check error:', error);
-      // Fail open - allow request if rate limit check fails
-      return { allowed: true, remaining: config.maxRequests, resetIn: 0 };
+      // FAIL CLOSED: Deny request on database error
+      console.error('[RateLimit] Database error - DENYING request', {
+        endpoint,
+        error: error.message,
+        requestId: await getRequestId(),
+      });
+      return {
+        allowed: false,
+        remaining: 0,
+        resetIn: 60, // Suggest retry in 1 minute
+        error: 'rate_limit_unavailable',
+      };
     }
 
     const allowed = data === true;
 
     return {
       allowed,
-      remaining: allowed ? config.maxRequests - 1 : 0,
+      remaining: allowed ? Math.max(0, config.maxRequests - 1) : 0,
       resetIn: allowed ? 0 : config.windowMinutes * 60,
     };
   } catch (error) {
-    console.error('Rate limit error:', error);
-    // Fail open
-    return { allowed: true, remaining: config.maxRequests, resetIn: 0 };
+    // FAIL CLOSED: Deny on any exception
+    console.error('[RateLimit] Exception - DENYING request', {
+      endpoint,
+      error: error instanceof Error ? error.message : 'Unknown',
+      requestId: await getRequestId(),
+    });
+    return {
+      allowed: false,
+      remaining: 0,
+      resetIn: 60,
+      error: 'rate_limit_error',
+    };
+  }
+}
+
+/**
+ * Get request ID from headers for tracing
+ */
+async function getRequestId(): Promise<string> {
+  try {
+    const headersList = await headers();
+    return headersList.get('x-request-id') ?? 'unknown';
+  } catch {
+    return 'unknown';
   }
 }
 

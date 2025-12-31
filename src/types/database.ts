@@ -62,6 +62,7 @@ export interface Database {
           admin_notes: string | null;
           created_at: string;
           updated_at: string;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -75,6 +76,7 @@ export interface Database {
           admin_notes?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -87,6 +89,7 @@ export interface Database {
           lead_source?: LeadSource;
           admin_notes?: string | null;
           updated_at?: string;
+          deleted_at?: string | null;
         };
       };
       calculator_submissions: {
@@ -104,6 +107,7 @@ export interface Database {
           admin_notes: string | null;
           created_at: string;
           updated_at: string;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -119,6 +123,7 @@ export interface Database {
           admin_notes?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -133,6 +138,7 @@ export interface Database {
           lead_source?: LeadSource;
           admin_notes?: string | null;
           updated_at?: string;
+          deleted_at?: string | null;
         };
       };
       chat_sessions: {
