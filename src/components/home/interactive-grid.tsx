@@ -110,9 +110,9 @@ export function InteractiveGrid(): React.ReactElement {
         if (intensity > 0.05) {
           const dotRadius = 2 + intensity * 3;
           const gradient = ctx.createRadialGradient(x, y, 0, x, y, dotRadius * 2);
-          gradient.addColorStop(0, `rgba(79, 70, 229, ${intensity * 0.9})`);
-          gradient.addColorStop(0.5, `rgba(99, 102, 241, ${intensity * 0.5})`);
-          gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+          gradient.addColorStop(0, `rgba(99, 102, 241, ${intensity * 0.9})`);
+          gradient.addColorStop(0.5, `rgba(129, 140, 248, ${intensity * 0.5})`);
+          gradient.addColorStop(1, 'rgba(129, 140, 248, 0)');
 
           ctx.beginPath();
           ctx.arc(x, y, dotRadius * 2, 0, Math.PI * 2);
@@ -257,7 +257,7 @@ export function InteractiveGrid(): React.ReactElement {
               style={{
                 left: mousePos.x - 250,
                 top: mousePos.y - 250,
-                background: `radial-gradient(circle, oklch(0.55 0.2 255 / 0.12) 0%, oklch(0.62 0.19 254 / 0.06) 35%, transparent 70%)`,
+                background: `radial-gradient(circle, oklch(0.50 0.22 275 / 0.12) 0%, oklch(0.58 0.20 275 / 0.06) 35%, transparent 70%)`,
                 opacity: isHovering ? 1 : 0,
               }}
             />
