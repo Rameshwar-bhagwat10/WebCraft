@@ -2,7 +2,6 @@
  * Hero Section Component
  * Above-the-fold content for maximum conversion
  *
- * Server Component - no client JS needed
  * Performance: Optimized for LCP, CLS = 0
  * SEO: Semantic HTML with proper heading hierarchy
  *
@@ -13,12 +12,15 @@
  * - Generous whitespace around CTAs
  * - Clear visual hierarchy
  * - Premium entrance animations (CSS-only)
+ * - Interactive grid background with cursor-following glow
  */
 
 import Link from 'next/link';
 
 import { Container } from '@/components/layout';
 import { Button } from '@/components/ui';
+
+import { InteractiveGrid } from './interactive-grid';
 
 /**
  * Hero eyebrow - establishes context before headline
@@ -210,9 +212,12 @@ export function Hero(): React.ReactElement {
         </div>
       </Container>
 
+      {/* Interactive grid background with cursor-following glow */}
+      <InteractiveGrid />
+
       {/* Enhanced background decoration - CSS only, no images */}
       <div
-        className="absolute inset-0 -z-10 overflow-hidden"
+        className="absolute inset-0 -z-20 overflow-hidden"
         aria-hidden="true"
       >
         {/* Primary gradient blob - enhanced with ambient motion */}
@@ -228,12 +233,6 @@ export function Hero(): React.ReactElement {
           style={{ animationDelay: '-5s' }}
         />
       </div>
-
-      {/* Subtle grid pattern for depth */}
-      <div
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] [background-size:4rem_4rem]"
-        aria-hidden="true"
-      />
     </section>
   );
 }
