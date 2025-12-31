@@ -110,9 +110,9 @@ export function InteractiveGrid(): React.ReactElement {
         if (intensity > 0.05) {
           const dotRadius = 2 + intensity * 3;
           const gradient = ctx.createRadialGradient(x, y, 0, x, y, dotRadius * 2);
-          gradient.addColorStop(0, `rgba(79, 70, 229, ${intensity * 0.9})`);
-          gradient.addColorStop(0.5, `rgba(99, 102, 241, ${intensity * 0.5})`);
-          gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+          gradient.addColorStop(0, `rgba(239, 68, 68, ${intensity * 0.9})`);
+          gradient.addColorStop(0.5, `rgba(249, 115, 22, ${intensity * 0.5})`);
+          gradient.addColorStop(1, 'rgba(236, 72, 153, 0)');
 
           ctx.beginPath();
           ctx.arc(x, y, dotRadius * 2, 0, Math.PI * 2);
@@ -144,7 +144,7 @@ export function InteractiveGrid(): React.ReactElement {
           ctx.moveTo(x, y);
           ctx.lineTo(nextX, y);
           ctx.strokeStyle = lineIntensity > 0.05
-            ? `rgba(99, 102, 241, ${0.15 + lineIntensity * 0.6})`
+            ? `rgba(239, 68, 68, ${0.15 + lineIntensity * 0.6})`
             : 'rgba(200, 200, 200, 0.15)';
           ctx.lineWidth = lineIntensity > 0.05 ? 1 + lineIntensity : 1;
           ctx.stroke();
@@ -168,7 +168,7 @@ export function InteractiveGrid(): React.ReactElement {
           ctx.moveTo(x, y);
           ctx.lineTo(x, nextY);
           ctx.strokeStyle = lineIntensity > 0.05
-            ? `rgba(99, 102, 241, ${0.15 + lineIntensity * 0.6})`
+            ? `rgba(236, 72, 153, ${0.15 + lineIntensity * 0.6})`
             : 'rgba(200, 200, 200, 0.15)';
           ctx.lineWidth = lineIntensity > 0.05 ? 1 + lineIntensity : 1;
           ctx.stroke();
@@ -257,7 +257,7 @@ export function InteractiveGrid(): React.ReactElement {
               style={{
                 left: mousePos.x - 250,
                 top: mousePos.y - 250,
-                background: `radial-gradient(circle, oklch(0.55 0.2 255 / 0.12) 0%, oklch(0.62 0.19 254 / 0.06) 35%, transparent 70%)`,
+                background: `radial-gradient(circle, oklch(0.58 0.24 0 / 0.15) 0%, oklch(0.65 0.22 25 / 0.08) 35%, transparent 70%)`,
                 opacity: isHovering ? 1 : 0,
               }}
             />
