@@ -286,16 +286,16 @@ p {
 }
 
 /* 
- * Link styles - only for content links, not button-styled links
- * Button components handle their own text colors
+ * Link styles - only for content links in paragraphs
+ * Navigation and button links handle their own colors
  */
-a:where(:not([class*='inline-flex'])) {
+a:where(:not([class])):where(p *, article *, .prose *) {
   color: var(--color-primary-600);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
-a:where(:not([class*='inline-flex'])):hover {
+a:where(:not([class])):where(p *, article *, .prose *):hover {
   color: var(--color-primary-700);
 }
 
