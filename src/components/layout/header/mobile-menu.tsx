@@ -141,8 +141,10 @@ export function MobileMenu(): React.ReactElement {
         className={cn(
           'fixed inset-x-0 top-16 bottom-0 z-40',
           'bg-background',
-          'transform transition-transform duration-300 ease-in-out',
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+          'transition-all duration-300 ease-in-out',
+          isOpen
+            ? 'visible opacity-100'
+            : 'invisible opacity-0 pointer-events-none'
         )}
         aria-hidden={!isOpen}
       >

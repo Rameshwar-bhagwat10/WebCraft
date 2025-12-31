@@ -71,7 +71,7 @@ export default function RootLayout({
         <JsonLd data={organizationSchema} />
         <JsonLd data={webSiteSchema} />
       </head>
-      <body className="bg-background text-foreground flex min-h-screen flex-col antialiased">
+      <body className="bg-background text-foreground flex min-h-screen flex-col overflow-x-hidden antialiased">
         {/* Skip link for keyboard accessibility */}
         <a href="#main-content" className="skip-link">
           Skip to main content
