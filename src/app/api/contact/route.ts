@@ -11,6 +11,7 @@
 
 import { NextResponse } from 'next/server';
 
+import { notifyNewContactLead } from '@/lib/email';
 import {
   checkRateLimit,
   rateLimitHeaders,
@@ -77,8 +78,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // TODO: Send email notification (Phase 12 P1)
-    // await sendNotificationEmail(validation.data);
+    // Send email notifications (async, non-blocking)
+    notifyNewContactLead({
+      name: validation.data!.name,
+      email: validation.data!.email,
+      projectType: validation.data!.project_type,
+      message: validation.data!.message,
+    });
 
     return NextResponse.json(
       { success: true, message: 'Message sent successfully' },

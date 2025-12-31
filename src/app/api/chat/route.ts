@@ -10,6 +10,7 @@
 
 import { NextResponse } from 'next/server';
 
+import { notifyNewChatMessage } from '@/lib/email/notifications';
 import {
   checkRateLimit,
   rateLimitHeaders,
@@ -87,6 +88,20 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
+
+    // Update session last_message_at
+    await supabase
+      .from('chat_sessions')
+      .update({ last_message_at: new Date().toISOString() } as never)
+      .eq('id', sessionId);
+
+    // Send admin notification (async, non-blocking)
+    notifyNewChatMessage({
+      name: validation.data!.visitor_name ?? undefined,
+      email: validation.data!.visitor_email ?? undefined,
+      message: validation.data!.message,
+      sessionId: sessionId!,
+    });
 
     return NextResponse.json(
       {

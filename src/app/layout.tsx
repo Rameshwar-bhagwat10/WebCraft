@@ -18,6 +18,7 @@
 
 import type { Viewport } from 'next';
 import { DM_Sans, Geist_Mono, Great_Vibes, Ubuntu } from 'next/font/google';
+import { headers } from 'next/headers';
 
 import { ChatTrigger } from '@/components/chat';
 import { Footer, Header } from '@/components/layout';
@@ -73,14 +74,19 @@ const greatVibes = Great_Vibes({
 export const metadata = defaultMetadata;
 export const viewport: Viewport = viewportConfig;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>): React.ReactElement {
+}>): Promise<React.ReactElement> {
   // Generate structured data schemas
   const organizationSchema = generateOrganizationSchema();
   const webSiteSchema = generateWebSiteSchema();
+
+  // Check if current route is admin
+  const headersList = await headers();
+  const pathname = headersList.get('x-pathname') ?? '';
+  const isAdminRoute = pathname.startsWith('/admin');
 
   return (
     <html
@@ -90,8 +96,8 @@ export default function RootLayout({
     >
       <head>
         {/* JSON-LD Structured Data - sanitized for XSS prevention */}
-        <JsonLd data={organizationSchema} />
-        <JsonLd data={webSiteSchema} />
+        {!isAdminRoute && <JsonLd data={organizationSchema} />}
+        {!isAdminRoute && <JsonLd data={webSiteSchema} />}
       </head>
       <body className="bg-background text-foreground flex min-h-screen flex-col overflow-x-hidden antialiased">
         {/* Skip link for keyboard accessibility */}
@@ -99,19 +105,19 @@ export default function RootLayout({
           Skip to main content
         </a>
 
-        {/* Header */}
-        <Header />
+        {/* Header - hidden on admin routes */}
+        {!isAdminRoute && <Header />}
 
         {/* Main content area */}
         <main id="main-content" className="flex-1">
           {children}
         </main>
 
-        {/* Footer */}
-        <Footer />
+        {/* Footer - hidden on admin routes */}
+        {!isAdminRoute && <Footer />}
 
-        {/* Chat Widget - lazy loaded */}
-        <ChatTrigger />
+        {/* Chat Widget - hidden on admin routes */}
+        {!isAdminRoute && <ChatTrigger />}
       </body>
     </html>
   );

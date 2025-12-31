@@ -17,7 +17,8 @@ interface NavItem {
   label: string;
   href: string;
   icon: React.ReactNode;
-  permission?: string; // Required permission to see this item
+  permission?: string;
+  badge?: string;
 }
 
 const navItems: NavItem[] = [
@@ -100,7 +101,6 @@ interface AdminSidebarProps {
 export function AdminSidebar({ role }: AdminSidebarProps) {
   const pathname = usePathname();
 
-  // Filter nav items based on role permissions
   const visibleItems = navItems.filter((item) => {
     if (!item.permission) return true;
     return hasPermission(role, item.permission);
@@ -108,7 +108,10 @@ export function AdminSidebar({ role }: AdminSidebarProps) {
 
   return (
     <aside className="hidden w-64 border-r border-neutral-200 bg-white lg:block">
-      <nav className="flex flex-col gap-1 p-4">
+      <nav className="flex flex-col gap-1 p-3">
+        <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+          Menu
+        </p>
         {visibleItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -116,26 +119,45 @@ export function AdminSidebar({ role }: AdminSidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all',
                 isActive
-                  ? 'bg-primary-50 text-primary-700'
-                  : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900'
+                  ? 'bg-primary-50 text-primary-700 shadow-sm'
+                  : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900'
               )}
             >
-              {item.icon}
+              <span className={cn(
+                'transition-colors',
+                isActive ? 'text-primary-600' : 'text-neutral-400 group-hover:text-neutral-600'
+              )}>
+                {item.icon}
+              </span>
               {item.label}
+              {item.badge && (
+                <span className="ml-auto rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
+                  {item.badge}
+                </span>
+              )}
             </Link>
           );
         })}
       </nav>
 
       {/* Role indicator */}
-      <div className="border-t border-neutral-200 p-4">
-        <div className="rounded-lg bg-neutral-50 px-3 py-2">
-          <p className="text-xs text-neutral-500">Role</p>
-          <p className="text-sm font-medium capitalize text-neutral-700">
-            {role.replace('_', ' ')}
-          </p>
+      <div className="absolute bottom-0 left-0 right-0 border-t border-neutral-200 p-4">
+        <div className="rounded-xl bg-linear-to-br from-neutral-50 to-neutral-100 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-200">
+              <svg className="h-4 w-4 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs text-neutral-500">Your Role</p>
+              <p className="text-sm font-semibold capitalize text-neutral-800">
+                {role.replace('_', ' ')}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </aside>

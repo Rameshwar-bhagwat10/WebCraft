@@ -9,6 +9,12 @@ import { useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui';
 import { cn } from '@/lib/utils';
+import {
+  getChatSessionId,
+  getOrCreateVisitorId,
+  setChatSessionId,
+  submitChatMessage,
+} from '@/services/forms';
 
 interface ChatFormProps {
   onSuccess?: () => void;
@@ -17,18 +23,45 @@ interface ChatFormProps {
 export function ChatForm({ onSuccess }: ChatFormProps): React.ReactElement {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setIsSubmitting(true);
+      setError(null);
 
-      // Simulate form submission (replace with actual API call)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+
+      const name = formData.get('name') as string;
+      const email = formData.get('email') as string;
+      const message = formData.get('message') as string;
+
+      // Get or create visitor ID and session
+      const visitorId = getOrCreateVisitorId();
+      const sessionId = getChatSessionId();
+
+      const result = await submitChatMessage({
+        visitor_id: visitorId,
+        session_id: sessionId,
+        message,
+        visitor_name: name,
+        visitor_email: email,
+      });
 
       setIsSubmitting(false);
-      setIsSubmitted(true);
-      onSuccess?.();
+
+      if (result.success) {
+        // Store session ID for future messages
+        if (result.session_id) {
+          setChatSessionId(result.session_id);
+        }
+        setIsSubmitted(true);
+        onSuccess?.();
+      } else {
+        setError(result.error ?? 'Failed to send message');
+      }
     },
     [onSuccess]
   );
@@ -61,6 +94,12 @@ export function ChatForm({ onSuccess }: ChatFormProps): React.ReactElement {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
+      {error && (
+        <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
       <div>
         <label htmlFor="chat-name" className="sr-only">
           Your name

@@ -11,6 +11,7 @@
 
 import { NextResponse } from 'next/server';
 
+import { notifyNewCalculatorLead } from '@/lib/email';
 import {
   checkRateLimit,
   rateLimitHeaders,
@@ -76,6 +77,18 @@ export async function POST(request: Request) {
         { success: false, error: 'Failed to save quote. Please try again.' },
         { status: 500 }
       );
+    }
+
+    // Send email notifications (async, non-blocking) - only if email provided
+    const contactEmail = validation.data!.contact_email;
+    if (contactEmail) {
+      notifyNewCalculatorLead({
+        name: validation.data!.contact_name ?? undefined,
+        email: contactEmail,
+        projectType: validation.data!.project_type,
+        estimatedMin: validation.data!.estimated_min,
+        estimatedMax: validation.data!.estimated_max,
+      });
     }
 
     return NextResponse.json(

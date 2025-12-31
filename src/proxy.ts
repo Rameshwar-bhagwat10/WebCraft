@@ -9,9 +9,12 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function proxy(_request: NextRequest): NextResponse {
+export function proxy(request: NextRequest): NextResponse {
   // Get response
   const response = NextResponse.next();
+
+  // Add pathname header for layout detection
+  response.headers.set('x-pathname', request.nextUrl.pathname);
 
   // Add security headers
   response.headers.set('X-Frame-Options', 'DENY');
