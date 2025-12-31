@@ -126,7 +126,7 @@ export function PortfolioGrid(): React.ReactElement {
         </div>
 
         {/* Projects grid */}
-        <ul className="grid list-none gap-8 sm:grid-cols-2">
+        <ul className="grid list-none gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projectsData.map((project, index) => (
             <li key={project.slug}>
               <ProjectCard
