@@ -50,18 +50,18 @@
    * All colors WCAG 2.2 AA compliant
    * ========================================= */
 
-  /* Primary brand (indigo) - OKLCH for perceptual uniformity */
-  --color-primary-50: oklch(97% 0.02 275);
-  --color-primary-100: oklch(93% 0.05 275);
-  --color-primary-200: oklch(87% 0.10 275);
-  --color-primary-300: oklch(78% 0.14 275);
-  --color-primary-400: oklch(68% 0.17 275);
-  --color-primary-500: oklch(58% 0.20 275);
-  --color-primary-600: oklch(50% 0.22 275);
-  --color-primary-700: oklch(44% 0.20 275);
-  --color-primary-800: oklch(38% 0.17 275);
-  --color-primary-900: oklch(32% 0.13 275);
-  --color-primary-950: oklch(24% 0.10 275);
+  /* Primary brand (blue) - OKLCH for perceptual uniformity */
+  --color-primary-50: oklch(97% 0.02 250);
+  --color-primary-100: oklch(93% 0.04 250);
+  --color-primary-200: oklch(87% 0.08 250);
+  --color-primary-300: oklch(78% 0.12 250);
+  --color-primary-400: oklch(70% 0.15 250);
+  --color-primary-500: oklch(62% 0.19 254);
+  --color-primary-600: oklch(55% 0.2 255);
+  --color-primary-700: oklch(49% 0.19 256);
+  --color-primary-800: oklch(42% 0.16 257);
+  --color-primary-900: oklch(37% 0.12 258);
+  --color-primary-950: oklch(28% 0.09 259);
 
   /* Neutral gray scale - OKLCH */
   --color-neutral-50: oklch(98% 0 0);
