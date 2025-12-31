@@ -22,7 +22,7 @@ const buttonVariants = cva(
   // Base styles
   [
     'inline-flex items-center justify-center font-medium',
-    'rounded-lg transition-colors duration-200',
+    'transition-all duration-200',
     // WCAG 2.2 compliant focus ring (2px, 3:1 contrast)
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
@@ -31,7 +31,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500',
+          'bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500 shadow-sm hover:shadow-md',
         secondary:
           'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 focus-visible:ring-neutral-500',
         outline:
@@ -42,9 +42,9 @@ const buttonVariants = cva(
           'bg-error-600 text-white hover:bg-error-700 focus-visible:ring-error-500',
       },
       size: {
-        sm: 'h-8 px-3 text-sm gap-1.5',
-        md: 'h-10 px-4 text-sm gap-2',
-        lg: 'h-12 px-6 text-base gap-2',
+        sm: 'h-9 px-4 text-sm gap-1.5 rounded-full',
+        md: 'h-10 px-5 text-sm gap-2 rounded-full',
+        lg: 'h-12 px-7 text-base gap-2 rounded-full',
       },
       fullWidth: {
         true: 'w-full',

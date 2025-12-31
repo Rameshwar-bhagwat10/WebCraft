@@ -2,7 +2,7 @@
 
 /**
  * StickyHeader Component
- * Wrapper that handles sticky behavior with smooth transitions
+ * Glassmorphism navbar with blur effect
  * Client Component - requires scroll detection
  *
  * Performance: Uses CSS transforms and will-change for smooth animations
@@ -54,14 +54,12 @@ export function StickyHeader({
       <header
         className={cn(
           'sticky top-0 z-50 w-full',
-          'border-b border-transparent',
-          'transition-all duration-200',
-          // Sticky state styles
-          isSticky && [
-            'border-border',
-            'bg-background/95 backdrop-blur-sm',
-            'shadow-sm',
-          ]
+          'transition-all duration-300 ease-out',
+          // Glassmorphism effect - always visible with blur
+          'bg-white/70 backdrop-blur-xl',
+          'border-b border-white/20',
+          // Enhanced shadow on scroll
+          isSticky ? 'shadow-lg shadow-black/5' : 'shadow-sm shadow-black/[0.02]'
         )}
         role="banner"
       >
