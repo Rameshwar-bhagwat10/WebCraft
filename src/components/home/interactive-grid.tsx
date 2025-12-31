@@ -234,7 +234,7 @@ export function InteractiveGrid(): React.ReactElement {
             'absolute inset-0',
             'bg-[linear-gradient(to_right,oklch(0.87_0_0/0.3)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.87_0_0/0.3)_1px,transparent_1px)]',
             'bg-size-[4rem_4rem]',
-            'mask-[radial-gradient(ellipse_80%_60%_at_50%_0%,#000_40%,transparent_100%)]'
+            'mask-[linear-gradient(to_bottom,#000_0%,#000_60%,transparent_100%)]'
           )}
         />
       )}
@@ -246,7 +246,7 @@ export function InteractiveGrid(): React.ReactElement {
             ref={canvasRef}
             className={cn(
               'absolute inset-0',
-              'mask-[radial-gradient(ellipse_80%_60%_at_50%_0%,#000_40%,transparent_100%)]'
+              'mask-[linear-gradient(to_bottom,#000_0%,#000_50%,transparent_100%)]'
             )}
           />
 
