@@ -17,7 +17,7 @@
  */
 
 import type { Viewport } from 'next';
-import { DM_Sans, Geist_Mono, Space_Grotesk } from 'next/font/google';
+import { DM_Sans, Geist_Mono, Ubuntu } from 'next/font/google';
 
 import { ChatTrigger } from '@/components/chat';
 import { Footer, Header } from '@/components/layout';
@@ -35,10 +35,11 @@ import './globals.css';
  * - preload for critical fonts
  */
 
-// Space Grotesk - for logotype/brand and headings (techy, modern, distinctive)
-const spaceGrotesk = Space_Grotesk({
-  variable: '--font-space-grotesk',
+// Ubuntu Bold - for logotype/brand (distinctive, friendly, modern)
+const ubuntu = Ubuntu({
+  variable: '--font-ubuntu',
   subsets: ['latin'],
+  weight: ['700'],
   display: 'swap',
   preload: true,
 });
@@ -75,7 +76,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${dmSans.variable} ${geistMono.variable}`}
+      className={`${ubuntu.variable} ${dmSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>
