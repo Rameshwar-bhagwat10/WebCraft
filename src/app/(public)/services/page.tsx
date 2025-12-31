@@ -21,6 +21,7 @@
 
 import type { Metadata } from 'next';
 
+import { CalculatorSection } from '@/components/calculator';
 import {
   ServiceDetail,
   ServicesCTA,
@@ -66,6 +67,9 @@ export default function ServicesPage(): React.ReactElement {
           alternate={index % 2 === 1}
         />
       ))}
+
+      {/* Project Cost Calculator */}
+      <CalculatorSection />
 
       {/* FAQ Section */}
       <ServicesFAQ />

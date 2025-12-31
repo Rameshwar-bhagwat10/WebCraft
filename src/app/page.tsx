@@ -27,6 +27,7 @@ import {
   WhyWebCraft,
 } from '@/components/home';
 import { JsonLd } from '@/components/shared';
+import { TestimonialsSection } from '@/components/testimonials';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
 
 /**
@@ -74,6 +75,9 @@ export default function HomePage(): React.ReactElement {
 
       {/* Why WebCraft - Trust builder */}
       <WhyWebCraft />
+
+      {/* Client Testimonials - Social proof */}
+      <TestimonialsSection />
 
       {/* Final CTA - Conversion */}
       <FinalCTA />

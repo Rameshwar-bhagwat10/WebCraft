@@ -19,6 +19,7 @@
 import type { Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
+import { ChatTrigger } from '@/components/chat';
 import { Footer, Header } from '@/components/layout';
 import { JsonLd } from '@/components/shared';
 import { defaultMetadata, viewportConfig } from '@/config/site';
@@ -87,6 +88,9 @@ export default function RootLayout({
 
         {/* Footer */}
         <Footer />
+
+        {/* Chat Widget - lazy loaded */}
+        <ChatTrigger />
       </body>
     </html>
   );
