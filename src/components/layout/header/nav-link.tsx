@@ -35,7 +35,7 @@ export function NavLink({
     // Active state styling
     isActive
       ? 'text-primary-600 bg-primary-50/80'
-      : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100/80',
+      : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100/60',
     className
   );
 
