@@ -10,9 +10,9 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui';
-import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import type { ContactStatus, ContactSubmission } from '@/types/database';
+import { VALID_STATUS_TRANSITIONS } from '@/types/database';
 
 interface ContactsTableProps {
   contacts: ContactSubmission[];
@@ -26,6 +26,7 @@ const statuses: { value: string; label: string }[] = [
   { value: 'new', label: 'New' },
   { value: 'contacted', label: 'Contacted' },
   { value: 'qualified', label: 'Qualified' },
+  { value: 'converted', label: 'Converted' },
   { value: 'closed', label: 'Closed' },
 ];
 
@@ -39,26 +40,47 @@ export function ContactsTable({
   const [selectedContact, setSelectedContact] = useState<ContactSubmission | null>(null);
   const [updating, setUpdating] = useState(false);
 
-  const handleStatusChange = async (id: string, newStatus: ContactStatus) => {
-    setUpdating(true);
-    const supabase = createClient();
+  const handleStatusChange = async (id: string, currentStatus: ContactStatus, newStatus: ContactStatus) => {
+    // Validate transition client-side first
+    const allowedTransitions = VALID_STATUS_TRANSITIONS[currentStatus];
+    if (!allowedTransitions.includes(newStatus)) {
+      alert(`Cannot change status from "${currentStatus}" to "${newStatus}"`);
+      return;
+    }
 
-    // Type assertion needed because tables don't exist yet
-    await supabase
-      .from('contact_submissions')
-      .update({ status: newStatus } as never)
-      .eq('id', id);
+    setUpdating(true);
+    
+    // Use API route for server-side validation
+    const response = await fetch(`/api/admin/leads/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    const result = await response.json();
+    
+    if (!result.success) {
+      alert(result.error || 'Failed to update status');
+    }
 
     router.refresh();
     setUpdating(false);
   };
 
   const handleNotesUpdate = async (id: string, notes: string) => {
-    const supabase = createClient();
-    await supabase
-      .from('contact_submissions')
-      .update({ admin_notes: notes } as never)
-      .eq('id', id);
+    // Use API route
+    const response = await fetch(`/api/admin/leads/${id}/notes`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notes }),
+    });
+
+    const result = await response.json();
+    
+    if (!result.success) {
+      alert(result.error || 'Failed to update notes');
+    }
+    
     router.refresh();
   };
 
@@ -202,6 +224,7 @@ function StatusBadge({ status }: { status: string }) {
     new: 'bg-blue-100 text-blue-700',
     contacted: 'bg-yellow-100 text-yellow-700',
     qualified: 'bg-green-100 text-green-700',
+    converted: 'bg-purple-100 text-purple-700',
     closed: 'bg-neutral-100 text-neutral-700',
   };
 
@@ -223,11 +246,15 @@ function ContactDetailModal({
 }: {
   contact: ContactSubmission;
   onClose: () => void;
-  onStatusChange: (id: string, status: ContactStatus) => void;
+  onStatusChange: (id: string, currentStatus: ContactStatus, newStatus: ContactStatus) => void;
   onNotesUpdate: (id: string, notes: string) => void;
   updating: boolean;
 }) {
   const [notes, setNotes] = useState(contact.admin_notes ?? '');
+  
+  // Get valid next statuses based on current status
+  const validNextStatuses = VALID_STATUS_TRANSITIONS[contact.status] ?? [];
+  const allStatuses: ContactStatus[] = ['new', 'contacted', 'qualified', 'converted', 'closed'];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -275,23 +302,34 @@ function ContactDetailModal({
 
           {/* Status */}
           <div>
-            <p className="mb-2 text-sm font-medium text-neutral-500">Status</p>
+            <p className="mb-2 text-sm font-medium text-neutral-500">
+              Status <span className="text-neutral-400">(click to change)</span>
+            </p>
             <div className="flex flex-wrap gap-2">
-              {(['new', 'contacted', 'qualified', 'closed'] as ContactStatus[]).map((s) => (
-                <button
-                  key={s}
-                  onClick={() => onStatusChange(contact.id, s)}
-                  disabled={updating}
-                  className={cn(
-                    'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
-                    contact.status === s
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-                  )}
-                >
-                  {s}
-                </button>
-              ))}
+              {allStatuses.map((s) => {
+                const isCurrent = contact.status === s;
+                const isValidTransition = validNextStatuses.includes(s);
+                const isDisabled = !isCurrent && !isValidTransition;
+                
+                return (
+                  <button
+                    key={s}
+                    onClick={() => !isCurrent && onStatusChange(contact.id, contact.status, s)}
+                    disabled={updating || isDisabled}
+                    title={isDisabled ? `Cannot transition from "${contact.status}" to "${s}"` : undefined}
+                    className={cn(
+                      'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
+                      isCurrent
+                        ? 'bg-primary-600 text-white'
+                        : isDisabled
+                        ? 'cursor-not-allowed bg-neutral-50 text-neutral-300'
+                        : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                    )}
+                  >
+                    {s}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -319,6 +357,7 @@ function ContactDetailModal({
           <div className="border-t border-neutral-200 pt-4 text-sm text-neutral-500">
             <p>Created: {new Date(contact.created_at).toLocaleString()}</p>
             <p>Updated: {new Date(contact.updated_at).toLocaleString()}</p>
+            <p>Source: {contact.lead_source ?? 'contact'}</p>
           </div>
         </div>
       </div>

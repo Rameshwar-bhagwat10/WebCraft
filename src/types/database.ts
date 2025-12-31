@@ -17,11 +17,12 @@ export type Json =
 /**
  * Submission status enum
  */
-export type ContactStatus = 'new' | 'contacted' | 'qualified' | 'closed';
+export type ContactStatus = 'new' | 'contacted' | 'qualified' | 'converted' | 'closed';
 export type CalculatorStatus = 'new' | 'reviewed' | 'converted';
 export type ChatSessionStatus = 'active' | 'closed' | 'converted';
 export type NewsletterStatus = 'active' | 'unsubscribed';
 export type AdminRole = 'super_admin' | 'admin' | 'viewer';
+export type LeadSource = 'contact' | 'calculator' | 'chat';
 
 /**
  * Project type enum for forms
@@ -33,6 +34,17 @@ export type ProjectType =
   | 'dashboard'
   | 'maintenance'
   | 'other';
+
+/**
+ * Valid status transitions for leads
+ */
+export const VALID_STATUS_TRANSITIONS: Record<ContactStatus, ContactStatus[]> = {
+  new: ['contacted', 'qualified', 'closed'],
+  contacted: ['qualified', 'converted', 'closed'],
+  qualified: ['converted', 'closed'],
+  converted: ['closed'],
+  closed: [],
+};
 
 export interface Database {
   public: {
@@ -46,6 +58,7 @@ export interface Database {
           project_type: ProjectType;
           message: string;
           status: ContactStatus;
+          lead_source: LeadSource;
           admin_notes: string | null;
           created_at: string;
           updated_at: string;
@@ -58,6 +71,7 @@ export interface Database {
           project_type: ProjectType;
           message: string;
           status?: ContactStatus;
+          lead_source?: LeadSource;
           admin_notes?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -70,8 +84,8 @@ export interface Database {
           project_type?: ProjectType;
           message?: string;
           status?: ContactStatus;
+          lead_source?: LeadSource;
           admin_notes?: string | null;
-          created_at?: string;
           updated_at?: string;
         };
       };
@@ -86,6 +100,7 @@ export interface Database {
           contact_email: string | null;
           contact_name: string | null;
           status: CalculatorStatus;
+          lead_source: LeadSource;
           admin_notes: string | null;
           created_at: string;
           updated_at: string;
@@ -100,6 +115,7 @@ export interface Database {
           contact_email?: string | null;
           contact_name?: string | null;
           status?: CalculatorStatus;
+          lead_source?: LeadSource;
           admin_notes?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -114,8 +130,8 @@ export interface Database {
           contact_email?: string | null;
           contact_name?: string | null;
           status?: CalculatorStatus;
+          lead_source?: LeadSource;
           admin_notes?: string | null;
-          created_at?: string;
           updated_at?: string;
         };
       };
@@ -244,7 +260,16 @@ export interface Database {
         };
       };
     };
-    Views: Record<string, never>;
+    Views: {
+      lead_statistics: {
+        Row: {
+          source: string;
+          status: string;
+          count: number;
+          date: string;
+        };
+      };
+    };
     Functions: {
       is_admin: {
         Args: Record<string, never>;
@@ -267,6 +292,7 @@ export interface Database {
       newsletter_status: NewsletterStatus;
       admin_role: AdminRole;
       project_type: ProjectType;
+      lead_source: LeadSource;
     };
   };
 }
