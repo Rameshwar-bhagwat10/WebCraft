@@ -9,7 +9,7 @@
  * Respects prefers-reduced-motion
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -21,24 +21,31 @@ interface MousePosition {
 const GRID_SIZE = 64; // 4rem = 64px
 const GLOW_RADIUS = 250; // pixels
 
+// Hook to detect reduced motion preference without causing cascading renders
+function usePrefersReducedMotion(): boolean {
+  const subscribe = useCallback((callback: () => void) => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    mediaQuery.addEventListener('change', callback);
+    return () => mediaQuery.removeEventListener('change', callback);
+  }, []);
+
+  const getSnapshot = useCallback(() => {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+
+  const getServerSnapshot = useCallback(() => false, []);
+
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
 export function InteractiveGrid(): React.ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mousePos, setMousePos] = useState<MousePosition>({ x: -1000, y: -1000 });
   const [isHovering, setIsHovering] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const rafRef = useRef<number | null>(null);
   const lastMousePos = useRef<MousePosition>({ x: -1000, y: -1000 });
-
-  // Check for reduced motion preference
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
 
   // Canvas setup and resize
   useEffect(() => {
@@ -226,8 +233,8 @@ export function InteractiveGrid(): React.ReactElement {
           className={cn(
             'absolute inset-0',
             'bg-[linear-gradient(to_right,oklch(0.87_0_0/0.3)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.87_0_0/0.3)_1px,transparent_1px)]',
-            '[background-size:4rem_4rem]',
-            '[mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_40%,transparent_100%)]'
+            'bg-size-[4rem_4rem]',
+            'mask-[radial-gradient(ellipse_80%_60%_at_50%_0%,#000_40%,transparent_100%)]'
           )}
         />
       )}
@@ -239,7 +246,7 @@ export function InteractiveGrid(): React.ReactElement {
             ref={canvasRef}
             className={cn(
               'absolute inset-0',
-              '[mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_40%,transparent_100%)]'
+              'mask-[radial-gradient(ellipse_80%_60%_at_50%_0%,#000_40%,transparent_100%)]'
             )}
           />
 
