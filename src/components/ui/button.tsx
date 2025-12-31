@@ -22,7 +22,7 @@ const buttonVariants = cva(
   // Base styles
   [
     'inline-flex items-center justify-center font-medium',
-    'transition-all duration-200',
+    'transition-all duration-300',
     // WCAG 2.2 compliant focus ring (2px, 3:1 contrast)
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
@@ -30,8 +30,16 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary:
-          'bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500 shadow-sm hover:shadow-md',
+        primary: [
+          'text-white',
+          'bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700',
+          'hover:from-primary-600 hover:via-primary-700 hover:to-primary-800',
+          'shadow-lg shadow-primary-500/25',
+          'hover:shadow-xl hover:shadow-primary-600/30',
+          'hover:scale-[1.02]',
+          'active:scale-[0.98]',
+          'focus-visible:ring-primary-500',
+        ],
         secondary:
           'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 focus-visible:ring-neutral-500',
         outline:
