@@ -1,53 +1,28 @@
 /**
  * Admin Authentication Utilities
  * Server-side admin verification for API routes
+ *
+ * Re-exports from auth module for backward compatibility
  */
 
-import { createServerSupabaseClient } from '@/lib/supabase/server';
 import type { AdminRole } from '@/types/database';
+import {
+  getAdminSession,
+  hasPermission,
+  meetsRoleRequirement,
+  type AdminSession,
+} from './auth';
 
-export interface AdminSession {
-  userId: string;
-  email: string;
-  role: AdminRole;
-}
+// Re-export types and functions
+export type { AdminSession };
+export { getAdminSession, hasPermission, meetsRoleRequirement };
 
 /**
  * Verify admin session and return admin info
  * Returns null if not authenticated or not an admin
  */
 export async function verifyAdminSession(): Promise<AdminSession | null> {
-  try {
-    const supabase = await createServerSupabaseClient();
-
-    // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return null;
-    }
-
-    // Check if user is admin
-    const { data: adminUser, error: adminError } = await supabase
-      .from('admin_users')
-      .select('id, email, role')
-      .eq('id', user.id)
-      .single();
-
-    if (adminError || !adminUser) {
-      return null;
-    }
-
-    const admin = adminUser as { id: string; email: string; role: AdminRole };
-
-    return {
-      userId: admin.id,
-      email: admin.email,
-      role: admin.role,
-    };
-  } catch {
-    return null;
-  }
+  return getAdminSession();
 }
 
 /**
@@ -78,4 +53,23 @@ export function forbiddenResponse(message = 'Forbidden') {
     { success: false, error: message },
     { status: 403 }
   );
+}
+
+/**
+ * Require permission for API route
+ */
+export async function requireApiPermission(
+  permission: string
+): Promise<{ session: AdminSession } | Response> {
+  const session = await getAdminSession();
+
+  if (!session) {
+    return unauthorizedResponse();
+  }
+
+  if (!hasPermission(session.role, permission)) {
+    return forbiddenResponse('Insufficient permissions');
+  }
+
+  return { session };
 }

@@ -6,8 +6,8 @@
 
 import { redirect } from 'next/navigation';
 
+import { getAdminSession } from '@/lib/auth';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import type { AdminRole } from '@/types/database';
 
 import { AdminHeader } from './components/admin-header';
 import { AdminSidebar } from './components/admin-sidebar';
@@ -22,7 +22,14 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Check authentication
+  // Get admin session using centralized auth
+  const session = await getAdminSession();
+
+  if (!session) {
+    redirect('/admin-login');
+  }
+
+  // Get full user object for header
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -30,26 +37,11 @@ export default async function AdminLayout({
     redirect('/admin-login');
   }
 
-  // Check if user is admin
-  const { data } = await supabase
-    .from('admin_users')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  const adminUser = data as { role: AdminRole } | null;
-
-  if (!adminUser) {
-    // User exists but not an admin
-    await supabase.auth.signOut();
-    redirect('/admin-login?error=unauthorized');
-  }
-
   return (
     <div className="min-h-screen bg-neutral-50">
-      <AdminHeader user={user} role={adminUser.role} />
+      <AdminHeader user={user} role={session.role} />
       <div className="flex">
-        <AdminSidebar />
+        <AdminSidebar role={session.role} />
         <main className="flex-1 p-6 lg:p-8">
           {children}
         </main>

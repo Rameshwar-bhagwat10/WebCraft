@@ -21,9 +21,14 @@ export function AdminHeader({ user, role }: AdminHeaderProps) {
   const router = useRouter();
 
   const handleSignOut = async () => {
+    // Use API route for proper logout with audit logging
+    await fetch('/api/auth/logout', { method: 'POST' });
+    
+    // Also sign out on client
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push('/admin/login');
+    
+    router.push('/admin-login');
     router.refresh();
   };
 
