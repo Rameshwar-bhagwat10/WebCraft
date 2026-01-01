@@ -6,10 +6,12 @@
 import Link from 'next/link';
 
 import { getAdminSession } from '@/lib/auth/session';
+import { getAllProjectsAdmin } from '@/lib/projects/admin';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { cn } from '@/lib/utils';
 
 import { DashboardCharts } from './components/dashboard-charts';
+import { ProjectsOverview } from './components/projects-overview';
 import { QuickStats } from './components/quick-stats';
 import { RecentActivity } from './components/recent-activity';
 
@@ -18,9 +20,11 @@ interface DashboardStats {
   calculator: { total: number; new: number };
   chat: { total: number; unread: number };
   newsletter: { total: number; active: number };
+  projects: { total: number; published: number; featured: number; drafts: number };
   statusBreakdown: { status: string; count: number }[];
   sourceBreakdown: { source: string; count: number }[];
   dailyLeads: { date: string; contacts: number; calculator: number; chat: number }[];
+  projectsByCategory: { category: string; count: number }[];
 }
 
 type ContactRow = { id: string; status: string; lead_source: string; created_at: string };
@@ -31,11 +35,12 @@ type NewsRow = { id: string; status: string };
 async function getDashboardData(): Promise<DashboardStats> {
   const supabase = await createServerSupabaseClient();
 
-  const [contacts, calculator, chat, newsletter] = await Promise.all([
+  const [contacts, calculator, chat, newsletter, projects] = await Promise.all([
     supabase.from('contact_submissions').select('id, status, lead_source, created_at'),
     supabase.from('calculator_submissions').select('id, status, lead_source, created_at'),
     supabase.from('chat_messages').select('id, is_read, created_at').eq('sender', 'visitor'),
     supabase.from('newsletter_subscriptions').select('id, status'),
+    getAllProjectsAdmin(),
   ]);
 
   const contactsData = (contacts.data ?? []) as ContactRow[];
@@ -60,6 +65,24 @@ async function getDashboardData(): Promise<DashboardStats> {
 
   const dailyLeads = getLast7DaysData(contactsData, calculatorData, chatData);
 
+  // Project stats
+  const projectStats = {
+    total: projects.length,
+    published: projects.filter((p) => p.status === 'published').length,
+    featured: projects.filter((p) => p.is_featured).length,
+    drafts: projects.filter((p) => p.status === 'draft').length,
+  };
+
+  // Projects by category
+  const categoryCounts: Record<string, number> = {};
+  projects.forEach((p) => {
+    categoryCounts[p.category] = (categoryCounts[p.category] ?? 0) + 1;
+  });
+  const projectsByCategory = Object.entries(categoryCounts).map(([category, count]) => ({
+    category,
+    count,
+  }));
+
   return {
     contacts: {
       total: contactsData.length,
@@ -74,9 +97,11 @@ async function getDashboardData(): Promise<DashboardStats> {
       total: newsletterData.length,
       active: newsletterData.filter((n) => n.status === 'active').length,
     },
+    projects: projectStats,
     statusBreakdown,
     sourceBreakdown,
     dailyLeads,
+    projectsByCategory,
   };
 }
 
@@ -175,6 +200,7 @@ export default async function AdminDashboardPage() {
         calculator={stats.calculator}
         chat={stats.chat}
         newsletter={stats.newsletter}
+        projects={stats.projects}
       />
 
       {newLeads > 0 && (
@@ -211,6 +237,11 @@ export default async function AdminDashboardPage() {
         statusBreakdown={stats.statusBreakdown}
         sourceBreakdown={stats.sourceBreakdown}
         totalLeads={totalLeads}
+      />
+
+      <ProjectsOverview
+        projects={stats.projects}
+        projectsByCategory={stats.projectsByCategory}
       />
 
       <RecentActivity leads={recentLeads} />

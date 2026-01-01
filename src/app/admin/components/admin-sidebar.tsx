@@ -33,6 +33,16 @@ const navItems: NavItem[] = [
     ),
   },
   {
+    label: 'Projects',
+    href: '/admin/projects',
+    permission: 'leads:read',
+    icon: (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+      </svg>
+    ),
+  },
+  {
     label: 'All Leads',
     href: '/admin/leads',
     permission: 'leads:read',
@@ -95,7 +105,7 @@ const navItems: NavItem[] = [
 ];
 
 interface AdminSidebarProps {
-  role: AdminRole;
+  role?: AdminRole;
 }
 
 export function AdminSidebar({ role }: AdminSidebarProps) {
@@ -103,6 +113,7 @@ export function AdminSidebar({ role }: AdminSidebarProps) {
 
   const visibleItems = navItems.filter((item) => {
     if (!item.permission) return true;
+    if (!role) return true;
     return hasPermission(role, item.permission);
   });
 
@@ -141,25 +152,6 @@ export function AdminSidebar({ role }: AdminSidebarProps) {
           );
         })}
       </nav>
-
-      {/* Role indicator */}
-      <div className="absolute bottom-0 left-0 right-0 border-t border-neutral-200 p-4">
-        <div className="rounded-xl bg-linear-to-br from-neutral-50 to-neutral-100 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-200">
-              <svg className="h-4 w-4 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-xs text-neutral-500">Your Role</p>
-              <p className="text-sm font-semibold capitalize text-neutral-800">
-                {role.replace('_', ' ')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </aside>
   );
 }

@@ -1,28 +1,29 @@
 /**
  * Project Detail Page (Dynamic Route)
- * Server Component - renders statically (SSG)
+ * Server Component with ISR
  *
- * Purpose: Individual project case study
- * - Full project details
- * - Problem/solution narrative
- * - Structured data for SEO
- *
- * Performance:
- * - Static generation at build time
- * - Optimized images with next/image
- * - Priority loading for featured image
+ * Strategy:
+ * - Static params generated from static demo data
+ * - Database projects rendered on-demand with caching
+ * - Falls back to static data if slug matches demo project
  */
 
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import {
-  getAllProjectSlugs,
-  getProjectBySlug,
-  ProjectDetail,
-} from '@/components/portfolio';
+import { ProjectDetail } from '@/components/portfolio';
+import { 
+  getProjectBySlug as getStaticProject, 
+  projectsData,
+  type ProjectData 
+} from '@/components/portfolio/projects-data';
 import { JsonLd } from '@/components/shared';
 import { siteConfig } from '@/config/site';
+import { getProjectBySlug, getProjectImageUrl } from '@/lib/projects';
+import type { ProjectWithImages } from '@/types/database';
+
+// Revalidate every 60 seconds
+export const revalidate = 60;
 
 interface ProjectPageProps {
   params: Promise<{
@@ -31,11 +32,11 @@ interface ProjectPageProps {
 }
 
 /**
- * Generate static params for all projects
- * This enables static generation at build time
+ * Generate static params for demo projects
+ * Database projects are rendered on-demand with ISR
  */
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  return getAllProjectSlugs().map((slug) => ({ slug }));
+export function generateStaticParams(): { slug: string }[] {
+  return projectsData.map((project) => ({ slug: project.slug }));
 }
 
 /**
@@ -45,61 +46,84 @@ export async function generateMetadata({
   params,
 }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  
+  // Try database first
+  const dbProject = await getProjectBySlug(slug);
+  if (dbProject) {
+    const coverImage = dbProject.images.find((img) => img.is_cover);
+    const imageUrl = coverImage
+      ? getProjectImageUrl(coverImage.storage_path, process.env.NEXT_PUBLIC_SUPABASE_URL!)
+      : `${siteConfig.url}/og-image.jpg`;
 
-  if (!project) {
     return {
-      title: 'Project Not Found - WebCraft',
+      title: dbProject.meta_title ?? `${dbProject.title} - WebCraft Portfolio`,
+      description: dbProject.meta_description ?? dbProject.short_description,
+      openGraph: {
+        title: dbProject.meta_title ?? `${dbProject.title} - WebCraft Portfolio`,
+        description: dbProject.meta_description ?? dbProject.short_description,
+        url: `${siteConfig.url}/work/${slug}`,
+        type: 'article',
+        images: [{ url: imageUrl, width: 1200, height: 675, alt: `${dbProject.title} project showcase` }],
+      },
+    };
+  }
+  
+  // Fall back to static project
+  const staticProject = getStaticProject(slug);
+  if (staticProject) {
+    return {
+      title: `${staticProject.title} - WebCraft Portfolio`,
+      description: staticProject.shortDescription,
+      openGraph: {
+        title: `${staticProject.title} - WebCraft Portfolio`,
+        description: staticProject.shortDescription,
+        url: `${siteConfig.url}/work/${slug}`,
+        type: 'article',
+        images: [{ url: staticProject.featuredImage, width: 1200, height: 675, alt: `${staticProject.title} project showcase` }],
+      },
     };
   }
 
-  return {
-    title: `${project.title} - WebCraft Portfolio`,
-    description: project.shortDescription,
-    openGraph: {
-      title: `${project.title} - WebCraft Portfolio`,
-      description: project.shortDescription,
-      url: `${siteConfig.url}/work/${slug}`,
-      type: 'article',
-      images: [
-        {
-          url: project.featuredImage,
-          width: 1200,
-          height: 675,
-          alt: `${project.title} project showcase`,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${project.title} - WebCraft Portfolio`,
-      description: project.shortDescription,
-      images: [project.featuredImage],
-    },
-  };
+  return { title: 'Project Not Found - WebCraft' };
 }
 
 /**
- * Generate structured data for the project
+ * Generate structured data
  */
-function generateProjectSchema(
-  project: NonNullable<ReturnType<typeof getProjectBySlug>>
-) {
+function generateProjectSchema(project: ProjectWithImages | ProjectData, isDb: boolean) {
+  if (isDb) {
+    const p = project as ProjectWithImages;
+    const coverImage = p.images.find((img) => img.is_cover);
+    const imageUrl = coverImage
+      ? getProjectImageUrl(coverImage.storage_path, process.env.NEXT_PUBLIC_SUPABASE_URL!)
+      : `${siteConfig.url}/og-image.jpg`;
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name: p.title,
+      description: p.short_description,
+      author: { '@type': 'Organization', name: siteConfig.name, url: siteConfig.url },
+      url: `${siteConfig.url}/work/${p.slug}`,
+      image: imageUrl,
+      datePublished: p.published_at ?? p.created_at,
+      genre: p.category,
+      keywords: (p.tech_stack as string[])?.join(', '),
+    };
+  }
+  
+  const p = project as ProjectData;
   return {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
-    name: project.title,
-    description: project.shortDescription,
-    author: {
-      '@type': 'Organization',
-      name: siteConfig.name,
-      url: siteConfig.url,
-    },
-    url: `${siteConfig.url}/work/${project.slug}`,
-    image: `${siteConfig.url}${project.featuredImage}`,
+    name: p.title,
+    description: p.shortDescription,
+    author: { '@type': 'Organization', name: siteConfig.name, url: siteConfig.url },
+    url: `${siteConfig.url}/work/${p.slug}`,
+    image: `${siteConfig.url}${p.featuredImage}`,
     datePublished: new Date().toISOString(),
-    genre: project.type,
-    keywords: project.techStack?.join(', '),
+    genre: p.type,
+    keywords: p.techStack?.join(', '),
   };
 }
 
@@ -107,21 +131,28 @@ export default async function ProjectPage({
   params,
 }: ProjectPageProps): Promise<React.ReactElement> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
-
-  if (!project) {
-    notFound();
+  
+  // Try database first
+  const dbProject = await getProjectBySlug(slug);
+  if (dbProject) {
+    return (
+      <>
+        <JsonLd data={generateProjectSchema(dbProject, true)} />
+        <ProjectDetail project={dbProject} />
+      </>
+    );
+  }
+  
+  // Fall back to static project
+  const staticProject = getStaticProject(slug);
+  if (staticProject) {
+    return (
+      <>
+        <JsonLd data={generateProjectSchema(staticProject, false)} />
+        <ProjectDetail project={staticProject} />
+      </>
+    );
   }
 
-  const projectSchema = generateProjectSchema(project);
-
-  return (
-    <>
-      {/* Project-specific JSON-LD */}
-      <JsonLd data={projectSchema} />
-
-      {/* Project Detail */}
-      <ProjectDetail project={project} />
-    </>
-  );
+  notFound();
 }

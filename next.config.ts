@@ -24,12 +24,12 @@ const nextConfig: NextConfig = {
 
     // Remote image patterns (use instead of deprecated 'domains')
     remotePatterns: [
-      // Example: Allow images from your CDN
-      // {
-      //   protocol: 'https',
-      //   hostname: 'cdn.webcraft.com',
-      //   pathname: '/images/**',
-      // },
+      // Supabase Storage for project images
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
 
     // Device sizes for responsive images (srcset)

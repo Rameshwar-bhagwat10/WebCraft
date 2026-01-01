@@ -25,6 +25,23 @@ export type AdminRole = 'super_admin' | 'admin' | 'viewer';
 export type LeadSource = 'contact' | 'calculator' | 'chat';
 
 /**
+ * Project status enum (for Work/Projects)
+ */
+export type ProjectStatus = 'draft' | 'published';
+
+/**
+ * Project category enum (for Work/Projects)
+ */
+export type ProjectCategory =
+  | 'website'
+  | 'webapp'
+  | 'mobile'
+  | 'ecommerce'
+  | 'dashboard'
+  | 'landing'
+  | 'other';
+
+/**
  * Project type enum for forms
  */
 export type ProjectType =
@@ -265,6 +282,107 @@ export interface Database {
           window_start?: string;
         };
       };
+      projects: {
+        Row: {
+          id: string;
+          title: string;
+          slug: string;
+          short_description: string;
+          full_description: string;
+          category: ProjectCategory;
+          tech_stack: Json;
+          status: ProjectStatus;
+          is_featured: boolean;
+          priority: number;
+          display_order: number;
+          live_url: string | null;
+          github_url: string | null;
+          meta_title: string | null;
+          meta_description: string | null;
+          created_at: string;
+          updated_at: string;
+          published_at: string | null;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          slug: string;
+          short_description: string;
+          full_description: string;
+          category: ProjectCategory;
+          tech_stack?: Json;
+          status?: ProjectStatus;
+          is_featured?: boolean;
+          priority?: number;
+          display_order?: number;
+          live_url?: string | null;
+          github_url?: string | null;
+          meta_title?: string | null;
+          meta_description?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          published_at?: string | null;
+          deleted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          slug?: string;
+          short_description?: string;
+          full_description?: string;
+          category?: ProjectCategory;
+          tech_stack?: Json;
+          status?: ProjectStatus;
+          is_featured?: boolean;
+          priority?: number;
+          display_order?: number;
+          live_url?: string | null;
+          github_url?: string | null;
+          meta_title?: string | null;
+          meta_description?: string | null;
+          updated_at?: string;
+          published_at?: string | null;
+          deleted_at?: string | null;
+        };
+      };
+      project_images: {
+        Row: {
+          id: string;
+          project_id: string;
+          storage_path: string;
+          alt_text: string;
+          is_cover: boolean;
+          display_order: number;
+          width: number | null;
+          height: number | null;
+          file_size: number | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          project_id: string;
+          storage_path: string;
+          alt_text: string;
+          is_cover?: boolean;
+          display_order?: number;
+          width?: number | null;
+          height?: number | null;
+          file_size?: number | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          project_id?: string;
+          storage_path?: string;
+          alt_text?: string;
+          is_cover?: boolean;
+          display_order?: number;
+          width?: number | null;
+          height?: number | null;
+          file_size?: number | null;
+        };
+      };
     };
     Views: {
       lead_statistics: {
@@ -299,6 +417,8 @@ export interface Database {
       admin_role: AdminRole;
       project_type: ProjectType;
       lead_source: LeadSource;
+      project_status: ProjectStatus;
+      project_category: ProjectCategory;
     };
   };
 }
@@ -320,3 +440,40 @@ export type ChatSession = Tables<'chat_sessions'>;
 export type ChatMessage = Tables<'chat_messages'>;
 export type NewsletterSubscription = Tables<'newsletter_subscriptions'>;
 export type AdminUser = Tables<'admin_users'>;
+export type Project = Tables<'projects'>;
+export type ProjectImage = Tables<'project_images'>;
+
+/**
+ * Project with images (for detail pages)
+ */
+export interface ProjectWithImages extends Project {
+  images: ProjectImage[];
+}
+
+/**
+ * Project listing item (optimized for list views)
+ */
+export interface ProjectListItem {
+  id: string;
+  title: string;
+  slug: string;
+  short_description: string;
+  category: ProjectCategory;
+  tech_stack: string[];
+  cover_image_path: string | null;
+  cover_image_alt: string | null;
+}
+
+/**
+ * Featured project (optimized for Home page)
+ */
+export interface FeaturedProject {
+  id: string;
+  title: string;
+  slug: string;
+  short_description: string;
+  category: ProjectCategory;
+  tech_stack: string[];
+  cover_image_path: string | null;
+  cover_image_alt: string | null;
+}

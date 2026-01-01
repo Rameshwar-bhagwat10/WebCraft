@@ -1,9 +1,11 @@
 /**
  * Project Image Component
- * Enhanced placeholder with gradient and project initial
+ * Displays project images with fallback placeholder
  *
  * Server Component - no client JS needed
  */
+
+import Image from 'next/image';
 
 import { cn } from '@/lib/utils';
 
@@ -58,9 +60,11 @@ export function ProjectImage({
   title,
   className,
 }: ProjectImageProps): React.ReactElement {
-  // For demo purposes, show enhanced placeholder for project images
-  // In production, this would use actual images with next/image
+  // Check if it's a placeholder path (static demo)
   const isPlaceholder = src.startsWith('/projects/');
+  
+  // Check if it's a real image URL (Supabase storage or external)
+  const isRealImage = src.startsWith('http') || src.startsWith('https');
 
   if (isPlaceholder) {
     return (
@@ -70,7 +74,22 @@ export function ProjectImage({
     );
   }
 
-  // For real images, we would use next/image here
+  if (isRealImage) {
+    return (
+      <div className={cn('relative h-full w-full', className)}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          unoptimized={src.includes('supabase')}
+        />
+      </div>
+    );
+  }
+
+  // Fallback to placeholder
   return (
     <div className={cn('relative h-full w-full', className)}>
       <ImagePlaceholder alt={alt} title={title} />

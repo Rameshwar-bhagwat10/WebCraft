@@ -17,6 +17,7 @@ interface QuickStatsProps {
   calculator: { total: number; new: number };
   chat: { total: number; unread: number };
   newsletter: { total: number; active: number };
+  projects?: { total: number; published: number; featured: number; drafts: number };
 }
 
 export function QuickStats({
@@ -26,9 +27,10 @@ export function QuickStats({
   calculator,
   chat: _chat,
   newsletter,
+  projects,
 }: QuickStatsProps) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
       <StatCard
         title="Total Leads"
         value={totalLeads}
@@ -60,6 +62,16 @@ export function QuickStats({
         delay={200}
       />
       <StatCard
+        title="Projects"
+        value={projects?.total ?? 0}
+        highlight={projects?.published ?? 0}
+        highlightLabel="published"
+        href="/admin/projects"
+        icon={<FolderIcon />}
+        gradient="from-pink-500 to-rose-500"
+        delay={300}
+      />
+      <StatCard
         title="Newsletter"
         value={newsletter.total}
         highlight={newsletter.active}
@@ -67,7 +79,7 @@ export function QuickStats({
         href="/admin/newsletter"
         icon={<NewsIcon />}
         gradient="from-amber-500 to-orange-500"
-        delay={300}
+        delay={400}
       />
     </div>
   );
@@ -203,6 +215,14 @@ function NewsIcon() {
   return (
     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
+    </svg>
+  );
+}
+
+function FolderIcon() {
+  return (
+    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
     </svg>
   );
 }

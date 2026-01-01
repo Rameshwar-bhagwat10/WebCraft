@@ -16,17 +16,54 @@ export interface ProjectCardProps {
   title: string;
   shortDescription: string;
   type: string;
-  thumbnail: string;
+  thumbnail: string | null;
+  thumbnailAlt?: string | null | undefined;
   result?: string | undefined;
   index?: number | undefined;
   className?: string | undefined;
 }
 
 /**
+ * Category to display name mapping
+ */
+const categoryLabels: Record<string, string> = {
+  website: 'Website',
+  webapp: 'Web App',
+  mobile: 'Mobile App',
+  ecommerce: 'E-Commerce',
+  dashboard: 'Dashboard',
+  landing: 'Landing Page',
+  other: 'Other',
+  // Also support already-formatted values
+  Website: 'Website',
+  'Web App': 'Web App',
+  'Mobile App': 'Mobile App',
+  'E-Commerce': 'E-Commerce',
+  Dashboard: 'Dashboard',
+  'Landing Page': 'Landing Page',
+  Other: 'Other',
+};
+
+/**
  * Type badge styles with icons
  */
 const typeConfig: Record<string, { style: string; icon: React.ReactNode }> = {
   Website: {
+    style: 'bg-primary-50 text-primary-700 border-primary-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="2" y="3" width="20" height="14" rx="2" />
+        <path d="M8 21h8M12 17v4" />
+      </svg>
+    ),
+  },
+  website: {
     style: 'bg-primary-50 text-primary-700 border-primary-200',
     icon: (
       <svg
@@ -55,7 +92,36 @@ const typeConfig: Record<string, { style: string; icon: React.ReactNode }> = {
       </svg>
     ),
   },
+  webapp: {
+    style: 'bg-success-50 text-success-700 border-success-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z" />
+      </svg>
+    ),
+  },
   'Mobile App': {
+    style: 'bg-warning-50 text-warning-700 border-warning-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="5" y="2" width="14" height="20" rx="2" />
+        <path d="M12 18h.01" />
+      </svg>
+    ),
+  },
+  mobile: {
     style: 'bg-warning-50 text-warning-700 border-warning-200',
     icon: (
       <svg
@@ -84,6 +150,68 @@ const typeConfig: Record<string, { style: string; icon: React.ReactNode }> = {
         <rect x="14" y="3" width="7" height="5" rx="1" />
         <rect x="14" y="12" width="7" height="9" rx="1" />
         <rect x="3" y="16" width="7" height="5" rx="1" />
+      </svg>
+    ),
+  },
+  dashboard: {
+    style: 'bg-neutral-100 text-neutral-700 border-neutral-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="3" y="3" width="7" height="9" rx="1" />
+        <rect x="14" y="3" width="7" height="5" rx="1" />
+        <rect x="14" y="12" width="7" height="9" rx="1" />
+        <rect x="3" y="16" width="7" height="5" rx="1" />
+      </svg>
+    ),
+  },
+  ecommerce: {
+    style: 'bg-success-50 text-success-700 border-success-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <circle cx="9" cy="21" r="1" />
+        <circle cx="20" cy="21" r="1" />
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+      </svg>
+    ),
+  },
+  landing: {
+    style: 'bg-primary-50 text-primary-700 border-primary-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="2" y="3" width="20" height="14" rx="2" />
+        <path d="M8 21h8M12 17v4" />
+      </svg>
+    ),
+  },
+  other: {
+    style: 'bg-neutral-100 text-neutral-700 border-neutral-200',
+    icon: (
+      <svg
+        className="h-3 w-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" />
       </svg>
     ),
   },
@@ -124,13 +252,22 @@ export function ProjectCard({
   shortDescription,
   type,
   thumbnail,
+  thumbnailAlt,
   result,
   index = 0,
   className,
 }: ProjectCardProps): React.ReactElement {
   const config = typeConfig[type] ?? defaultConfig;
+  const displayType = categoryLabels[type] ?? type;
   const gradient =
     gradientColors[slug] ?? 'from-primary-500/20 to-primary-600/20';
+  
+  // Handle both static paths and Supabase storage URLs
+  const imageUrl = thumbnail 
+    ? thumbnail.startsWith('/') 
+      ? thumbnail 
+      : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/project-images/${thumbnail}`
+    : null;
 
   return (
     <article
@@ -164,12 +301,18 @@ export function ProjectCard({
             gradient
           )}
         >
-          <ProjectImage
-            src={thumbnail}
-            alt={`${title} project screenshot`}
-            title={title}
-            className="transition-transform duration-500 group-hover:scale-105"
-          />
+          {imageUrl ? (
+            <ProjectImage
+              src={imageUrl}
+              alt={thumbnailAlt ?? `${title} project screenshot`}
+              title={title}
+              className="transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center">
+              <span className="text-foreground-muted text-lg font-medium">{title}</span>
+            </div>
+          )}
 
           {/* Hover overlay */}
           <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/20">
@@ -213,7 +356,7 @@ export function ProjectCard({
             )}
           >
             {config.icon}
-            {type}
+            {displayType}
           </span>
 
           {/* Title */}
