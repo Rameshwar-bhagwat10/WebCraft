@@ -166,7 +166,7 @@ export function ChatWidget({
         aria-modal="true"
         aria-labelledby="chat-widget-title"
         className={cn(
-          'fixed right-4 bottom-20 z-50 w-[300px] sm:right-6 sm:w-[320px]',
+          'fixed right-4 bottom-36 z-50 w-[300px] sm:right-6 sm:bottom-40 sm:w-[320px]',
           'rounded-2xl bg-white shadow-2xl',
           'border border-neutral-100',
           'overflow-hidden',

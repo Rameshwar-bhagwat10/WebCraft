@@ -17,6 +17,10 @@ export interface Testimonial {
   quote: string;
   /** Optional: initials for avatar fallback */
   initials?: string;
+  /** Optional: rating (1-5) */
+  rating?: number;
+  /** Optional: link to project */
+  projectSlug?: string;
 }
 
 /**

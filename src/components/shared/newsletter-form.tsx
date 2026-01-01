@@ -4,10 +4,12 @@
  * Newsletter Subscription Form
  * Reusable component for newsletter signups
  * Connected to Supabase backend
+ * Protected by reCAPTCHA v3
  */
 
 import { useState } from 'react';
 
+import { useRecaptcha } from '@/hooks/use-recaptcha';
 import { cn } from '@/lib/utils';
 import { subscribeNewsletter } from '@/services/forms';
 
@@ -22,6 +24,7 @@ export function NewsletterForm({
   variant = 'default',
   className,
 }: NewsletterFormProps) {
+  const { executeRecaptcha } = useRecaptcha();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
@@ -38,11 +41,15 @@ export function NewsletterForm({
     }
 
     setStatus('loading');
+
+    // Get CAPTCHA token
+    const captchaToken = await executeRecaptcha('newsletter_form');
     
     const result = await subscribeNewsletter({
       email: email.trim(),
       source,
       website, // Honeypot
+      captchaToken,
     });
 
     if (result.success) {

@@ -6,10 +6,14 @@
  * - Request body size limit (100KB)
  * - Safe JSON parsing
  * - Rate limiting fails closed
- * - Trusted IP extraction
+ * - CAPTCHA verification (reCAPTCHA v3)
+ * - Idempotency support
+ * - Honeypot spam protection
  */
 
+import { verifyCaptcha } from '@/lib/captcha';
 import { notifyNewCalculatorLead } from '@/lib/email';
+import { checkIdempotency, storeIdempotencyResult } from '@/lib/idempotency';
 import { checkRateLimit, rateLimitHeaders } from '@/lib/rate-limit';
 import {
   errorResponse,
@@ -21,6 +25,12 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { isHoneypotTriggered, validateCalculatorForm } from '@/lib/validations/forms';
 
 export async function POST(request: Request) {
+  // Check idempotency first (return cached response if duplicate)
+  const idempotency = await checkIdempotency('/api/calculator');
+  if (idempotency.isDuplicate && idempotency.cachedResponse) {
+    return successResponse(idempotency.cachedResponse as Record<string, unknown>);
+  }
+
   // Parse body with size limit
   const parseResult = await parseJsonBody(request);
   if (!parseResult.success) {
@@ -32,6 +42,13 @@ export async function POST(request: Request) {
   // Check honeypot (spam protection)
   if (isHoneypotTriggered(body)) {
     return successResponse({ message: 'Quote saved successfully' });
+  }
+
+  // Verify CAPTCHA (fails closed in production)
+  const captchaToken = body.captchaToken as string | undefined;
+  const captchaResult = await verifyCaptcha(captchaToken);
+  if (!captchaResult.success) {
+    return errorResponse(captchaResult.error ?? 'Captcha verification failed', 400);
   }
 
   // Check rate limit (fails closed)
@@ -86,8 +103,13 @@ export async function POST(request: Request) {
       });
     }
 
+    const responseData = { message: 'Quote saved successfully' };
+
+    // Store idempotency result
+    await storeIdempotencyResult(idempotency.key, '/api/calculator', responseData);
+
     return successResponse(
-      { message: 'Quote saved successfully' },
+      responseData,
       200,
       rateLimitHeaders('calculator', rateLimit.remaining, rateLimit.resetIn)
     );

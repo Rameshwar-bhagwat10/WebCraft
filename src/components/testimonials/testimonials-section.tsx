@@ -2,18 +2,40 @@
  * TestimonialsSection Component
  * Client testimonials grid for social proof
  *
- * Server Component - renders statically
- * Placement: Home page (after WhyWebCraft, before FinalCTA)
+ * Server Component - fetches from database
+ * Falls back to static data if no database reviews
  */
 
 import { Container, Section } from '@/components/layout';
 import { Heading, Text } from '@/components/ui';
+import { getFeaturedReviews } from '@/lib/reviews/queries';
+import type { ClientReviewWithProject } from '@/types/database';
 
 import { TestimonialCard } from './testimonial-card';
-import { getFeaturedTestimonials } from './testimonials-data';
+import { getFeaturedTestimonials, type Testimonial } from './testimonials-data';
 
-export function TestimonialsSection(): React.ReactElement {
-  const testimonials = getFeaturedTestimonials(6);
+export async function TestimonialsSection(): Promise<React.ReactElement> {
+  // Fetch from database
+  const dbReviews = await getFeaturedReviews(6);
+  
+  // Convert database reviews to testimonial format or use static fallback
+  const testimonials: Testimonial[] = dbReviews.length > 0
+    ? dbReviews.map((review: ClientReviewWithProject) => ({
+        id: review.id,
+        name: review.client_name,
+        role: review.client_role ?? '',
+        company: review.client_company ?? '',
+        quote: review.review_text,
+        initials: review.client_name
+          .split(' ')
+          .map((n: string) => n[0])
+          .join('')
+          .toUpperCase()
+          .slice(0, 2),
+        ...(review.rating !== null && review.rating !== undefined && { rating: review.rating }),
+        ...(review.project_slug !== null && review.project_slug !== undefined && { projectSlug: review.project_slug }),
+      }))
+    : getFeaturedTestimonials(6);
 
   return (
     <Section
@@ -26,12 +48,7 @@ export function TestimonialsSection(): React.ReactElement {
         <div className="mx-auto mb-8 max-w-2xl text-center sm:mb-12">
           <div
             className="motion-slide-up"
-            style={
-              {
-                '--motion-delay': '0s',
-                '--motion-duration': '0.5s',
-              } as React.CSSProperties
-            }
+            style={{ '--motion-delay': '0s', '--motion-duration': '0.5s' } as React.CSSProperties}
           >
             <p className="text-primary-600 mb-2 text-xs font-semibold tracking-wider uppercase sm:mb-3 sm:text-sm">
               Client Feedback
@@ -39,12 +56,7 @@ export function TestimonialsSection(): React.ReactElement {
           </div>
           <div
             className="motion-slide-up"
-            style={
-              {
-                '--motion-delay': '0.1s',
-                '--motion-duration': '0.5s',
-              } as React.CSSProperties
-            }
+            style={{ '--motion-delay': '0.1s', '--motion-duration': '0.5s' } as React.CSSProperties}
           >
             <Heading
               level={2}
@@ -56,12 +68,7 @@ export function TestimonialsSection(): React.ReactElement {
           </div>
           <div
             className="motion-slide-up"
-            style={
-              {
-                '--motion-delay': '0.2s',
-                '--motion-duration': '0.5s',
-              } as React.CSSProperties
-            }
+            style={{ '--motion-delay': '0.2s', '--motion-duration': '0.5s' } as React.CSSProperties}
           >
             <Text
               variant="secondary"
@@ -88,12 +95,7 @@ export function TestimonialsSection(): React.ReactElement {
         {/* Trust note */}
         <div
           className="motion-slide-up mt-8 text-center sm:mt-10"
-          style={
-            {
-              '--motion-delay': '0.5s',
-              '--motion-duration': '0.4s',
-            } as React.CSSProperties
-          }
+          style={{ '--motion-delay': '0.5s', '--motion-duration': '0.4s' } as React.CSSProperties}
         >
           <p className="text-foreground-muted text-xs sm:text-sm">
             These testimonials reflect genuine client experiences.

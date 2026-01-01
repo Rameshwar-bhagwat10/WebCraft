@@ -383,6 +383,121 @@ export interface Database {
           file_size?: number | null;
         };
       };
+      client_reviews: {
+        Row: {
+          id: string;
+          project_id: string | null;
+          client_name: string;
+          client_role: string | null;
+          client_company: string | null;
+          client_avatar_url: string | null;
+          review_text: string;
+          rating: number | null;
+          is_featured: boolean;
+          is_published: boolean;
+          display_order: number;
+          created_at: string;
+          updated_at: string;
+          published_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          project_id?: string | null;
+          client_name: string;
+          client_role?: string | null;
+          client_company?: string | null;
+          client_avatar_url?: string | null;
+          review_text: string;
+          rating?: number | null;
+          is_featured?: boolean;
+          is_published?: boolean;
+          display_order?: number;
+          created_at?: string;
+          updated_at?: string;
+          published_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          project_id?: string | null;
+          client_name?: string;
+          client_role?: string | null;
+          client_company?: string | null;
+          client_avatar_url?: string | null;
+          review_text?: string;
+          rating?: number | null;
+          is_featured?: boolean;
+          is_published?: boolean;
+          display_order?: number;
+          updated_at?: string;
+          published_at?: string | null;
+        };
+      };
+      visitor_feedback: {
+        Row: {
+          id: string;
+          name: string;
+          email: string | null;
+          message: string;
+          rating: number;
+          status: string;
+          is_featured: boolean;
+          ip_address: string | null;
+          user_agent: string | null;
+          created_at: string;
+          updated_at: string;
+          reviewed_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          email?: string | null;
+          message: string;
+          rating: number;
+          status?: string;
+          is_featured?: boolean;
+          ip_address?: string | null;
+          user_agent?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          reviewed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          email?: string | null;
+          message?: string;
+          rating?: number;
+          status?: string;
+          is_featured?: boolean;
+          ip_address?: string | null;
+          user_agent?: string | null;
+          updated_at?: string;
+          reviewed_at?: string | null;
+        };
+      };
+      idempotency_keys: {
+        Row: {
+          id: string;
+          key: string;
+          endpoint: string;
+          response: Json | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          key: string;
+          endpoint: string;
+          response?: Json | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          key?: string;
+          endpoint?: string;
+          response?: Json | null;
+          created_at?: string;
+        };
+      };
     };
     Views: {
       lead_statistics: {
@@ -407,6 +522,18 @@ export interface Database {
           p_window_minutes: number;
         };
         Returns: boolean;
+      };
+      cleanup_rate_limits: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
+      cleanup_idempotency_keys: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
+      run_all_cleanups: {
+        Args: Record<string, never>;
+        Returns: Json;
       };
     };
     Enums: {
@@ -442,12 +569,29 @@ export type NewsletterSubscription = Tables<'newsletter_subscriptions'>;
 export type AdminUser = Tables<'admin_users'>;
 export type Project = Tables<'projects'>;
 export type ProjectImage = Tables<'project_images'>;
+export type ClientReview = Tables<'client_reviews'>;
+export type VisitorFeedback = Tables<'visitor_feedback'>;
 
 /**
  * Project with images (for detail pages)
  */
 export interface ProjectWithImages extends Project {
   images: ProjectImage[];
+}
+
+/**
+ * Project with images and review (for detail pages)
+ */
+export interface ProjectWithImagesAndReview extends ProjectWithImages {
+  review: ClientReview | null;
+}
+
+/**
+ * Client review with project info (for testimonials)
+ */
+export interface ClientReviewWithProject extends ClientReview {
+  project_title?: string | null;
+  project_slug?: string | null;
 }
 
 /**

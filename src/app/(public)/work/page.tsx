@@ -30,7 +30,7 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default async function WorkPage(): Promise<React.ReactElement> {
   // Try to fetch from database, fall back to static data
-  let projects = await getPublishedProjects();
+  const projects = await getPublishedProjects();
   
   // If no database projects, use static demo data
   const useStaticData = projects.length === 0;

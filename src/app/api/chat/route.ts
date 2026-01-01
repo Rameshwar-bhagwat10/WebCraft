@@ -6,10 +6,12 @@
  * - Request body size limit (100KB)
  * - Safe JSON parsing
  * - Rate limiting fails closed
+ * - CAPTCHA verification for first message
  * - Session ownership validation
  * - Server-side visitor ID validation
  */
 
+import { verifyCaptcha } from '@/lib/captcha';
 import { notifyNewChatMessage } from '@/lib/email/notifications';
 import { checkRateLimit, rateLimitHeaders } from '@/lib/rate-limit';
 import {
@@ -43,6 +45,15 @@ export async function POST(request: Request) {
     return errorResponse('Invalid visitor identity', 400);
   }
   const visitorId = visitorValidation.visitorId;
+
+  // Verify CAPTCHA for first message (no session_id means new chat)
+  if (!validation.data!.session_id) {
+    const captchaToken = body.captchaToken as string | undefined;
+    const captchaResult = await verifyCaptcha(captchaToken);
+    if (!captchaResult.success) {
+      return errorResponse(captchaResult.error ?? 'Captcha verification failed', 400);
+    }
+  }
 
   // Check rate limit using validated visitor_id (fails closed)
   const rateLimit = await checkRateLimit('chat', visitorId);

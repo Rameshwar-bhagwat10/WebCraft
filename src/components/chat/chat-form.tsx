@@ -3,11 +3,13 @@
 /**
  * ChatForm Component
  * Quick message form for the chat widget
+ * Protected by reCAPTCHA v3 for first message
  */
 
 import { useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui';
+import { useRecaptcha } from '@/hooks/use-recaptcha';
 import { cn } from '@/lib/utils';
 import {
   getChatSessionId,
@@ -21,6 +23,7 @@ interface ChatFormProps {
 }
 
 export function ChatForm({ onSuccess }: ChatFormProps): React.ReactElement {
+  const { executeRecaptcha } = useRecaptcha();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,12 +45,16 @@ export function ChatForm({ onSuccess }: ChatFormProps): React.ReactElement {
       const visitorId = getOrCreateVisitorId();
       const sessionId = getChatSessionId();
 
+      // Get CAPTCHA token only for first message (no session yet)
+      const captchaToken = !sessionId ? await executeRecaptcha('chat_form') : null;
+
       const result = await submitChatMessage({
         visitor_id: visitorId,
         session_id: sessionId,
         message,
         visitor_name: name,
         visitor_email: email,
+        captchaToken,
       });
 
       setIsSubmitting(false);
@@ -63,7 +70,7 @@ export function ChatForm({ onSuccess }: ChatFormProps): React.ReactElement {
         setError(result.error ?? 'Failed to send message');
       }
     },
-    [onSuccess]
+    [onSuccess, executeRecaptcha]
   );
 
   if (isSubmitted) {

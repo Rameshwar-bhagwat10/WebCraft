@@ -4,6 +4,7 @@
  *
  * Client Component - handles form state and submission
  * Integrates with Supabase backend via API routes
+ * Protected by reCAPTCHA v3
  */
 
 'use client';
@@ -11,6 +12,7 @@
 import { useState } from 'react';
 
 import { Button, Text } from '@/components/ui';
+import { useRecaptcha } from '@/hooks/use-recaptcha';
 import { submitContactForm } from '@/services/forms';
 import type { ProjectType } from '@/types/database';
 
@@ -89,6 +91,7 @@ function validateForm(data: FormData): FormErrors {
 }
 
 export function ContactForm(): React.ReactElement {
+  const { executeRecaptcha } = useRecaptcha();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -129,6 +132,9 @@ export function ContactForm(): React.ReactElement {
 
     setStatus('submitting');
 
+    // Get CAPTCHA token
+    const captchaToken = await executeRecaptcha('contact_form');
+
     // Submit to API
     const result = await submitContactForm({
       name: formData.name,
@@ -137,6 +143,7 @@ export function ContactForm(): React.ReactElement {
       project_type: formData.projectType as ProjectType,
       message: formData.message,
       website: formData.website, // Honeypot
+      captchaToken,
     });
 
     if (result.success) {

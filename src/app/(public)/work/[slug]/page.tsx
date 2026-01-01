@@ -20,6 +20,7 @@ import {
 import { JsonLd } from '@/components/shared';
 import { siteConfig } from '@/config/site';
 import { getProjectBySlug, getProjectImageUrl } from '@/lib/projects';
+import { getProjectReview } from '@/lib/reviews/queries';
 import type { ProjectWithImages } from '@/types/database';
 
 // Revalidate every 60 seconds
@@ -135,10 +136,13 @@ export default async function ProjectPage({
   // Try database first
   const dbProject = await getProjectBySlug(slug);
   if (dbProject) {
+    // Fetch review for this project
+    const review = await getProjectReview(dbProject.id);
+    
     return (
       <>
         <JsonLd data={generateProjectSchema(dbProject, true)} />
-        <ProjectDetail project={dbProject} />
+        <ProjectDetail project={dbProject} review={review} />
       </>
     );
   }

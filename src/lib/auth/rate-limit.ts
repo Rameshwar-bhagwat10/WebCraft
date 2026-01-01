@@ -17,6 +17,7 @@ export interface RateLimitResult {
 
 /**
  * Check if login attempt is allowed
+ * HARDENED: Fails CLOSED - denies on error to prevent brute-force during DB issues
  */
 export async function checkLoginRateLimit(
   identifier: string
@@ -34,9 +35,17 @@ export async function checkLoginRateLimit(
     } as never);
 
     if (error) {
-      console.error('Rate limit check error:', error);
-      // Fail open - allow attempt if check fails
-      return { allowed: true, locked: false, attempts: 0 };
+      // FAIL CLOSED: Deny login attempts when rate limit check fails
+      console.error('[AuthRateLimit] Database error - DENYING request for safety', {
+        error: error.message,
+        identifier: identifier.slice(0, 3) + '***',
+      });
+      return {
+        allowed: false,
+        locked: true,
+        attempts: 999,
+        lockedUntil: new Date(Date.now() + 60000).toISOString(),
+      };
     }
 
     const result = data as {
@@ -55,8 +64,16 @@ export async function checkLoginRateLimit(
       remaining: result.remaining,
     };
   } catch (error) {
-    console.error('Rate limit error:', error);
-    return { allowed: true, locked: false, attempts: 0 };
+    // FAIL CLOSED: Deny on any exception
+    console.error('[AuthRateLimit] Exception - DENYING request for safety', {
+      error: error instanceof Error ? error.message : 'Unknown',
+    });
+    return {
+      allowed: false,
+      locked: true,
+      attempts: 999,
+      lockedUntil: new Date(Date.now() + 60000).toISOString(),
+    };
   }
 }
 
@@ -78,6 +95,7 @@ export async function resetLoginRateLimit(identifier: string): Promise<void> {
 
 /**
  * Check password reset rate limit
+ * HARDENED: Fails CLOSED - denies on error to prevent abuse during DB issues
  */
 export async function checkPasswordResetRateLimit(
   identifier: string
@@ -95,7 +113,17 @@ export async function checkPasswordResetRateLimit(
     } as never);
 
     if (error) {
-      return { allowed: true, locked: false, attempts: 0 };
+      // FAIL CLOSED: Deny password reset attempts when rate limit check fails
+      console.error('[AuthRateLimit] Password reset check failed - DENYING for safety', {
+        error: error.message,
+        identifier: identifier.slice(0, 3) + '***',
+      });
+      return {
+        allowed: false,
+        locked: true,
+        attempts: 999,
+        lockedUntil: new Date(Date.now() + 60000).toISOString(),
+      };
     }
 
     const result = data as {
@@ -113,7 +141,16 @@ export async function checkPasswordResetRateLimit(
       attempts: result.attempts,
       remaining: result.remaining,
     };
-  } catch {
-    return { allowed: true, locked: false, attempts: 0 };
+  } catch (error) {
+    // FAIL CLOSED: Deny on any exception
+    console.error('[AuthRateLimit] Password reset exception - DENYING for safety', {
+      error: error instanceof Error ? error.message : 'Unknown',
+    });
+    return {
+      allowed: false,
+      locked: true,
+      attempts: 999,
+      lockedUntil: new Date(Date.now() + 60000).toISOString(),
+    };
   }
 }

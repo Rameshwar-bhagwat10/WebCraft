@@ -81,7 +81,7 @@ export function ChatTrigger(): React.ReactElement {
         type="button"
         onClick={toggleWidget}
         className={cn(
-          'fixed right-4 bottom-4 z-50 sm:right-6 sm:bottom-6',
+          'fixed right-4 bottom-20 z-50 sm:right-6 sm:bottom-24',
           'flex h-14 w-14 items-center justify-center rounded-full',
           'shadow-lg',
           'transition-all duration-200 ease-out',

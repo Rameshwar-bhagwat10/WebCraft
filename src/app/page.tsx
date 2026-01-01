@@ -17,6 +17,7 @@
 import type { Metadata } from 'next';
 
 import { CalculatorSection } from '@/components/calculator';
+import { VisitorFeedbackSection } from '@/components/feedback';
 import {
   FeaturedWork,
   FinalCTA,
@@ -82,6 +83,9 @@ export default function HomePage(): React.ReactElement {
 
       {/* Client Testimonials - Social proof */}
       <TestimonialsSection />
+
+      {/* Visitor Feedback - Community engagement */}
+      <VisitorFeedbackSection />
 
       {/* Final CTA - Conversion */}
       <FinalCTA />

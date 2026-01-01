@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { Container, Section } from '@/components/layout';
 import { Button, Heading, Text } from '@/components/ui';
 import { cn } from '@/lib/utils';
-import type { ProjectWithImages } from '@/types/database';
+import type { ClientReview, ProjectWithImages } from '@/types/database';
 
 import { ProjectImage } from './project-image';
 import type { ProjectData } from './projects-data';
@@ -21,6 +21,8 @@ import { projectsData } from './projects-data';
 interface ProjectDetailProps {
   /** Project from database or static data */
   project: ProjectWithImages | ProjectData;
+  /** Client review for this project (database projects only) */
+  review?: ClientReview | null;
 }
 
 /**
@@ -91,6 +93,7 @@ function formatCategory(category: string): string {
 
 export function ProjectDetail({
   project,
+  review,
 }: ProjectDetailProps): React.ReactElement {
   const isDb = checkIsDbProject(project);
   
@@ -353,6 +356,87 @@ export function ProjectDetail({
                     </a>
                   </Button>
                 )}
+              </div>
+            </div>
+          </Container>
+        </Section>
+      )}
+
+      {/* Client Review - Database projects only */}
+      {review && (
+        <Section size="lg" background="secondary" aria-labelledby="review-heading">
+          <Container size="lg">
+            <div className="mx-auto max-w-4xl">
+              <div className="motion-slide-up mb-8" style={{ '--motion-delay': '0s', '--motion-duration': '0.5s' } as React.CSSProperties}>
+                <Heading level={2} id="review-heading">Client Feedback</Heading>
+              </div>
+              <div
+                className={cn(
+                  'motion-slide-up relative overflow-hidden rounded-2xl',
+                  'bg-white border border-neutral-100',
+                  'p-6 sm:p-8',
+                  'shadow-sm'
+                )}
+                style={{ '--motion-delay': '0.1s', '--motion-duration': '0.5s' } as React.CSSProperties}
+              >
+                {/* Quote icon */}
+                <div className="mb-4">
+                  <svg
+                    className="text-primary-200 h-10 w-10 sm:h-12 sm:w-12"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                  </svg>
+                </div>
+
+                {/* Rating */}
+                {review.rating && (
+                  <div className="mb-4 flex gap-0.5" aria-label={`${review.rating} out of 5 stars`}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg
+                        key={star}
+                        className={cn('h-5 w-5', star <= review.rating! ? 'text-amber-400' : 'text-neutral-200')}
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                    ))}
+                  </div>
+                )}
+
+                {/* Review text */}
+                <blockquote className="mb-6">
+                  <Text variant="secondary" size="lg" className="leading-relaxed text-pretty">
+                    &ldquo;{review.review_text}&rdquo;
+                  </Text>
+                </blockquote>
+
+                {/* Client info */}
+                <footer className="border-border flex items-center gap-4 border-t pt-4">
+                  {/* Avatar with initials */}
+                  <div
+                    className="bg-primary-100 text-primary-700 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+                    aria-hidden="true"
+                  >
+                    {review.client_name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2)}
+                  </div>
+                  <div>
+                    <p className="text-foreground font-semibold">{review.client_name}</p>
+                    <p className="text-foreground-muted text-sm">
+                      {review.client_role}
+                      {review.client_role && review.client_company ? ', ' : ''}
+                      {review.client_company}
+                    </p>
+                  </div>
+                </footer>
               </div>
             </div>
           </Container>

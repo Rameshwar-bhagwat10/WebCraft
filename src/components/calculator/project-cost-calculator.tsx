@@ -5,12 +5,14 @@
  * Interactive cost estimation tool
  *
  * Client Component - requires state for calculations
+ * Protected by reCAPTCHA v3
  */
 
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui';
+import { useRecaptcha } from '@/hooks/use-recaptcha';
 import { cn } from '@/lib/utils';
 import { submitCalculatorForm } from '@/services/forms';
 import type { ProjectType } from '@/types/database';
@@ -91,6 +93,7 @@ function AnimatedPrice({
 }
 
 export function ProjectCostCalculator(): React.ReactElement {
+  const { executeRecaptcha } = useRecaptcha();
   const [inputs, setInputs] = useState<CalculatorInputs>(defaultInputs);
   const [showSaveForm, setShowSaveForm] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -116,6 +119,9 @@ export function ProjectCostCalculator(): React.ReactElement {
 
     setSaveStatus('loading');
 
+    // Get CAPTCHA token
+    const captchaToken = await executeRecaptcha('calculator_form');
+
     // Map calculator inputs to API format
     const features = [
       `Scope: ${inputs.projectScope}`,
@@ -134,6 +140,7 @@ export function ProjectCostCalculator(): React.ReactElement {
       contact_email: contactEmail.trim(),
       contact_name: contactName.trim() || undefined,
       website, // Honeypot
+      captchaToken,
     });
 
     if (result.success) {

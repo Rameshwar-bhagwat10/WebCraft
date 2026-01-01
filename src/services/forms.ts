@@ -4,6 +4,7 @@
  *
  * All submissions go through API routes which handle:
  * - Rate limiting
+ * - CAPTCHA verification
  * - Validation
  * - Spam protection
  * - Database insertion
@@ -33,6 +34,8 @@ export interface ContactFormInput {
   message: string;
   // Honeypot field (should be empty)
   website?: string | undefined;
+  // CAPTCHA token
+  captchaToken?: string | null;
 }
 
 /**
@@ -75,6 +78,8 @@ export interface CalculatorFormInput {
   contact_name?: string | undefined;
   // Honeypot field
   website?: string | undefined;
+  // CAPTCHA token
+  captchaToken?: string | null;
 }
 
 /**
@@ -113,6 +118,8 @@ export interface ChatMessageInput {
   message: string;
   visitor_email?: string;
   visitor_name?: string;
+  // CAPTCHA token (only for first message)
+  captchaToken?: string | null;
 }
 
 /**
@@ -154,6 +161,8 @@ export interface NewsletterInput {
   source: string;
   // Honeypot field
   website?: string;
+  // CAPTCHA token
+  captchaToken?: string | null;
 }
 
 /**
@@ -174,6 +183,44 @@ export async function subscribeNewsletter(data: NewsletterInput): Promise<ApiRes
         success: false,
         error: result.error || 'Failed to subscribe',
         errors: result.errors,
+      };
+    }
+
+    return { success: true, message: result.message };
+  } catch {
+    return { success: false, error: 'Network error. Please try again.' };
+  }
+}
+
+/**
+ * Feedback submission data
+ */
+export interface FeedbackInput {
+  name: string;
+  email?: string | null;
+  message: string;
+  rating: number;
+  // CAPTCHA token
+  captchaToken?: string | null;
+}
+
+/**
+ * Submit visitor feedback
+ */
+export async function submitFeedback(data: FeedbackInput): Promise<ApiResponse> {
+  try {
+    const response = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: result.error || 'Failed to submit feedback',
       };
     }
 
