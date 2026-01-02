@@ -5,7 +5,6 @@
 export { FeaturedWork } from './featured-work';
 export { FinalCTA } from './final-cta';
 export { Hero } from './hero';
-export { InteractiveGrid } from './interactive-grid';
 export { ProcessSection } from './process-section';
 export { ServiceCard } from './service-card';
 export { ServicesSection } from './services-section';

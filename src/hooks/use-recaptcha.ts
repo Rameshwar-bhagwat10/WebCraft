@@ -4,12 +4,16 @@
  * reCAPTCHA v3 Hook
  * Provides invisible CAPTCHA protection for forms
  *
+ * PERFORMANCE OPTIMIZED:
+ * - Lazy loads script only when executeRecaptcha is called
+ * - Does not load on component mount
+ *
  * Usage:
  * const { executeRecaptcha, isReady } = useRecaptcha();
  * const token = await executeRecaptcha('contact_form');
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 declare global {
   interface Window {
@@ -25,44 +29,58 @@ const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 export function useRecaptcha() {
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const loadPromiseRef = useRef<Promise<void> | null>(null);
 
-  useEffect(() => {
-    // Debug log
-    console.warn('[reCAPTCHA] Site key configured:', Boolean(RECAPTCHA_SITE_KEY));
-    
-    // Skip if no site key configured
+  /**
+   * Lazy load reCAPTCHA script
+   * Only called when executeRecaptcha is invoked
+   */
+  const loadScript = useCallback((): Promise<void> => {
+    // Return existing promise if already loading
+    if (loadPromiseRef.current) {
+      return loadPromiseRef.current;
+    }
+
+    // Skip if no site key
     if (!RECAPTCHA_SITE_KEY) {
-      console.warn('[reCAPTCHA] No site key found, skipping CAPTCHA');
-      setIsReady(true); // Allow forms to work without CAPTCHA in dev
-      return;
+      setIsReady(true);
+      return Promise.resolve();
     }
 
     // Check if already loaded
     if (window.grecaptcha) {
-      window.grecaptcha.ready(() => setIsReady(true));
-      return;
+      return new Promise((resolve) => {
+        window.grecaptcha.ready(() => {
+          setIsReady(true);
+          resolve();
+        });
+      });
     }
 
-    // Load reCAPTCHA script
-    const script = document.createElement('script');
-    script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
-    script.async = true;
-    script.defer = true;
+    // Load script lazily
+    loadPromiseRef.current = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+      script.async = true;
+      script.defer = true;
 
-    script.onload = () => {
-      window.grecaptcha.ready(() => setIsReady(true));
-    };
+      script.onload = () => {
+        window.grecaptcha.ready(() => {
+          setIsReady(true);
+          resolve();
+        });
+      };
 
-    script.onerror = () => {
-      console.error('[reCAPTCHA] Failed to load script');
-      setIsReady(true); // Allow forms to work even if CAPTCHA fails
-    };
+      script.onerror = () => {
+        console.error('[reCAPTCHA] Failed to load script');
+        setIsReady(true); // Allow forms to work
+        reject(new Error('Failed to load reCAPTCHA'));
+      };
 
-    document.head.appendChild(script);
+      document.head.appendChild(script);
+    });
 
-    return () => {
-      // Cleanup not needed - script stays loaded
-    };
+    return loadPromiseRef.current;
   }, []);
 
   const executeRecaptcha = useCallback(
@@ -72,14 +90,19 @@ export function useRecaptcha() {
         return null;
       }
 
-      if (!isReady || !window.grecaptcha) {
-        console.warn('[reCAPTCHA] Not ready yet');
-        return null;
-      }
-
       setIsLoading(true);
 
       try {
+        // Lazy load script if not ready
+        if (!isReady) {
+          await loadScript();
+        }
+
+        if (!window.grecaptcha) {
+          console.warn('[reCAPTCHA] Not available');
+          return null;
+        }
+
         const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
           action,
         });
@@ -91,7 +114,7 @@ export function useRecaptcha() {
         setIsLoading(false);
       }
     },
-    [isReady]
+    [isReady, loadScript]
   );
 
   return {

@@ -35,13 +35,10 @@ export function PortfolioGrid({ projects }: PortfolioGridProps): React.ReactElem
       aria-labelledby="work-heading"
       className="relative overflow-hidden"
     >
-      {/* Background decoration */}
+      {/* Background decoration - static, no animations */}
       <div className="absolute inset-0 -z-10" aria-hidden="true">
-        <div className="motion-float motion-pulse-glow bg-primary-100 absolute -top-1/2 left-1/2 h-[800px] w-[800px] -translate-x-1/2 rounded-full opacity-60 blur-3xl" />
-        <div
-          className="motion-float bg-primary-50 absolute -right-1/4 -bottom-1/4 h-[500px] w-[500px] rounded-full opacity-50 blur-3xl"
-          style={{ animationDelay: '-10s' }}
-        />
+        <div className="bg-primary-100 absolute -top-1/2 left-1/2 h-[800px] w-[800px] -translate-x-1/2 rounded-full opacity-50 blur-3xl" />
+        <div className="bg-primary-50 absolute -right-1/4 -bottom-1/4 h-[500px] w-[500px] rounded-full opacity-40 blur-3xl" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] mask-[radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] bg-size-[4rem_4rem]" />
       </div>
 

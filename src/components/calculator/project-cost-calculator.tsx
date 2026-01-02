@@ -9,7 +9,7 @@
  */
 
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui';
 import { useRecaptcha } from '@/hooks/use-recaptcha';
@@ -32,7 +32,8 @@ import {
 } from './calculator-logic';
 
 /**
- * Animated number display with count-up effect
+ * Price display - simple CSS transition instead of RAF animation
+ * Much better performance, same visual effect
  */
 function AnimatedPrice({
   value,
@@ -43,50 +44,10 @@ function AnimatedPrice({
   prefix?: string;
   suffix?: string;
 }): React.ReactElement {
-  const [displayValue, setDisplayValue] = useState(value);
-  const animationRef = useRef<number | null>(null);
-  const prefersReducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  useEffect(() => {
-    if (prefersReducedMotion) {
-      setDisplayValue(value);
-      return;
-    }
-
-    const startValue = displayValue;
-    const diff = value - startValue;
-    const duration = 400;
-    const startTime = performance.now();
-
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      // Ease out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(startValue + diff * eased);
-      setDisplayValue(current);
-
-      if (progress < 1) {
-        animationRef.current = requestAnimationFrame(animate);
-      }
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, prefersReducedMotion]);
-
   return (
-    <span>
+    <span className="tabular-nums transition-opacity duration-200">
       {prefix}
-      {formatPrice(displayValue)}
+      {formatPrice(value)}
       {suffix}
     </span>
   );

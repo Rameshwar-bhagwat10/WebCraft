@@ -12,15 +12,13 @@
  * - Generous whitespace around CTAs
  * - Clear visual hierarchy
  * - Premium entrance animations (CSS-only)
- * - Interactive grid background with cursor-following glow
+ * - Static grid background (no JS overhead)
  */
 
 import Link from 'next/link';
 
 import { Container } from '@/components/layout';
 import { Button } from '@/components/ui';
-
-import { InteractiveGrid } from './interactive-grid';
 
 /**
  * Hero eyebrow - establishes context before headline
@@ -212,26 +210,27 @@ export function Hero(): React.ReactElement {
         </div>
       </Container>
 
-      {/* Interactive grid background with cursor-following glow */}
-      <InteractiveGrid />
+      {/* Static grid background - CSS only, no JS overhead */}
+      <div
+        className="absolute inset-0 -z-10 overflow-hidden"
+        aria-hidden="true"
+      >
+        <div
+          className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.87_0_0/0.15)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.87_0_0/0.15)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[linear-gradient(to_bottom,#000_0%,#000_60%,transparent_100%)]"
+        />
+      </div>
 
-      {/* Enhanced background decoration - CSS only, no images */}
+      {/* Background decoration - static gradients, no animations */}
       <div
         className="absolute inset-0 -z-20 overflow-hidden"
         aria-hidden="true"
       >
-        {/* Primary gradient blob - enhanced with ambient motion */}
-        <div className="motion-float motion-pulse-glow bg-primary-100 absolute -top-1/2 left-1/2 h-[1000px] w-[1000px] -translate-x-1/2 rounded-full opacity-70 blur-3xl" />
-        {/* Secondary accent - offset animation timing */}
-        <div
-          className="motion-float bg-primary-50 absolute right-0 -bottom-1/4 h-[600px] w-[600px] rounded-full opacity-50 blur-3xl"
-          style={{ animationDelay: '-10s' }}
-        />
+        {/* Primary gradient blob - static */}
+        <div className="bg-primary-100 absolute -top-1/2 left-1/2 h-[1000px] w-[1000px] -translate-x-1/2 rounded-full opacity-60 blur-3xl" />
+        {/* Secondary accent */}
+        <div className="bg-primary-50 absolute right-0 -bottom-1/4 h-[600px] w-[600px] rounded-full opacity-40 blur-3xl" />
         {/* Tertiary accent for depth */}
-        <div
-          className="motion-float bg-primary-200/30 absolute top-1/4 -left-1/4 h-[400px] w-[400px] rounded-full blur-3xl"
-          style={{ animationDelay: '-5s' }}
-        />
+        <div className="bg-primary-200/30 absolute top-1/4 -left-1/4 h-[400px] w-[400px] rounded-full blur-3xl" />
       </div>
     </section>
   );

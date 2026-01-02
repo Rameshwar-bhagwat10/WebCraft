@@ -269,13 +269,16 @@ export function ProjectCard({
       : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/project-images/${thumbnail}`
     : null;
 
+  // Limit animation delay to prevent long waits (max 0.5s)
+  const animationDelay = Math.min(index * 0.08, 0.5);
+
   return (
     <article
       className={cn('motion-slide-up group', className)}
       style={
         {
-          '--motion-delay': `${0.1 + index * 0.1}s`,
-          '--motion-duration': '0.5s',
+          '--motion-delay': `${animationDelay}s`,
+          '--motion-duration': '0.4s',
         } as React.CSSProperties
       }
     >
