@@ -318,8 +318,9 @@ export async function removeProjectImage(id: string): Promise<OperationResult> {
       .from('project-images')
       .remove([imageData.storage_path]);
 
-    if (storageError) {
-      console.warn('[Admin] Storage delete warning:', storageError);
+    // Storage deletion is non-critical - image may already be deleted
+    if (storageError && process.env.NODE_ENV !== 'production') {
+      console.warn('[Admin] Storage delete warning:', storageError.message);
     }
   }
 

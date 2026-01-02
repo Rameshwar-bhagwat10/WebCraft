@@ -99,7 +99,7 @@ export function useRecaptcha() {
         }
 
         if (!window.grecaptcha) {
-          console.warn('[reCAPTCHA] Not available');
+          // reCAPTCHA not available - allow form to proceed without token
           return null;
         }
 

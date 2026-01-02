@@ -56,13 +56,19 @@ export async function verifyCaptcha(
     };
 
     if (!data.success) {
-      console.warn('[Captcha] Verification failed:', data['error-codes']);
+      // Verification failed - logged for security monitoring
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('[Captcha] Verification failed:', data['error-codes']);
+      }
       return { success: false, error: 'Captcha verification failed' };
     }
 
     const score = data.score ?? 1.0;
     if (score < MIN_SCORE_THRESHOLD) {
-      console.warn('[Captcha] Low score detected:', score);
+      // Low score indicates potential bot - logged for security monitoring
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('[Captcha] Low score detected:', score);
+      }
       return { success: false, score, error: 'Suspicious activity detected' };
     }
 

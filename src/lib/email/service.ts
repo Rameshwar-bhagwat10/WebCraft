@@ -76,22 +76,24 @@ export async function sendEmail(params: SendEmailParams): Promise<SendEmailResul
         replyTo,
       });
 
-      console.warn('[Email] Sent successfully', {
-        messageId: info.messageId,
-        to: recipients,
-        subject: subject.slice(0, 50),
-      });
+      // Email sent successfully - intentionally kept for operational visibility
+      if (process.env.NODE_ENV !== 'production') {
+        console.info('[Email] Sent successfully', {
+          messageId: info.messageId,
+          to: recipients,
+        });
+      }
 
       return { success: true, messageId: info.messageId };
     } catch (error) {
       lastError = error instanceof Error ? error.message : 'Unknown error';
 
-      // Log retry attempt
-      if (attempt < EMAIL_CONFIG.maxRetries) {
-        console.warn(`[Email] Attempt ${attempt + 1} failed, retrying...`, {
-          error: lastError,
-        });
+      // Log retry attempt in development only
+      if (attempt < EMAIL_CONFIG.maxRetries && process.env.NODE_ENV !== 'production') {
+        console.warn(`[Email] Attempt ${attempt + 1} failed, retrying...`);
         // Brief delay before retry
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      } else if (attempt < EMAIL_CONFIG.maxRetries) {
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
     }

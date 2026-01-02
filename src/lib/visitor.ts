@@ -125,11 +125,9 @@ export async function validateSessionOwnership(
     
     // Check if visitor owns this session
     if (session.visitor_id !== visitorId) {
-      console.warn('[Visitor] Session ownership mismatch', {
-        sessionId: sessionId.slice(0, 8),
-        expected: session.visitor_id.slice(0, 8),
-        provided: visitorId.slice(0, 8),
-      });
+      // Security: Session ownership mismatch - potential session hijacking attempt
+      // Intentionally kept as console.error for security monitoring
+      console.error('[Visitor] Session ownership mismatch');
       return { valid: false, error: 'Session access denied' };
     }
 

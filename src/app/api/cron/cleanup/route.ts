@@ -73,7 +73,10 @@ export async function POST(request: NextRequest) {
     const idempotencyDeleted = await cleanupExpiredKeys();
     results.idempotency_ts = { deleted: idempotencyDeleted };
 
-    console.warn('[Cron] Cleanup completed:', results);
+    // Log cleanup results in development only
+    if (process.env.NODE_ENV !== 'production') {
+      console.info('[Cron] Cleanup completed:', results);
+    }
 
     return NextResponse.json({
       success: true,
