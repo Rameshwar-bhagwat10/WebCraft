@@ -8,7 +8,6 @@
  * - Mission & Vision
  * - How we work
  * - Our values
- * - Meet the team
  * - Tech stack
  * - CTA
  *
@@ -33,7 +32,6 @@ import {
   OurProcess,
   OurStory,
   OurValues,
-  TeamSection,
   TechStack,
 } from '@/components/about';
 import { JsonLd } from '@/components/shared';
@@ -77,8 +75,7 @@ export default function AboutPage(): React.ReactElement {
       {/* Our Values - What we believe */}
       <OurValues />
 
-      {/* Team Section */}
-      <TeamSection />
+      {/* TODO: Add TeamSection back when team data is ready */}
 
       {/* Tech Stack */}
       <TechStack />

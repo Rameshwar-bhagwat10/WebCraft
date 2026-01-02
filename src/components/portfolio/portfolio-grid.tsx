@@ -2,7 +2,7 @@
  * Portfolio Grid Component
  * Enhanced hero with project cards in a responsive grid
  *
- * Server Component - no client JS needed
+ * Server Component for header, Client Component for filters
  * Supports both database and static data
  */
 
@@ -10,7 +10,7 @@ import { Container, Section } from '@/components/layout';
 import { Text } from '@/components/ui';
 import type { ProjectListItem } from '@/types/database';
 
-import { ProjectCard } from './project-card';
+import { PortfolioFilters } from './portfolio-filters';
 import { projectsData } from './projects-data';
 
 interface PortfolioGridProps {
@@ -136,40 +136,11 @@ export function PortfolioGrid({ projects }: PortfolioGridProps): React.ReactElem
           </div>
         </div>
 
-        {/* Projects grid */}
-        <ul className="grid list-none gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {useDbProjects ? (
-            // Database projects
-            projects.map((project, index) => (
-              <li key={project.slug}>
-                <ProjectCard
-                  slug={project.slug}
-                  title={project.title}
-                  shortDescription={project.short_description}
-                  type={project.category}
-                  thumbnail={project.cover_image_path}
-                  thumbnailAlt={project.cover_image_alt}
-                  index={index}
-                />
-              </li>
-            ))
-          ) : (
-            // Static demo projects
-            projectsData.map((project, index) => (
-              <li key={project.slug}>
-                <ProjectCard
-                  slug={project.slug}
-                  title={project.title}
-                  shortDescription={project.shortDescription}
-                  type={project.type}
-                  thumbnail={project.thumbnail}
-                  result={project.outcome.split('.')[0]}
-                  index={index}
-                />
-              </li>
-            ))
-          )}
-        </ul>
+        {/* Projects grid with filters */}
+        <PortfolioFilters
+          dbProjects={useDbProjects ? projects : undefined}
+          staticProjects={useDbProjects ? undefined : projectsData}
+        />
       </Container>
     </Section>
   );

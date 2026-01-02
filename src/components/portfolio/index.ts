@@ -2,6 +2,7 @@
  * Portfolio Components Barrel Export
  */
 
+export { PortfolioFilters } from './portfolio-filters';
 export { PortfolioGrid } from './portfolio-grid';
 export { ProjectCard } from './project-card';
 export { ProjectDetail } from './project-detail';
