@@ -146,47 +146,6 @@ function HeroCTA(): React.ReactElement {
 }
 
 /**
- * Trust indicators - social proof snippet
- * Builds credibility without heavy content
- * Enhanced with pill-style badges
- */
-function TrustBadges(): React.ReactElement {
-  const companies = ['TechCorp', 'StartupX', 'GrowthCo', 'InnovateLab'];
-
-  return (
-    <div
-      className="motion-fade-in border-border/50 mt-16 border-t pt-8 sm:mt-20 sm:pt-10"
-      style={
-        {
-          '--motion-delay': '0.5s',
-          '--motion-duration': '0.8s',
-        } as React.CSSProperties
-      }
-    >
-      <p className="text-foreground-muted mb-6 text-sm">
-        Trusted by innovative companies
-      </p>
-      <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-        {companies.map((company, index) => (
-          <span
-            key={company}
-            className="motion-scale-in border-border/60 bg-background/80 text-foreground-secondary hover:border-primary-200 hover:bg-primary-50/50 rounded-full border px-4 py-1.5 text-sm font-medium backdrop-blur-sm transition-all duration-200"
-            style={
-              {
-                '--motion-delay': `${0.6 + index * 0.1}s`,
-                '--motion-duration': '0.4s',
-              } as React.CSSProperties
-            }
-          >
-            {company}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/**
  * Main Hero Section
  * Clean, focused, conversion-optimized
  *
@@ -206,7 +165,6 @@ export function Hero(): React.ReactElement {
           <HeroHeadline />
           <HeroSubheadline />
           <HeroCTA />
-          <TrustBadges />
         </div>
       </Container>
 

@@ -7,6 +7,7 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 
+import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 
 import { ChatForm } from './chat-form';
@@ -225,7 +226,7 @@ export function ChatWidget({
           {/* Contact shortcuts */}
           <div className="flex gap-2">
             <a
-              href="mailto:hello@webcraft.com"
+              href={`mailto:${siteConfig.email}`}
               className={cn(
                 'flex flex-1 items-center justify-center gap-2 rounded-lg',
                 'border-border bg-background border px-3 py-2.5',
@@ -239,7 +240,7 @@ export function ChatWidget({
               Email
             </a>
             <a
-              href="https://wa.me/919876543210"
+              href={`https://wa.me/${siteConfig.whatsapp}`}
               target="_blank"
               rel="noopener noreferrer"
               className={cn(

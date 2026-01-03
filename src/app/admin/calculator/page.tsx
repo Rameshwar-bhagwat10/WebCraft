@@ -93,7 +93,7 @@ export default async function CalculatorPage({ searchParams }: PageProps) {
 
               <div className="mb-4">
                 <p className="text-2xl font-bold text-neutral-900">
-                  ${sub.estimated_min.toLocaleString()} - ${sub.estimated_max.toLocaleString()}
+                  ₹{sub.estimated_min.toLocaleString('en-IN')} - ₹{sub.estimated_max.toLocaleString('en-IN')}
                 </p>
                 <p className="text-sm text-neutral-500">Estimated budget</p>
               </div>

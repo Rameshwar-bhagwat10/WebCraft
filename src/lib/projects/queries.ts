@@ -7,7 +7,10 @@
  * - Uses indexes for hot paths
  * - Avoids N+1 queries
  * - Lightweight featured projects query
+ * - Cached queries for home page (60s revalidation)
  */
+
+import { unstable_cache } from 'next/cache';
 
 import { createAdminClient } from '@/lib/supabase/server';
 import type {
@@ -20,13 +23,9 @@ import type {
 import type { ProjectFilters } from './types';
 
 /**
- * Get featured projects for Home page
- * Optimized: Uses index, minimal columns, single query with join
- * Target: < 150ms
+ * Internal: Fetch featured projects from database
  */
-export async function getFeaturedProjects(
-  limit: number = 3
-): Promise<FeaturedProject[]> {
+async function fetchFeaturedProjects(limit: number): Promise<FeaturedProject[]> {
   const supabase = createAdminClient();
 
   // First get featured projects
@@ -88,10 +87,20 @@ export async function getFeaturedProjects(
 }
 
 /**
- * Get all published projects for Work page
- * Target: < 200ms
+ * Get featured projects for Home page (CACHED)
+ * Revalidates every 60 seconds for fresh content
+ * Target: < 50ms (cached) / < 150ms (uncached)
  */
-export async function getPublishedProjects(
+export const getFeaturedProjects = unstable_cache(
+  async (limit: number = 3) => fetchFeaturedProjects(limit),
+  ['featured-projects'],
+  { revalidate: 60, tags: ['projects'] }
+);
+
+/**
+ * Internal: Fetch all published projects from database
+ */
+async function fetchPublishedProjects(
   filters?: ProjectFilters
 ): Promise<ProjectListItem[]> {
   const supabase = createAdminClient();
@@ -175,10 +184,20 @@ export async function getPublishedProjects(
 }
 
 /**
- * Get single project by slug with all images
- * Target: < 200ms
+ * Get all published projects for Work page (CACHED)
+ * Revalidates every 60 seconds
+ * Target: < 50ms (cached) / < 200ms (uncached)
  */
-export async function getProjectBySlug(
+export const getPublishedProjects = unstable_cache(
+  async (filters?: ProjectFilters) => fetchPublishedProjects(filters),
+  ['published-projects'],
+  { revalidate: 60, tags: ['projects'] }
+);
+
+/**
+ * Internal: Fetch single project by slug with all images
+ */
+async function fetchProjectBySlug(
   slug: string
 ): Promise<ProjectWithImages | null> {
   const supabase = createAdminClient();
@@ -277,6 +296,17 @@ export async function getProjectBySlug(
     images: projectImages,
   };
 }
+
+/**
+ * Get single project by slug with all images (CACHED)
+ * Revalidates every 60 seconds
+ * Target: < 50ms (cached) / < 200ms (uncached)
+ */
+export const getProjectBySlug = unstable_cache(
+  async (slug: string) => fetchProjectBySlug(slug),
+  ['project-by-slug'],
+  { revalidate: 60, tags: ['projects'] }
+);
 
 /**
  * Get project count by category

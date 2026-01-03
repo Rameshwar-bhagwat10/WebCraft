@@ -1,15 +1,19 @@
 /**
  * Reviews Queries
  * Server-side data access for client reviews
+ * 
+ * Performance: Cached queries for home page (60s revalidation)
  */
+
+import { unstable_cache } from 'next/cache';
 
 import { createAdminClient } from '@/lib/supabase/server';
 import type { ClientReview, ClientReviewWithProject } from '@/types/database';
 
 /**
- * Get featured reviews for home page testimonials
+ * Internal: Fetch featured reviews from database
  */
-export async function getFeaturedReviews(limit: number = 6): Promise<ClientReviewWithProject[]> {
+async function fetchFeaturedReviews(limit: number): Promise<ClientReviewWithProject[]> {
   const supabase = createAdminClient();
 
   const { data, error } = await supabase
@@ -70,6 +74,16 @@ export async function getFeaturedReviews(limit: number = 6): Promise<ClientRevie
     };
   });
 }
+
+/**
+ * Get featured reviews for home page testimonials (CACHED)
+ * Revalidates every 60 seconds
+ */
+export const getFeaturedReviews = unstable_cache(
+  async (limit: number = 6) => fetchFeaturedReviews(limit),
+  ['featured-reviews'],
+  { revalidate: 60, tags: ['reviews'] }
+);
 
 /**
  * Get review for a specific project

@@ -10,18 +10,19 @@ import type { Metadata } from 'next';
 import { Container, Section } from '@/components/layout';
 import { JsonLd } from '@/components/shared';
 import { Text } from '@/components/ui';
+import { siteConfig } from '@/config/site';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Privacy Policy - WebCraft',
+  title: `Privacy Policy - ${siteConfig.name}`,
   description:
-    'Learn how WebCraft collects, uses, and protects your personal information.',
+    `Learn how ${siteConfig.name} collects, uses, and protects your personal information.`,
   pathname: '/privacy',
 });
 
 export default function PrivacyPage(): React.ReactElement {
   const pageSchema = generateWebPageSchema({
-    title: 'Privacy Policy - WebCraft',
+    title: `Privacy Policy - ${siteConfig.name}`,
     description: 'Our privacy policy and data protection practices.',
     pathname: '/privacy',
   });
@@ -72,7 +73,7 @@ export default function PrivacyPage(): React.ReactElement {
                 } as React.CSSProperties
               }
             >
-              <Text variant="muted">Last updated: December 30, 2024</Text>
+              <Text variant="muted">Last updated: January 1, 2025</Text>
             </div>
           </div>
         </Container>
@@ -96,8 +97,8 @@ export default function PrivacyPage(): React.ReactElement {
                   1. Introduction
                 </h2>
                 <p className="text-foreground-secondary leading-relaxed">
-                  WebCraft (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;)
-                  is committed to protecting your privacy. This Privacy Policy
+                  {siteConfig.name} (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;),
+                  operated by {siteConfig.founder}, is committed to protecting your privacy. This Privacy Policy
                   explains how we collect, use, disclose, and safeguard your
                   information when you visit our website or use our services.
                 </p>
@@ -113,7 +114,11 @@ export default function PrivacyPage(): React.ReactElement {
                 <ul className="text-foreground-secondary list-disc space-y-2 pl-6">
                   <li>
                     <strong>Personal Data:</strong> Name, email address, phone
-                    number, and other contact information you provide.
+                    number, and other contact information you provide through our forms.
+                  </li>
+                  <li>
+                    <strong>Project Information:</strong> Details about your project
+                    requirements submitted through our calculator or contact forms.
                   </li>
                   <li>
                     <strong>Usage Data:</strong> Information about how you use
@@ -139,14 +144,10 @@ export default function PrivacyPage(): React.ReactElement {
                 </p>
                 <ul className="text-foreground-secondary list-disc space-y-2 pl-6">
                   <li>Provide, operate, and maintain our services</li>
-                  <li>
-                    Respond to your inquiries and provide customer support
-                  </li>
-                  <li>
-                    Send you updates, marketing communications, and promotional
-                    materials
-                  </li>
+                  <li>Respond to your inquiries and provide project quotes</li>
+                  <li>Send you updates about your project or inquiry</li>
                   <li>Improve our website and services</li>
+                  <li>Protect against spam and abuse using reCAPTCHA</li>
                   <li>Comply with legal obligations</li>
                 </ul>
               </section>
@@ -158,8 +159,8 @@ export default function PrivacyPage(): React.ReactElement {
                 <p className="text-foreground-secondary leading-relaxed">
                   We do not sell your personal information. We may share your
                   information with third-party service providers who assist us
-                  in operating our website and conducting our business, provided
-                  they agree to keep your information confidential.
+                  in operating our website (such as hosting providers and email services),
+                  provided they agree to keep your information confidential.
                 </p>
               </section>
 
@@ -169,9 +170,9 @@ export default function PrivacyPage(): React.ReactElement {
                 </h2>
                 <p className="text-foreground-secondary leading-relaxed">
                   We implement appropriate technical and organizational security
-                  measures to protect your personal information. However, no
-                  method of transmission over the Internet is 100% secure, and
-                  we cannot guarantee absolute security.
+                  measures to protect your personal information, including encryption
+                  and secure data storage. However, no method of transmission over
+                  the Internet is 100% secure, and we cannot guarantee absolute security.
                 </p>
               </section>
 
@@ -180,14 +181,14 @@ export default function PrivacyPage(): React.ReactElement {
                   6. Your Rights
                 </h2>
                 <p className="text-foreground-secondary mb-4 leading-relaxed">
-                  Depending on your location, you may have the right to:
+                  You have the right to:
                 </p>
                 <ul className="text-foreground-secondary list-disc space-y-2 pl-6">
                   <li>Access the personal information we hold about you</li>
                   <li>Request correction of inaccurate information</li>
                   <li>Request deletion of your personal information</li>
                   <li>Opt-out of marketing communications</li>
-                  <li>Data portability</li>
+                  <li>Withdraw consent at any time</li>
                 </ul>
               </section>
 
@@ -200,10 +201,13 @@ export default function PrivacyPage(): React.ReactElement {
                   practices, please contact us at:
                 </p>
                 <p className="text-foreground-secondary mt-4 leading-relaxed">
-                  <strong>Email:</strong> privacy@webcraft.com
+                  <strong>Name:</strong> {siteConfig.founder}
                   <br />
-                  <strong>Address:</strong> 123 Web Street, San Francisco, CA
-                  94102
+                  <strong>Email:</strong> {siteConfig.email}
+                  <br />
+                  <strong>Phone:</strong> {siteConfig.phone}
+                  <br />
+                  <strong>Location:</strong> {siteConfig.location?.city}, {siteConfig.location?.state}, {siteConfig.location?.country}
                 </p>
               </section>
             </div>

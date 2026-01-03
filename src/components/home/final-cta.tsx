@@ -19,7 +19,7 @@ export function FinalCTA(): React.ReactElement {
         <div
           className={cn(
             'motion-slide-up relative overflow-hidden rounded-3xl',
-            'from-primary-600 via-primary-700 to-primary-800 bg-gradient-to-br',
+            'from-primary-600 via-primary-700 to-primary-800 bg-linear-to-br',
             'px-6 py-16 text-center sm:px-12 sm:py-20'
           )}
           style={
@@ -35,7 +35,7 @@ export function FinalCTA(): React.ReactElement {
             aria-hidden="true"
           >
             {/* Grid pattern */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:3rem_3rem]" />
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-size-[3rem_3rem]" />
             {/* Gradient orbs */}
             <div className="absolute -top-1/2 -right-1/4 h-[500px] w-[500px] rounded-full bg-white/20 blur-3xl" />
             <div className="absolute -bottom-1/2 -left-1/4 h-[400px] w-[400px] rounded-full bg-white/10 blur-3xl" />

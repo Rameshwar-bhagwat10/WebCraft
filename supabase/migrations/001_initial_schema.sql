@@ -391,4 +391,4 @@ CREATE POLICY "Service role manages rate limits"
 
 -- Note: Create admin user manually after setting up auth:
 -- 1. Create user in Supabase Auth dashboard
--- 2. Run: INSERT INTO admin_users (id, email, role) VALUES ('<auth-user-id>', 'admin@webcraft.com', 'super_admin');
+-- 2. Run: INSERT INTO admin_users (id, email, role) VALUES ('<auth-user-id>', 'your-admin-email@example.com', 'super_admin');

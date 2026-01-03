@@ -40,7 +40,7 @@ const faqCategories = [
     questions: [
       {
         q: 'How much does a website cost?',
-        a: 'Our projects start at $3,000 for basic websites. The final cost depends on your specific requirements, features, and complexity. We provide detailed quotes after understanding your needs.',
+        a: 'Our projects start at ₹1,000 for basic websites. The final cost depends on your specific requirements, features, and complexity. We provide detailed quotes after understanding your needs.',
       },
       {
         q: 'What payment methods do you accept?',
@@ -65,7 +65,7 @@ const faqCategories = [
       },
       {
         q: 'Do you provide ongoing maintenance?',
-        a: 'Yes, we offer maintenance packages that include security updates, backups, performance monitoring, and content updates. Plans start at $200/month.',
+        a: 'Yes, we offer maintenance packages that include security updates, backups, performance monitoring, and content updates. Plans start at ₹200/month.',
       },
       {
         q: 'What happens after the website launches?',

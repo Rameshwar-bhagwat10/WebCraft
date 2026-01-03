@@ -1,15 +1,19 @@
 /**
  * Feedback Queries
  * Server-side data access for visitor feedback
+ * 
+ * Performance: Cached queries for home page (60s revalidation)
  */
+
+import { unstable_cache } from 'next/cache';
 
 import { createAdminClient } from '@/lib/supabase/server';
 import type { VisitorFeedback } from '@/types/database';
 
 /**
- * Get approved feedback for public display
+ * Internal: Fetch approved feedback from database
  */
-export async function getApprovedFeedback(limit: number = 10): Promise<VisitorFeedback[]> {
+async function fetchApprovedFeedback(limit: number): Promise<VisitorFeedback[]> {
   const supabase = createAdminClient();
 
   const { data, error } = await supabase
@@ -26,6 +30,16 @@ export async function getApprovedFeedback(limit: number = 10): Promise<VisitorFe
 
   return (data ?? []) as VisitorFeedback[];
 }
+
+/**
+ * Get approved feedback for public display (CACHED)
+ * Revalidates every 60 seconds
+ */
+export const getApprovedFeedback = unstable_cache(
+  async (limit: number = 10) => fetchApprovedFeedback(limit),
+  ['approved-feedback'],
+  { revalidate: 60, tags: ['feedback'] }
+);
 
 /**
  * Get featured feedback for homepage

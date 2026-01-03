@@ -196,7 +196,7 @@ export function ContactForm(): React.ReactElement {
           id="name"
           label="Full Name"
           type="text"
-          placeholder="John Smith"
+          placeholder="Enter your full name"
           required
           value={formData.name}
           onChange={updateField('name')}
@@ -206,7 +206,7 @@ export function ContactForm(): React.ReactElement {
           id="email"
           label="Email Address"
           type="email"
-          placeholder="john@example.com"
+          placeholder="Enter your email address"
           required
           value={formData.email}
           onChange={updateField('email')}
@@ -220,7 +220,7 @@ export function ContactForm(): React.ReactElement {
           id="phone"
           label="Phone Number"
           type="tel"
-          placeholder="+1 (555) 123-4567"
+          placeholder="Enter your phone number"
           value={formData.phone}
           onChange={updateField('phone')}
         />

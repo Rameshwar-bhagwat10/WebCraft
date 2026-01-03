@@ -53,7 +53,7 @@ export function PricingCard({ plan }: PricingCardProps): React.ReactElement {
         <div className="flex items-baseline gap-1">
           <span className="text-foreground-muted text-lg">From</span>
           <span className="text-foreground text-4xl font-bold">
-            ${plan.startingPrice.toLocaleString()}
+            ₹{plan.startingPrice.toLocaleString('en-IN')}
           </span>
         </div>
         <Text variant="muted" size="sm">

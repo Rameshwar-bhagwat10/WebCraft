@@ -207,30 +207,45 @@ export function PortfolioFilters({
           />
         </div>
 
-        {/* Category Filter Pills */}
-        <div 
-          className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0"
-          role="tablist"
-          aria-label="Filter by category"
-        >
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => handleCategoryChange(category)}
-              role="tab"
-              aria-selected={activeCategory === category}
-              className={cn(
-                'whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium',
-                'transition-colors duration-150',
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
-                activeCategory === category
-                  ? 'bg-primary-600 text-white shadow-sm'
-                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-              )}
+        {/* Category Filter Dropdown */}
+        <div className="relative w-full sm:w-auto">
+          <label htmlFor="category-filter" className="sr-only">
+            Filter by category
+          </label>
+          <select
+            id="category-filter"
+            value={activeCategory}
+            onChange={(e) => handleCategoryChange(e.target.value)}
+            className={cn(
+              'w-full sm:w-48 appearance-none rounded-lg border border-neutral-200 bg-white',
+              'py-2.5 pl-4 pr-10 text-sm font-medium',
+              'text-neutral-700 cursor-pointer',
+              'focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20',
+              'transition-colors duration-150'
+            )}
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {CATEGORY_LABELS[category] ?? category}
+              </option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <svg
+              className="h-5 w-5 text-neutral-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
             >
-              {CATEGORY_LABELS[category] ?? category}
-            </button>
-          ))}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
         </div>
       </div>
 

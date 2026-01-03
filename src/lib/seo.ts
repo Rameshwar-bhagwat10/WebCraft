@@ -134,15 +134,27 @@ export function generateOrganizationSchema(): WithContext<Organization> {
     description: siteConfig.description,
     url: siteConfig.url,
     logo: absoluteUrl('/logo.png'),
+    founder: {
+      '@type': 'Person',
+      name: siteConfig.founder,
+    },
+    foundingDate: '2025',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: siteConfig.location?.city,
+      addressRegion: siteConfig.location?.state,
+      addressCountry: siteConfig.location?.country,
+    },
     sameAs: [
-      siteConfig.links.twitter,
-      siteConfig.links.github,
       siteConfig.links.linkedin,
+      siteConfig.links.github,
     ],
     contactPoint: {
       '@type': 'ContactPoint',
+      email: siteConfig.email,
+      telephone: siteConfig.phone,
       contactType: 'customer service',
-      availableLanguage: ['English'],
+      availableLanguage: ['English', 'Hindi'],
     },
   };
 }

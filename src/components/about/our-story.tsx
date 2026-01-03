@@ -11,44 +11,38 @@ import { Heading, Text } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
 /**
- * Timeline milestones
+ * Timeline milestones - Journey from learning to founding WebCraft
  */
 const milestones = [
   {
-    year: '2019',
-    title: 'The Beginning',
-    description:
-      'Started as a freelance developer with a passion for clean code and great user experiences.',
-  },
-  {
-    year: '2020',
-    title: 'First Major Client',
-    description:
-      'Landed our first enterprise client and delivered a project that exceeded expectations.',
-  },
-  {
     year: '2021',
-    title: 'Team Growth',
+    title: 'Started Learning',
     description:
-      'Expanded the team to include designers and developers who share our values.',
+      'Began the journey into web development, learning HTML, CSS, JavaScript and modern frameworks.',
   },
   {
     year: '2022',
-    title: '25+ Projects',
+    title: 'First Projects',
     description:
-      'Reached a milestone of 25 successful projects across various industries.',
+      'Built first personal projects and started exploring React, Next.js, and backend technologies.',
   },
   {
     year: '2023',
-    title: 'Studio Launch',
+    title: 'Skill Development',
     description:
-      'Officially launched WebCraft as a full-service web development studio.',
+      'Expanded expertise to include full-stack development, databases, and cloud deployment.',
   },
   {
     year: '2024',
-    title: '50+ Projects',
+    title: 'Freelance Work',
     description:
-      'Doubled our portfolio and established long-term partnerships with clients worldwide.',
+      'Started taking freelance projects, helping small businesses establish their online presence.',
+  },
+  {
+    year: '2025',
+    title: 'WebCraft Founded',
+    description:
+      'Officially launched WebCraft to provide professional web development services and help businesses grow online.',
   },
 ];
 
@@ -157,8 +151,8 @@ export function OurStory(): React.ReactElement {
             }
           >
             <Text variant="secondary" size="lg">
-              From a solo developer to a full-service studio — here&apos;s how
-              we got here.
+              From personal projects to building platforms — here&apos;s our
+              story so far.
             </Text>
           </div>
         </div>

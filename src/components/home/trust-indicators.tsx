@@ -165,7 +165,7 @@ function TrustIndicator({
         {/* Background */}
         <div className="bg-primary-50 group-hover:bg-primary-100 absolute inset-0 rounded-full transition-colors duration-300" />
         {/* Subtle glow on hover */}
-        <div className="from-primary-200/0 to-primary-100/0 group-hover:from-primary-200/50 group-hover:to-primary-100/30 absolute inset-0 rounded-full bg-gradient-to-br transition-all duration-300" />
+        <div className="from-primary-200/0 to-primary-100/0 group-hover:from-primary-200/50 group-hover:to-primary-100/30 absolute inset-0 rounded-full bg-linear-to-br transition-all duration-300" />
         {/* Icon */}
         <span className="text-primary-600 relative">{icon}</span>
       </div>

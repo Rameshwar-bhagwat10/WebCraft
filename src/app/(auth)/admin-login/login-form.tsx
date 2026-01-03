@@ -99,7 +99,7 @@ export function LoginForm() {
           required
           disabled={isLocked}
           className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-neutral-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-500 focus:outline-none disabled:bg-neutral-100 disabled:cursor-not-allowed"
-          placeholder="admin@webcraft.com"
+          placeholder="your-email@example.com"
         />
       </div>
 

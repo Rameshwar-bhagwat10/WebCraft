@@ -375,6 +375,15 @@ a:where(:not([class])):where(p *, article *, .prose *):hover {
   }
 }
 
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 /* Motion utility classes */
 .motion-fade-in {
   animation: fadeIn var(--motion-duration, 0.5s) ease-out
@@ -397,6 +406,10 @@ a:where(:not([class])):where(p *, article *, .prose *):hover {
 
 .motion-pulse-glow {
   animation: pulse-glow 8s ease-in-out infinite;
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
 }
 
 /* Respect reduced motion preference */

@@ -3,6 +3,8 @@
  * Centralized email settings for Nodemailer
  */
 
+import { siteConfig } from '@/config/site';
+
 /**
  * Email configuration from environment
  */
@@ -19,10 +21,10 @@ export const EMAIL_CONFIG = {
   },
   
   // From address
-  fromAddress: process.env.EMAIL_FROM_ADDRESS ?? 'WebCraft <noreply@webcraft.com>',
+  fromAddress: process.env.EMAIL_FROM_ADDRESS ?? `${siteConfig.name} <${siteConfig.email}>`,
   
   // Admin notification emails (comma-separated)
-  adminEmails: (process.env.ADMIN_NOTIFICATION_EMAILS ?? '')
+  adminEmails: (process.env.ADMIN_NOTIFICATION_EMAILS ?? siteConfig.email)
     .split(',')
     .map((e) => e.trim())
     .filter(Boolean),

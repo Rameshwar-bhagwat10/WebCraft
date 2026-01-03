@@ -3,6 +3,8 @@
  * Reusable HTML email templates for transactional emails
  */
 
+import { siteConfig } from '@/config/site';
+
 /**
  * Base email wrapper with consistent styling
  */
@@ -13,7 +15,7 @@ function baseTemplate(content: string): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebCraft</title>
+  <title>${siteConfig.name}</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f5f5f5;">
@@ -23,7 +25,7 @@ function baseTemplate(content: string): string {
           <!-- Header -->
           <tr>
             <td style="background-color: #171717; padding: 24px; text-align: center;">
-              <span style="color: #ffffff; font-size: 24px; font-weight: bold;">WebCraft</span>
+              <span style="color: #ffffff; font-size: 24px; font-weight: bold;">${siteConfig.name}</span>
             </td>
           </tr>
           <!-- Content -->
@@ -36,7 +38,7 @@ function baseTemplate(content: string): string {
           <tr>
             <td style="background-color: #fafafa; padding: 24px; text-align: center; border-top: 1px solid #e5e5e5;">
               <p style="margin: 0; color: #737373; font-size: 14px;">
-                © ${new Date().getFullYear()} WebCraft. All rights reserved.
+                © ${new Date().getFullYear()} ${siteConfig.name}. All rights reserved.
               </p>
               <p style="margin: 8px 0 0; color: #a3a3a3; font-size: 12px;">
                 This is an automated message. Please do not reply directly to this email.
@@ -95,12 +97,13 @@ export function contactConfirmationTemplate(data: ContactConfirmationData): {
     </table>
     
     <p style="margin: 0 0 24px; color: #525252; font-size: 16px; line-height: 1.6;">
-      In the meantime, feel free to explore our <a href="https://webcraft.com/work" style="color: #2563eb; text-decoration: none;">portfolio</a> or check out our <a href="https://webcraft.com/services" style="color: #2563eb; text-decoration: none;">services</a>.
+      In the meantime, feel free to explore our <a href="${siteConfig.url}/work" style="color: #2563eb; text-decoration: none;">portfolio</a> or check out our <a href="${siteConfig.url}/services" style="color: #2563eb; text-decoration: none;">services</a>.
     </p>
     
     <p style="margin: 0; color: #525252; font-size: 16px; line-height: 1.6;">
       Best regards,<br>
-      <strong>The WebCraft Team</strong>
+      <strong>${siteConfig.founder}</strong><br>
+      <span style="color: #737373; font-size: 14px;">${siteConfig.founderRole}, ${siteConfig.name}</span>
     </p>
   `;
 
@@ -116,11 +119,12 @@ Your Inquiry:
 - Message: "${data.messagePreview}${data.messagePreview.length >= 100 ? '...' : ''}"
 
 Best regards,
-The WebCraft Team
+${siteConfig.founder}
+${siteConfig.founderRole}, ${siteConfig.name}
   `.trim();
 
   return {
-    subject: 'We received your message - WebCraft',
+    subject: `We received your message - ${siteConfig.name}`,
     html: baseTemplate(content),
     text,
   };
@@ -141,7 +145,7 @@ export function quoteConfirmationTemplate(data: QuoteConfirmationData): {
   html: string;
   text: string;
 } {
-  const formatPrice = (n: number) => `$${n.toLocaleString()}`;
+  const formatPrice = (n: number) => `₹${n.toLocaleString('en-IN')}`;
 
   const content = `
     <h1 style="margin: 0 0 16px; color: #171717; font-size: 24px; font-weight: 600;">
@@ -179,7 +183,7 @@ export function quoteConfirmationTemplate(data: QuoteConfirmationData): {
     <table role="presentation" cellspacing="0" cellpadding="0" style="margin-bottom: 24px;">
       <tr>
         <td style="background-color: #171717; border-radius: 8px;">
-          <a href="https://webcraft.com/contact" style="display: inline-block; padding: 14px 28px; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px;">
+          <a href="${siteConfig.url}/contact" style="display: inline-block; padding: 14px 28px; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px;">
             Schedule a Call
           </a>
         </td>
@@ -188,7 +192,8 @@ export function quoteConfirmationTemplate(data: QuoteConfirmationData): {
     
     <p style="margin: 0; color: #525252; font-size: 16px; line-height: 1.6;">
       Best regards,<br>
-      <strong>The WebCraft Team</strong>
+      <strong>${siteConfig.founder}</strong><br>
+      <span style="color: #737373; font-size: 14px;">${siteConfig.founderRole}, ${siteConfig.name}</span>
     </p>
   `;
 
@@ -204,14 +209,15 @@ Project Type: ${data.projectType}
 
 This is an estimated range. Final pricing will be determined after we discuss your requirements.
 
-Schedule a call: https://webcraft.com/contact
+Schedule a call: ${siteConfig.url}/contact
 
 Best regards,
-The WebCraft Team
+${siteConfig.founder}
+${siteConfig.founderRole}, ${siteConfig.name}
   `.trim();
 
   return {
-    subject: 'Your Project Quote - WebCraft',
+    subject: `Your Project Quote - ${siteConfig.name}`,
     html: baseTemplate(content),
     text,
   };

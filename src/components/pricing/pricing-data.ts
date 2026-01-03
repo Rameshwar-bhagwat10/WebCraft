@@ -18,7 +18,7 @@ export interface PricingPlan {
   description: string;
   /** Who this plan is best for */
   bestFor: string;
-  /** Starting price (displayed as "From $X") */
+  /** Starting price (displayed as "From ₹X") */
   startingPrice: number;
   /** Price suffix (e.g., "one-time" or "/month") */
   priceSuffix: string;
@@ -36,7 +36,7 @@ export const pricingPlans: PricingPlan[] = [
     description:
       'A solid foundation for small businesses getting started online.',
     bestFor: 'Small businesses, personal brands, simple online presence',
-    startingPrice: 2500,
+    startingPrice: 1000,
     priceSuffix: 'one-time',
     ctaText: 'Get Started',
     features: [
@@ -57,7 +57,7 @@ export const pricingPlans: PricingPlan[] = [
     description:
       'Everything you need for a professional, conversion-focused website.',
     bestFor: 'Growing businesses, service providers, lead generation',
-    startingPrice: 5000,
+    startingPrice: 3000,
     priceSuffix: 'one-time',
     ctaText: 'Get Started',
     recommended: true,
@@ -79,7 +79,7 @@ export const pricingPlans: PricingPlan[] = [
     description:
       'Full-featured solution for businesses with complex requirements.',
     bestFor: 'Established businesses, e-commerce, custom functionality',
-    startingPrice: 10000,
+    startingPrice: 6000,
     priceSuffix: 'one-time',
     ctaText: 'Contact Us',
     features: [
@@ -102,6 +102,6 @@ export const pricingPlans: PricingPlan[] = [
 export const pricingNotes = [
   'All prices are starting points. Final pricing depends on project scope and requirements.',
   'Payment is typically split: 50% upfront, 50% on completion.',
-  'Hosting and domain costs are separate and billed annually.',
+  'Hosting and domain: +₹1,000/year if required (optional - you can use your own hosting).',
   'Ongoing maintenance plans are available for all tiers.',
 ];

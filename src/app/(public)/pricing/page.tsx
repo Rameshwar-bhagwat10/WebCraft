@@ -15,6 +15,7 @@
 
 import type { Metadata } from 'next';
 
+import { CalculatorSection } from '@/components/calculator';
 import {
   PricingCTA,
   PricingGrid,
@@ -53,6 +54,9 @@ export default function PricingPage(): React.ReactElement {
 
       {/* Pricing Grid - Plan cards */}
       <PricingGrid />
+
+      {/* Project Cost Calculator */}
+      <CalculatorSection />
 
       {/* Pricing Notes - Important disclaimers */}
       <PricingNotes />

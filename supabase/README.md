@@ -67,7 +67,7 @@ Run this SQL in the SQL Editor:
 INSERT INTO admin_users (id, email, role)
 VALUES (
   'paste-user-uuid-here',
-  'admin@webcraft.com',
+  'your-admin-email@example.com',
   'super_admin'
 );
 ```

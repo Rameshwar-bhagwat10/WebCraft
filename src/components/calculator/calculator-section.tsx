@@ -13,6 +13,7 @@ import { ProjectCostCalculator } from './project-cost-calculator';
 export function CalculatorSection(): React.ReactElement {
   return (
     <Section
+      id="calculator"
       size="lg"
       background="secondary"
       aria-labelledby="calculator-heading"

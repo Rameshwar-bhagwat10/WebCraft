@@ -20,9 +20,12 @@ import type { ProjectType } from '@/types/database';
 import { CalculatorField } from './calculator-field';
 import {
   calculateEstimate,
+  contentOptions,
   defaultInputs,
   designOptions,
+  featureOptions,
   formatPrice,
+  hostingOptions,
   maintenanceOptions,
   pageCountOptions,
   projectScopes,
@@ -85,10 +88,14 @@ export function ProjectCostCalculator(): React.ReactElement {
 
     // Map calculator inputs to API format
     const features = [
+      `Type: ${inputs.projectType}`,
       `Scope: ${inputs.projectScope}`,
       `Pages: ${inputs.pageCount}`,
       `Design: ${inputs.designComplexity}`,
+      `Features: ${inputs.features}`,
+      `Content: ${inputs.content}`,
       `Timeline: ${inputs.timeline}`,
+      `Hosting: ${inputs.hosting}`,
       `Maintenance: ${inputs.maintenance}`,
     ];
 
@@ -96,8 +103,8 @@ export function ProjectCostCalculator(): React.ReactElement {
       project_type: inputs.projectType as ProjectType,
       features,
       timeline: inputs.timeline,
-      estimated_min: estimate.minPrice,
-      estimated_max: estimate.maxPrice,
+      estimated_min: estimate.minPrice + estimate.hostingCost,
+      estimated_max: estimate.maxPrice + estimate.hostingCost,
       contact_email: contactEmail.trim(),
       contact_name: contactName.trim() || undefined,
       website, // Honeypot
@@ -135,8 +142,8 @@ export function ProjectCostCalculator(): React.ReactElement {
 
       {/* Calculator body */}
       <div className="p-4 sm:p-6">
-        {/* Input fields grid */}
-        <div className="grid gap-4 sm:grid-cols-2">
+        {/* Input fields grid - 8 fields in 2 columns */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <CalculatorField
             id="project-type"
             label="Project Type"
@@ -155,7 +162,7 @@ export function ProjectCostCalculator(): React.ReactElement {
 
           <CalculatorField
             id="page-count"
-            label="Pages / Features"
+            label="Number of Pages"
             value={inputs.pageCount}
             options={pageCountOptions}
             onChange={updateInput('pageCount')}
@@ -163,10 +170,26 @@ export function ProjectCostCalculator(): React.ReactElement {
 
           <CalculatorField
             id="design-complexity"
-            label="Design Complexity"
+            label="Design Level"
             value={inputs.designComplexity}
             options={designOptions}
             onChange={updateInput('designComplexity')}
+          />
+
+          <CalculatorField
+            id="features"
+            label="Features & Integrations"
+            value={inputs.features}
+            options={featureOptions}
+            onChange={updateInput('features')}
+          />
+
+          <CalculatorField
+            id="content"
+            label="Content Management"
+            value={inputs.content}
+            options={contentOptions}
+            onChange={updateInput('content')}
           />
 
           <CalculatorField
@@ -175,6 +198,14 @@ export function ProjectCostCalculator(): React.ReactElement {
             value={inputs.timeline}
             options={timelineOptions}
             onChange={updateInput('timeline')}
+          />
+
+          <CalculatorField
+            id="hosting"
+            label="Hosting & Domain"
+            value={inputs.hosting}
+            options={hostingOptions}
+            onChange={updateInput('hosting')}
           />
 
           <CalculatorField
@@ -202,13 +233,22 @@ export function ProjectCostCalculator(): React.ReactElement {
             Estimated Investment
           </p>
           <p className="text-primary-700 text-2xl font-bold sm:text-3xl">
-            <AnimatedPrice value={estimate.minPrice} /> –{' '}
-            <AnimatedPrice value={estimate.maxPrice} />
+            <AnimatedPrice value={estimate.minPrice + estimate.hostingCost} /> –{' '}
+            <AnimatedPrice value={estimate.maxPrice + estimate.hostingCost} />
           </p>
-          {estimate.monthlyMaintenance > 0 && (
-            <p className="text-foreground-secondary mt-2 text-sm">
-              + {formatPrice(estimate.monthlyMaintenance)}/month for maintenance
-            </p>
+          {(estimate.hostingCost > 0 || estimate.monthlyMaintenance > 0) && (
+            <div className="mt-3 space-y-1">
+              {estimate.hostingCost > 0 && (
+                <p className="text-foreground-secondary text-sm">
+                  Includes {formatPrice(estimate.hostingCost)}/year for hosting & domain
+                </p>
+              )}
+              {estimate.monthlyMaintenance > 0 && (
+                <p className="text-foreground-secondary text-sm">
+                  + {formatPrice(estimate.monthlyMaintenance)}/month for maintenance
+                </p>
+              )}
+            </div>
           )}
           <p className="text-foreground-muted mt-3 text-xs">
             Based on your selected options
@@ -237,14 +277,14 @@ export function ProjectCostCalculator(): React.ReactElement {
                   type="text"
                   value={contactName}
                   onChange={(e) => setContactName(e.target.value)}
-                  placeholder="Your name (optional)"
+                  placeholder="Full name (optional)"
                   className="rounded-lg border border-neutral-200 px-4 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 />
                 <input
                   type="email"
                   value={contactEmail}
                   onChange={(e) => setContactEmail(e.target.value)}
-                  placeholder="Your email *"
+                  placeholder="Email address *"
                   required
                   className="rounded-lg border border-neutral-200 px-4 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 />
@@ -269,7 +309,7 @@ export function ProjectCostCalculator(): React.ReactElement {
                   size="lg"
                   className="flex-1"
                 >
-                  {saveStatus === 'loading' ? 'Saving...' : 'Save My Quote'}
+                  {saveStatus === 'loading' ? 'Sending...' : 'Get My Quote'}
                 </Button>
                 <Button
                   variant="outline"
@@ -283,10 +323,10 @@ export function ProjectCostCalculator(): React.ReactElement {
           ) : (
             <>
               <Button onClick={() => setShowSaveForm(true)} size="lg">
-                Save Quote
+                Get Free Quote
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/contact">Get Exact Quote</Link>
+                <Link href="/contact">Contact Us</Link>
               </Button>
             </>
           )}

@@ -16,18 +16,32 @@ export const siteConfig = {
   description:
     'Professional web development services. We craft high-performance, scalable websites that drive results.',
   url: process.env.NEXT_PUBLIC_APP_URL ?? 'https://webcraft.com',
-  locale: 'en_US',
+  locale: 'en_IN',
   language: 'en',
 
+  // Owner/Founder
+  founder: 'Rameshwar Bhagwat',
+  founderRole: 'Founder',
+
+  // Contact
+  email: 'rameshwarbhagwat10@gmail.com',
+  phone: '+91 9699245170',
+  whatsapp: '919699245170',
+
+  // Location
+  location: {
+    city: 'Yeola',
+    state: 'Maharashtra',
+    country: 'India',
+  },
+
   // Social & branding
-  creator: 'WebCraft Team',
-  twitterHandle: '@webcraft',
+  creator: 'Rameshwar Bhagwat',
 
   // Social links
   links: {
-    twitter: 'https://twitter.com/webcraft',
-    github: 'https://github.com/webcraft',
-    linkedin: 'https://linkedin.com/company/webcraft',
+    linkedin: 'https://www.linkedin.com/in/rameshwar-bhagwat-888540328',
+    github: 'https://github.com/Rameshwar-bhagwat10',
   },
 
   // Open Graph image standards
@@ -128,11 +142,9 @@ export const defaultMetadata: Metadata = {
     ],
   },
 
-  // Twitter card metadata
+  // Twitter card metadata (using site name since no Twitter account)
   twitter: {
     card: 'summary_large_image',
-    site: siteConfig.twitterHandle,
-    creator: siteConfig.twitterHandle,
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.twitterImage.url],

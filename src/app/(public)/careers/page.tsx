@@ -11,13 +11,14 @@ import Link from 'next/link';
 import { Container, Section } from '@/components/layout';
 import { JsonLd } from '@/components/shared';
 import { Button, Heading, Text } from '@/components/ui';
+import { siteConfig } from '@/config/site';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Careers - WebCraft',
+  title: `Careers - ${siteConfig.name}`,
   description:
-    "Join our team at WebCraft. Explore open positions and discover what it's like to work with us.",
+    `Join our team at ${siteConfig.name}. Explore open positions and discover what it's like to work with us.`,
   pathname: '/careers',
 });
 
@@ -104,17 +105,17 @@ const values = [
 ];
 
 /**
- * Benefits
+ * Benefits - Updated for freelance/small team
  */
 const benefits = [
-  'Competitive salary & equity',
-  'Health, dental & vision insurance',
-  'Unlimited PTO policy',
+  'Flexible working hours',
   'Remote-first workplace',
-  'Learning & development budget',
-  'Latest equipment provided',
-  'Team retreats & events',
-  'Parental leave',
+  'Project-based collaboration',
+  'Learning opportunities',
+  'Direct communication',
+  'Quick decision making',
+  'Growth potential',
+  'Diverse projects',
 ];
 
 /**
@@ -122,29 +123,29 @@ const benefits = [
  */
 const positions = [
   {
-    title: 'Senior Frontend Developer',
-    department: 'Engineering',
-    location: 'Remote',
-    type: 'Full-time',
+    title: 'Frontend Developer',
+    department: 'Development',
+    location: 'Remote / India',
+    type: 'Freelance / Part-time',
   },
   {
     title: 'UI/UX Designer',
     department: 'Design',
-    location: 'Remote',
-    type: 'Full-time',
+    location: 'Remote / India',
+    type: 'Freelance / Part-time',
   },
   {
-    title: 'Project Manager',
-    department: 'Operations',
-    location: 'San Francisco, CA',
-    type: 'Full-time',
+    title: 'Backend Developer',
+    department: 'Development',
+    location: 'Remote / India',
+    type: 'Freelance / Part-time',
   },
 ];
 
 export default function CareersPage(): React.ReactElement {
   const pageSchema = generateWebPageSchema({
-    title: 'Careers - WebCraft',
-    description: 'Join our team at WebCraft.',
+    title: `Careers - ${siteConfig.name}`,
+    description: `Join our team at ${siteConfig.name}.`,
     pathname: '/careers',
   });
 

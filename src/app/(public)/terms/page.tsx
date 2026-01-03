@@ -10,17 +10,18 @@ import type { Metadata } from 'next';
 import { Container, Section } from '@/components/layout';
 import { JsonLd } from '@/components/shared';
 import { Text } from '@/components/ui';
+import { siteConfig } from '@/config/site';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Terms of Service - WebCraft',
-  description: 'Read the terms and conditions for using WebCraft services.',
+  title: `Terms of Service - ${siteConfig.name}`,
+  description: `Read the terms and conditions for using ${siteConfig.name} services.`,
   pathname: '/terms',
 });
 
 export default function TermsPage(): React.ReactElement {
   const pageSchema = generateWebPageSchema({
-    title: 'Terms of Service - WebCraft',
+    title: `Terms of Service - ${siteConfig.name}`,
     description: 'Terms and conditions for using our services.',
     pathname: '/terms',
   });
@@ -71,7 +72,7 @@ export default function TermsPage(): React.ReactElement {
                 } as React.CSSProperties
               }
             >
-              <Text variant="muted">Last updated: December 30, 2024</Text>
+              <Text variant="muted">Last updated: January 1, 2025</Text>
             </div>
           </div>
         </Container>
@@ -95,7 +96,7 @@ export default function TermsPage(): React.ReactElement {
                   1. Agreement to Terms
                 </h2>
                 <p className="text-foreground-secondary leading-relaxed">
-                  By accessing or using WebCraft&apos;s services, you agree to
+                  By accessing or using {siteConfig.name}&apos;s services, you agree to
                   be bound by these Terms of Service. If you do not agree to
                   these terms, please do not use our services.
                 </p>
@@ -106,10 +107,10 @@ export default function TermsPage(): React.ReactElement {
                   2. Services
                 </h2>
                 <p className="text-foreground-secondary leading-relaxed">
-                  WebCraft provides web development, design, and related digital
+                  {siteConfig.name} provides web development, design, and related digital
                   services. The specific scope of work, deliverables, and
                   timelines will be outlined in individual project agreements or
-                  proposals.
+                  proposals shared via email or document.
                 </p>
               </section>
 
@@ -145,10 +146,9 @@ export default function TermsPage(): React.ReactElement {
                 <ul className="text-foreground-secondary list-disc space-y-2 pl-6">
                   <li>A deposit of 50% is required before work begins</li>
                   <li>The remaining balance is due upon project completion</li>
-                  <li>Late payments may incur additional fees</li>
-                  <li>
-                    All fees are non-refundable unless otherwise specified
-                  </li>
+                  <li>Payments can be made via UPI, bank transfer, or other agreed methods</li>
+                  <li>All fees are in Indian Rupees (₹) unless otherwise specified</li>
+                  <li>Late payments may delay project delivery</li>
                 </ul>
               </section>
 
@@ -158,10 +158,10 @@ export default function TermsPage(): React.ReactElement {
                 </h2>
                 <p className="text-foreground-secondary leading-relaxed">
                   Upon full payment, you will own the final deliverables created
-                  specifically for your project. WebCraft retains the right to
+                  specifically for your project. {siteConfig.name} retains the right to
                   use general techniques, skills, and knowledge gained during
                   the project. We may also showcase the work in our portfolio
-                  unless otherwise agreed.
+                  unless otherwise agreed in writing.
                 </p>
               </section>
 
@@ -171,19 +171,31 @@ export default function TermsPage(): React.ReactElement {
                 </h2>
                 <p className="text-foreground-secondary leading-relaxed">
                   The number of revision rounds will be specified in your
-                  project proposal. Additional revisions or changes to the
+                  project proposal (typically 2-3 rounds). Additional revisions or changes to the
                   project scope may incur additional fees. Major changes to
-                  project requirements after work has begun may require a new
-                  proposal.
+                  project requirements after work has begun may require a revised
+                  proposal and timeline.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-foreground mb-4 text-xl font-semibold">
-                  7. Limitation of Liability
+                  7. Project Timeline
                 </h2>
                 <p className="text-foreground-secondary leading-relaxed">
-                  WebCraft shall not be liable for any indirect, incidental,
+                  Project timelines are estimates based on the agreed scope. Delays
+                  caused by late feedback, content delivery, or scope changes from
+                  the client side may extend the timeline. We will communicate any
+                  delays promptly.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-foreground mb-4 text-xl font-semibold">
+                  8. Limitation of Liability
+                </h2>
+                <p className="text-foreground-secondary leading-relaxed">
+                  {siteConfig.name} shall not be liable for any indirect, incidental,
                   special, consequential, or punitive damages resulting from
                   your use of our services. Our total liability shall not exceed
                   the amount paid for the specific service giving rise to the
@@ -193,40 +205,43 @@ export default function TermsPage(): React.ReactElement {
 
               <section>
                 <h2 className="text-foreground mb-4 text-xl font-semibold">
-                  8. Termination
+                  9. Termination
                 </h2>
                 <p className="text-foreground-secondary leading-relaxed">
                   Either party may terminate a project with written notice. In
                   case of termination, you will be responsible for payment for
                   all work completed up to the termination date. Any deposits
-                  paid are non-refundable.
+                  paid are non-refundable as they cover initial planning and setup work.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-foreground mb-4 text-xl font-semibold">
-                  9. Governing Law
+                  10. Governing Law
                 </h2>
                 <p className="text-foreground-secondary leading-relaxed">
                   These Terms shall be governed by and construed in accordance
-                  with the laws of the State of California, without regard to
-                  its conflict of law provisions.
+                  with the laws of India. Any disputes shall be subject to the
+                  jurisdiction of courts in {siteConfig.location?.state}, India.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-foreground mb-4 text-xl font-semibold">
-                  10. Contact
+                  11. Contact
                 </h2>
                 <p className="text-foreground-secondary leading-relaxed">
                   For questions about these Terms of Service, please contact us
                   at:
                 </p>
                 <p className="text-foreground-secondary mt-4 leading-relaxed">
-                  <strong>Email:</strong> legal@webcraft.com
+                  <strong>Name:</strong> {siteConfig.founder}
                   <br />
-                  <strong>Address:</strong> 123 Web Street, San Francisco, CA
-                  94102
+                  <strong>Email:</strong> {siteConfig.email}
+                  <br />
+                  <strong>Phone:</strong> {siteConfig.phone}
+                  <br />
+                  <strong>Location:</strong> {siteConfig.location?.city}, {siteConfig.location?.state}, {siteConfig.location?.country}
                 </p>
               </section>
             </div>

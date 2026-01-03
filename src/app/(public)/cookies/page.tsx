@@ -10,13 +10,14 @@ import type { Metadata } from 'next';
 import { Container, Section } from '@/components/layout';
 import { JsonLd } from '@/components/shared';
 import { Text } from '@/components/ui';
+import { siteConfig } from '@/config/site';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/seo';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Cookie Policy - WebCraft',
+  title: `Cookie Policy - ${siteConfig.name}`,
   description:
-    'Learn about how WebCraft uses cookies and similar technologies.',
+    `Learn about how ${siteConfig.name} uses cookies and similar technologies.`,
   pathname: '/cookies',
 });
 
@@ -28,7 +29,7 @@ const cookieTypes = [
     name: 'Essential Cookies',
     description:
       'Required for the website to function properly. Cannot be disabled.',
-    examples: ['Session management', 'Security tokens', 'Load balancing'],
+    examples: ['Session management', 'Security tokens', 'Form submissions'],
   },
   {
     name: 'Analytics Cookies',
@@ -38,19 +39,18 @@ const cookieTypes = [
   {
     name: 'Functional Cookies',
     description: 'Enable enhanced functionality and personalization.',
-    examples: ['Language preferences', 'Region settings', 'User preferences'],
+    examples: ['Chat preferences', 'Calculator settings', 'User preferences'],
   },
   {
-    name: 'Marketing Cookies',
-    description:
-      'Used to track visitors across websites for advertising purposes.',
-    examples: ['Ad targeting', 'Campaign tracking', 'Social media integration'],
+    name: 'Security Cookies',
+    description: 'Used to protect against spam and abuse.',
+    examples: ['reCAPTCHA tokens', 'Bot detection', 'Form protection'],
   },
 ];
 
 export default function CookiesPage(): React.ReactElement {
   const pageSchema = generateWebPageSchema({
-    title: 'Cookie Policy - WebCraft',
+    title: `Cookie Policy - ${siteConfig.name}`,
     description: 'Information about our cookie usage.',
     pathname: '/cookies',
   });
@@ -101,7 +101,7 @@ export default function CookiesPage(): React.ReactElement {
                 } as React.CSSProperties
               }
             >
-              <Text variant="muted">Last updated: December 30, 2024</Text>
+              <Text variant="muted">Last updated: January 1, 2025</Text>
             </div>
           </div>
         </Container>
@@ -135,10 +135,10 @@ export default function CookiesPage(): React.ReactElement {
                 How We Use Cookies
               </h2>
               <p className="text-foreground-secondary leading-relaxed">
-                We use cookies to improve your experience on our website,
-                analyze site traffic, and understand where our visitors come
-                from. This helps us provide you with a better, more personalized
-                experience.
+                {siteConfig.name} uses cookies to improve your experience on our website,
+                protect our forms from spam using Google reCAPTCHA, and understand
+                how visitors interact with our site. We do not use cookies for
+                advertising or tracking across other websites.
               </p>
             </section>
           </div>
@@ -223,6 +223,26 @@ export default function CookiesPage(): React.ReactElement {
           >
             <section>
               <h2 className="text-foreground mb-4 text-xl font-semibold">
+                Third-Party Services
+              </h2>
+              <p className="text-foreground-secondary mb-4 leading-relaxed">
+                We use the following third-party services that may set cookies:
+              </p>
+              <ul className="text-foreground-secondary list-disc space-y-2 pl-6">
+                <li>
+                  <strong>Google reCAPTCHA:</strong> Protects our forms from spam and abuse
+                </li>
+                <li>
+                  <strong>Supabase:</strong> Provides our database and authentication services
+                </li>
+                <li>
+                  <strong>Vercel:</strong> Hosts our website and may collect analytics
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-foreground mb-4 text-xl font-semibold">
                 Managing Your Cookie Preferences
               </h2>
               <p className="text-foreground-secondary mb-4 leading-relaxed">
@@ -271,8 +291,8 @@ export default function CookiesPage(): React.ReactElement {
               </h2>
               <p className="text-foreground-secondary leading-relaxed">
                 Please note that disabling cookies may affect the functionality
-                of our website. Some features may not work properly, and your
-                experience may be degraded.
+                of our website. Some features like form submissions may not work
+                properly if essential cookies are blocked.
               </p>
             </section>
 
@@ -285,7 +305,9 @@ export default function CookiesPage(): React.ReactElement {
                 us at:
               </p>
               <p className="text-foreground-secondary mt-4 leading-relaxed">
-                <strong>Email:</strong> privacy@webcraft.com
+                <strong>Email:</strong> {siteConfig.email}
+                <br />
+                <strong>Phone:</strong> {siteConfig.phone}
               </p>
             </section>
           </div>

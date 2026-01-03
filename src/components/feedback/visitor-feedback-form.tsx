@@ -86,7 +86,7 @@ export function VisitorFeedbackForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="feedback-name" className="mb-1.5 block text-sm font-medium text-neutral-700">
-            Your Name <span className="text-red-500">*</span>
+            Name <span className="text-red-500">*</span>
           </label>
           <input
             id="feedback-name"
@@ -96,7 +96,7 @@ export function VisitorFeedbackForm() {
             required
             maxLength={100}
             className="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-            placeholder="John Doe"
+            placeholder="Enter your name"
           />
         </div>
 
@@ -110,14 +110,14 @@ export function VisitorFeedbackForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-            placeholder="john@example.com"
+            placeholder="Enter your email"
           />
         </div>
       </div>
 
       <div>
         <label htmlFor="feedback-message" className="mb-1.5 block text-sm font-medium text-neutral-700">
-          Your Feedback <span className="text-red-500">*</span>
+          Feedback <span className="text-red-500">*</span>
         </label>
         <textarea
           id="feedback-message"

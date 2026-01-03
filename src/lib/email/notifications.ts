@@ -113,7 +113,7 @@ export function notifyNewCalculatorLead(lead: {
   estimatedMin: number;
   estimatedMax: number;
 }): void {
-  const formatPrice = (n: number) => `$${n.toLocaleString()}`;
+  const formatPrice = (n: number) => `₹${n.toLocaleString('en-IN')}`;
 
   // Send confirmation to user
   sendQuoteConfirmation(lead.email, {
