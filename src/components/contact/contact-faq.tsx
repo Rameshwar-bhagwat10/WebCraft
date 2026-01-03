@@ -20,27 +20,27 @@ const faqItems = [
   {
     question: 'How quickly will you respond to my inquiry?',
     answer:
-      'We typically respond to all inquiries within 24 hours during business days. For urgent matters, we recommend reaching out via WhatsApp for faster communication.',
+      'I typically respond to all inquiries within 24 hours during business days. For urgent matters, reach out via WhatsApp for faster communication.',
   },
   {
     question: 'What information should I include in my message?',
     answer:
-      'The more details you provide, the better we can help. Include your project goals, timeline, budget range (if known), and any specific requirements or preferences you have.',
+      'The more details you provide, the better I can help. Include your project goals, timeline, budget range (if known), and any specific requirements or preferences you have.',
   },
   {
     question: 'Do you offer free consultations?',
     answer:
-      "Yes! We offer a free initial consultation to discuss your project, understand your needs, and provide recommendations. There's no obligation to proceed after the consultation.",
+      "Yes! I offer a free initial consultation to discuss your project, understand your needs, and provide recommendations. There's no obligation to proceed after the consultation.",
   },
   {
     question: 'What happens after I submit the form?',
     answer:
-      "After you submit the form, you'll receive a confirmation email. Within 24 hours, a team member will reach out to schedule a discovery call to discuss your project in detail.",
+      "After you submit the form, you'll receive a confirmation email. Within 24 hours, I will reach out to schedule a discovery call to discuss your project in detail.",
   },
   {
-    question: 'Can I request a specific team member?',
+    question: 'What is your typical project timeline?',
     answer:
-      "Absolutely. If you've worked with us before or have a preference, let us know in your message and we'll do our best to accommodate your request.",
+      'Timeline depends on project complexity. A simple landing page takes 1-2 weeks, a business website 3-4 weeks, and complex web applications 6-8 weeks or more. I\'ll provide a detailed timeline after understanding your requirements.',
   },
 ];
 

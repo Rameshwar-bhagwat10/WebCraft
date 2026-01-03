@@ -28,7 +28,7 @@ export function AboutIntro(): React.ReactElement {
           style={{ animationDelay: '-10s' }}
         />
         {/* Grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] [background-size:4rem_4rem]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] mask-[radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] bg-size-[4rem_4rem]" />
       </div>
 
       <Container size="md">
@@ -107,9 +107,9 @@ export function AboutIntro(): React.ReactElement {
             }
           >
             {[
-              { value: '5+', label: 'Years Experience' },
               { value: '50+', label: 'Projects Delivered' },
-              { value: '98%', label: 'Client Satisfaction' },
+              { value: '100%', label: 'Client Satisfaction' },
+              { value: '24h', label: 'Response Time' },
             ].map((stat, index) => (
               <div
                 key={stat.label}

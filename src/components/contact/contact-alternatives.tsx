@@ -6,16 +6,17 @@
  */
 
 import { Text } from '@/components/ui';
+import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 
 /**
  * Alternative contact methods
  */
-const alternatives = [
+const getAlternatives = () => [
   {
     name: 'WhatsApp',
     description: 'Chat with us directly',
-    href: 'https://wa.me/15551234567?text=Hi%20WebCraft%2C%20I%27d%20like%20to%20discuss%20a%20project.',
+    href: `https://wa.me/${siteConfig.whatsapp}?text=Hi%20${encodeURIComponent(siteConfig.name)}%2C%20I%27d%20like%20to%20discuss%20a%20project.`,
     external: true,
     icon: (
       <svg
@@ -33,7 +34,7 @@ const alternatives = [
   {
     name: 'Schedule a Call',
     description: 'Book a free consultation',
-    href: '#',
+    href: '/contact',
     external: false,
     icon: (
       <svg
@@ -56,6 +57,8 @@ const alternatives = [
 ];
 
 export function ContactAlternatives(): React.ReactElement {
+  const alternatives = getAlternatives();
+  
   return (
     <div
       className="motion-slide-up mt-8"

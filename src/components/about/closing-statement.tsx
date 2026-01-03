@@ -81,7 +81,7 @@ export function ClosingStatement(): React.ReactElement {
           >
             <div className="bg-primary-500 mx-auto mb-4 h-1 w-12 rounded-full" />
             <Text variant="muted" as="span" className="text-sm font-medium">
-              — The WebCraft Team
+              — Rameshwar Bhagwat, Founder
             </Text>
           </figcaption>
         </figure>
