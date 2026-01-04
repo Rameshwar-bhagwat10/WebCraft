@@ -1,9 +1,9 @@
 /**
  * Portfolio Projects Data
- * Centralized project information for consistency
+ * Real projects by Rameshwar Bhagwat / WebCraft
  *
- * Note: These are demo projects presented honestly.
- * In production, this data could come from a CMS.
+ * In production, this data comes from Supabase.
+ * This file serves as fallback/static data.
  */
 
 export interface ProjectData {
@@ -14,7 +14,7 @@ export interface ProjectData {
   /** One-line description (problem/solution focused) */
   shortDescription: string;
   /** Project category */
-  type: 'Website' | 'Web App' | 'Mobile App' | 'Dashboard';
+  type: 'Website' | 'Web App' | 'Mobile App' | 'Dashboard' | 'Landing Page';
   /** Thumbnail image path */
   thumbnail: string;
   /** Full project overview */
@@ -27,112 +27,117 @@ export interface ProjectData {
   features: string[];
   /** Business outcome (realistic) */
   outcome: string;
-  /** Tech stack used (optional, brief) */
-  techStack?: string[];
+  /** Tech stack used */
+  techStack: string[];
   /** Featured image for detail page */
   featuredImage: string;
+  /** Live URL if available */
+  liveUrl?: string;
 }
 
 export const projectsData: ProjectData[] = [
   {
-    slug: 'freshbite-restaurant',
-    title: 'FreshBite Restaurant',
+    slug: 'webcraft-agency',
+    title: 'WebCraft Agency Platform',
     shortDescription:
-      'A modern restaurant website with online ordering that increased takeout orders by 40%.',
-    type: 'Website',
-    thumbnail: '/projects/freshbite-thumb.jpg',
-    overview:
-      'FreshBite needed a website that showcased their farm-to-table philosophy while making it easy for customers to browse the menu and place orders online.',
-    problem:
-      'Their existing website was outdated, slow on mobile, and had no online ordering capability. Customers were calling in orders, leading to errors and long wait times.',
-    solution:
-      'We built a fast, mobile-first website with an integrated ordering system. The design emphasizes their fresh ingredients with clean photography and intuitive navigation.',
-    features: [
-      'Mobile-optimized menu with filtering',
-      'Online ordering with real-time availability',
-      'Location finder with directions',
-      'Reservation system integration',
-      'SEO-optimized for local search',
-    ],
-    outcome:
-      'Online orders increased by 40% in the first three months. Phone orders decreased significantly, freeing up staff time. The site loads in under 2 seconds on mobile.',
-    techStack: ['Next.js', 'Tailwind CSS', 'Stripe'],
-    featuredImage: '/projects/freshbite-featured.jpg',
-  },
-  {
-    slug: 'taskflow-app',
-    title: 'TaskFlow Project Manager',
-    shortDescription:
-      'A project management web app that helped a consulting firm reduce project delays by 25%.',
+      'A production-grade web development agency platform with high performance, security, and SEO optimization.',
     type: 'Web App',
-    thumbnail: '/projects/taskflow-thumb.jpg',
+    thumbnail: '/projects/webcraft-thumb.jpg',
     overview:
-      'A mid-size consulting firm needed a custom project management tool that matched their unique workflow, which off-the-shelf solutions could not accommodate.',
+      'WebCraft is a comprehensive web development agency platform designed to showcase services, projects, pricing, and capture client leads efficiently.',
     problem:
-      'The team was using spreadsheets and email to track projects, leading to missed deadlines, duplicated work, and poor visibility into project status.',
+      'Building a professional agency presence requires more than just a website—it needs enterprise-grade security, blazing-fast performance, and seamless lead capture while maintaining excellent SEO and accessibility standards.',
     solution:
-      'We built a custom web application with real-time collaboration, automated status updates, and a dashboard that gives leadership instant visibility into all active projects.',
+      'Built a full-stack platform using cutting-edge technologies including Next.js 15 with App Router, React 19, and Supabase for the backend. Implemented comprehensive security measures including Row Level Security, rate limiting, and CAPTCHA protection.',
     features: [
-      'Real-time project status tracking',
-      'Automated deadline reminders',
-      'Team workload visualization',
-      'Client portal for status updates',
-      'Integration with existing calendar system',
+      'High-performance server-rendered pages with optimized Core Web Vitals',
+      'Secure backend with Supabase RLS and rate limiting',
+      'Project showcase with optimized images and featured projects',
+      'Contact forms with CAPTCHA, honeypot, and idempotency protection',
+      'Complete SEO implementation (Metadata, OG images, JSON-LD, Sitemap)',
+      'WCAG 2.2 AA accessibility compliance',
+      'Production-grade error handling and monitoring',
     ],
     outcome:
-      'Project delays decreased by 25% within six months. Team members report spending less time on status meetings and more time on actual work.',
-    techStack: ['React', 'Node.js', 'PostgreSQL'],
-    featuredImage: '/projects/taskflow-featured.jpg',
+      'Achieved a 9.8/10 production audit score with optimized Core Web Vitals architecture. The platform provides a secure, scalable foundation ready to handle real client traffic and leads.',
+    techStack: ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind CSS', 'Supabase', 'PostgreSQL', 'Edge Functions'],
+    featuredImage: '/projects/webcraft-featured.jpg',
+    liveUrl: 'https://webcraftx.vercel.app',
   },
   {
-    slug: 'greenleaf-ecommerce',
-    title: 'GreenLeaf Plant Shop',
+    slug: 'kirana-store-management',
+    title: 'Local Kirana Store Management',
     shortDescription:
-      'An e-commerce platform for a plant nursery that doubled their online revenue.',
-    type: 'Website',
-    thumbnail: '/projects/greenleaf-thumb.jpg',
+      'A web application for local kirana stores to manage products, orders, and customers digitally.',
+    type: 'Web App',
+    thumbnail: '/projects/kirana-thumb.jpg',
     overview:
-      'GreenLeaf wanted to expand beyond their local market by selling plants online, but needed a platform that could handle the complexity of live plant inventory.',
+      'A comprehensive web application built to help a local kirana store transition from traditional offline operations to a modern digital system.',
     problem:
-      'Plants have unique inventory challenges—seasonal availability, size variations, and care requirements. Generic e-commerce platforms could not handle these needs well.',
+      'Local kirana stores often struggle with manual record-keeping, order tracking, and inventory management. The store owner needed a simple yet powerful solution to digitize their business operations without a steep learning curve.',
     solution:
-      'We created a custom e-commerce solution with dynamic inventory management, plant care guides integrated into product pages, and a shipping calculator that accounts for plant fragility.',
+      'Developed a user-friendly web application with intuitive product management, order tracking, and customer management features. The system is designed for ease of use on mobile devices, allowing the store owner to manage operations on the go.',
     features: [
-      'Dynamic inventory with size/variant support',
-      'Integrated plant care guides',
-      'Smart shipping calculator',
-      'Seasonal availability indicators',
-      'Customer plant collection tracker',
+      'Product listing with categories and search functionality',
+      'Customer order management and tracking',
+      'Simple admin dashboard for daily operations',
+      'Responsive design optimized for mobile users',
+      'Secure backend APIs with proper authentication',
     ],
     outcome:
-      'Online revenue doubled in the first year. Customer satisfaction improved due to better plant care information and accurate delivery expectations.',
-    techStack: ['Next.js', 'Shopify API', 'Tailwind CSS'],
-    featuredImage: '/projects/greenleaf-featured.jpg',
+      'Successfully digitized the store\'s operations, improving order tracking accuracy and reducing manual record-keeping errors. The store now has a digital presence and can serve customers more efficiently.',
+    techStack: ['Next.js', 'Node.js', 'Express.js', 'MongoDB', 'Tailwind CSS'],
+    featuredImage: '/projects/kirana-featured.jpg',
   },
   {
-    slug: 'healthtrack-dashboard',
-    title: 'HealthTrack Analytics',
+    slug: 'freelancehub-platform',
+    title: 'FreelanceHub Platform',
     shortDescription:
-      'A healthcare analytics dashboard that reduced report generation time from hours to minutes.',
-    type: 'Dashboard',
-    thumbnail: '/projects/healthtrack-thumb.jpg',
+      'An online freelancing platform where clients post jobs and freelancers can apply and manage work opportunities.',
+    type: 'Web App',
+    thumbnail: '/projects/freelancehub-thumb.jpg',
     overview:
-      'A regional healthcare provider needed a way to visualize patient data and operational metrics without relying on manual spreadsheet reports.',
+      'FreelanceHub is a comprehensive job marketplace platform connecting clients with skilled freelancers for various project needs.',
     problem:
-      'Leadership spent hours each week compiling reports from multiple systems. Data was often outdated by the time decisions were made.',
+      'Creating a marketplace platform requires handling complex workflows—job posting, applications, user profiles, messaging, and secure authentication—while maintaining scalability for future growth.',
     solution:
-      'We built a real-time dashboard that pulls data from their existing systems and presents it in clear, actionable visualizations with role-based access control.',
+      'Built a full-featured freelancing platform with separate flows for clients and freelancers. Implemented secure authentication, job management, and a scalable backend architecture designed to handle growing user bases.',
     features: [
-      'Real-time data synchronization',
-      'Customizable dashboard views',
-      'Automated report generation',
-      'Role-based access control',
-      'HIPAA-compliant data handling',
+      'Job posting and browsing with filters and search',
+      'Comprehensive freelancer profiles with skills and portfolio',
+      'Client–freelancer interaction and communication flow',
+      'Secure authentication with role-based access',
+      'Scalable backend structure for future expansion',
     ],
     outcome:
-      'Report generation time dropped from 4+ hours to under 5 minutes. Leadership now has real-time visibility into key metrics for faster decision-making.',
-    techStack: ['React', 'D3.js', 'Node.js', 'PostgreSQL'],
-    featuredImage: '/projects/healthtrack-featured.jpg',
+      'Demonstrates marketplace-level architecture with real-world workflows. The platform showcases expertise in building complex multi-user applications with scalable backend models.',
+    techStack: ['Next.js', 'Node.js', 'Express.js', 'MongoDB', 'Tailwind CSS'],
+    featuredImage: '/projects/freelancehub-featured.jpg',
+  },
+  {
+    slug: 'developer-portfolio',
+    title: 'Developer Portfolio',
+    shortDescription:
+      'A modern, responsive portfolio website showcasing projects, skills, and experience with clean UI and smooth animations.',
+    type: 'Landing Page',
+    thumbnail: '/projects/portfolio-thumb.jpg',
+    overview:
+      'A professionally designed portfolio website built to establish a strong personal brand and online presence for developers.',
+    problem:
+      'Standing out in the competitive web development market requires more than just skills—it needs a professional online presence that effectively showcases work, expertise, and personality.',
+    solution:
+      'Created a modern single-page portfolio with clean design, smooth animations, and optimized performance. The site effectively communicates skills, projects, and experience while maintaining excellent SEO and accessibility standards.',
+    features: [
+      'Clean single-page layout with smooth navigation',
+      'Responsive sections for About, Projects, Skills, and Contact',
+      'SEO-friendly structure with proper metadata',
+      'Performance-optimized UI with fast load times',
+      'Modern design with subtle animations',
+    ],
+    outcome:
+      'Established a strong personal brand with a professional online presence. The portfolio serves as the foundation for agency branding and client acquisition.',
+    techStack: ['Next.js', 'TypeScript', 'Tailwind CSS'],
+    featuredImage: '/projects/portfolio-featured.jpg',
   },
 ];
 
